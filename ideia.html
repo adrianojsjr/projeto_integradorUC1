@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel do Médico</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    header { display: flex; justify-content: space-between; align-items: center; }
+    h1 { margin: 0; }
+    section { margin-top: 20px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f0f0f0; }
+    .actions button { margin-right: 5px; }
+    .add-form input, .add-form select { padding: 5px; margin-right: 10px; }
+    .add-form button { padding: 6px 12px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Dr. João Silva – Painel de Agendamentos</h1>
+  <div>Hoje: <strong>18/07/2025</strong></div>
+</header>
+
+<section id="agenda">
+  <h2>📅 Agenda do Dia</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Hora</th>
+        <th>Paciente</th>
+        <th>Serviço</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>09:00</td>
+        <td>Maria Santos</td>
+        <td>Consulta Geral</td>
+        <td>Agendado</td>
+        <td class="actions">
+          <button>Cancel</button>
+          <button>Ver Detalhes</button>
+        </td>
+      </tr>
+      <tr>
+        <td>10:30</td>
+        <td>Carlos Pereira</td>
+        <td>Retorno</td>
+        <td>Confirmado</td>
+        <td class="actions">
+          <button>Cancel</button>
+          <button>Ver Detalhes</button>
+        </td>
+      </tr>
+      <!-- mais linhas conforme a agenda -->
+    </tbody>
+  </table>
+</section>
+
+<section id="add-consulta">
+  <h2>➕ Adicionar Nova Consulta</h2>
+  <form class="add-form">
+    <label>Data: <input type="date" name="data"></label>
+    <label>Hora: <input type="time" name="hora"></label>
+    <label>Paciente: <input type="text" name="paciente" placeholder="Nome do paciente"></label>
+    <label>Serviço:
+      <select name="servico">
+        <option value="consulta">Consulta Geral</option>
+        <option value="retorno">Retorno</option>
+        <option value="exame">Exame</option>
+      </select>
+    </label>
+    <button type="submit">Agendar</button>
+  </form>
+</section>
+
+</body>
+</html>
