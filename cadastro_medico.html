@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro Médico</title>
+</head>
+<body>
+    <div class="payment-container">
+      <h2>Cadastro do Médico</h2>
+     
+      <form action=""><!-- para o required funcionar precisa estar dentro do form-->
+        <!-- Dados do comprador -->
+        <label for="nome">Nome do Médico</label>
+        <input type="text" placeholder="Nome do titular" required />
+   
+        <label for="email">E-mail</label>
+        <input type="email" placeholder="exemplo@email.com" required />
+   
+        <label for="">CPF</label>
+        <input type="number" placeholder="000.000.000-00" required />
+
+        
+        <label for="numerodocrm">Numero do CRM</label>
+        <input type="number" placeholder="CRM" required />
+
+        
+        <label for="ufdocrm">UF do CRM</label>
+        <input type="number" placeholder="Insira o UF do CRM" required />
+
+        
+        <label for="telefone">Telefone</label>
+        <input type="number" placeholder="insira o Telefone" required />
+
+
+        <label for="especialidade">Especialidade</label>
+        <input type="number"  placeholder="000.000.000-00" required />
+
+
+        <label for="cpf">Data de Emissão</label>
+        <input type="date" placeholder="000.000.000-00" required />
+
+        
+   
+          </div>
+          <div>
+
+            <label for="arquivo" class="upload-btn">Anexar residência médica</label>
+            <input type="file" name="arquivo">
+
+            <label for="arquivo" class="upload-btn">Anexar diploma acadêmico</label>
+            <input type="file" name="arquivo">
+
+            <label for="arquivo" class="upload-btn">comprovante de situação regular</label>
+            <input type="file" name="arquivo">
+
+          </div>
+        </div>
+    </form>
+        <a href="#">
+          <button>Cadastrar</button>
+        </a>
+   
+        
+   
+    </div>
+  </body>
+</html>
