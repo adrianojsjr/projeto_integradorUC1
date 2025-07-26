@@ -1,0 +1,62 @@
+/*Paleta:
+
+Verde-água: #11b5ba (vibrante, ideal para destaque)
+
+Cinza azulado: #40566e (ótimo para texto, bordas e contornos)
+
+Azul: #1e5acd (fundo ou botões primários)
+
+Verde: #33B291 (secundário, suave)
+
+*/
+
+.cardInfoConsulta {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 100px;
+}
+
+.cardInfoConsulta .infoConsulta {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+.cardInfoConsulta .calendario {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 430px; /*largura da div*/
+    height: 360px; /*altura da div*/
+
+
+}
+
+.cardInfoConsulta .calendario .disponibilidade {
+    display: grid; /* Usa CSS Grid para organizar os itens em linhas e colunas */
+    gap: 15px; /* Espaçamento entre os itens (horizontal e vertical) */
+    overflow-y: auto; /* Adiciona rolagem vertical caso ultrapasse a altura do container */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Cria automaticamente colunas de no mínimo 180px e ajusta conforme o espaço disponível */
+}
+
+
+.cardInfoConsulta .calendario .dataDisponivel {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+
+}
+
+
+.calendario .btnData {
+    background-color: #33B291; 
+    color: #ffffff;
+    border: none; /* Sem borda padrão*/
+    border-radius: 6px; /* Bordas arredondadas */
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+}
