@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pacote</title>
+</head>
+<body>
+
+    <h1>Objetos</h1>
+    <p>Como criar um objeto JSON em JavaScript</p>
+    
+    <input id="inputNome" placeholder="Digite o nome:" />
+    <br/>
+    <input id="inputSenha" placeholder="Digite a sennha:" />
+    <br/>
+    <input id="inputEmail" placeholder="Digite o email:" />
+    <br/>
+    <button onclick="salvar()">Criar</button>
+    
+    <script>
+        //Objeto de usuario
+        let usuario = {
+            id: 0,
+            nome: "",
+            senha: "",
+            email: "",
+            criado_em: "",
+            ativo: true // se eu já coloquei ele aqui true, nao precisa colocar na função
+        }
+
+        function salvar(){
+
+            //Popular o objeto de acordo com os dados dos inputs // dados preenchidos pelo user
+            usuario.nome = document.querySelector("#inputNome").value
+            usuario.senha = document.querySelector("#inputSenha").value
+            usuario.email = document.querySelector("#inputEmail").value
+            
+            //adicionar os dados ocultos (dados de controle inserido pelo programador)
+            usuario.id = 1
+            usuario.criado_em = new Date ()
+
+            //mostrar os dados no console.log
+            console.log(usuario)
+            
+
+        }
+
+        
+    </script>
+</body>
+</html>
