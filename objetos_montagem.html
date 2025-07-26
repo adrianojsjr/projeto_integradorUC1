@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Objetos</h1>
+    <p>Como criar um objeto JSON em JavaScript.</p>
+
+    <hr/>
+
+    <h2> <span id="textoNome" >...</span> </h2>
+    <p>Email: <span id="textoEmail">...</span> </p>
+    <p>Senha: ***** <button>Alterar</button></p>
+
+    <script>
+
+        // Objeto de usuário
+        let usuario = {
+            id: 1,
+            nome: "Conrado",
+            senha: "123123",
+            email: "conradosaud@gmail.com",
+            criado_em: "",
+            ativo: true
+        }
+
+        // Montar o objeto no HTML
+        document.querySelector("#textoNome").innerHTML = usuario.nome
+        document.querySelector("#textoEmail").innerHTML = usuario.email
+
+    </script>
+
+</body>
+</html>

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>página inicial</title>
 </head>
+
 <body>
     <!--cabecalho do site com botao entrar----------------------------------------------------------------------------------->
     <a href="#"> <img src="https://placehold.co/100x50" /> </a>
@@ -13,36 +15,60 @@
     <input placeholder="Pesquisar Médico/Especialidade">
     <button>Buscar</button>
 
-<!--Catalogo com card das melhores avaliações---------------------------------------------------------------------------->
+    <!--Catalogo com card das melhores avaliações---------------------------------------------------------------------------->
 
     <h1>Cátalogo de médicos</h1>
+    <h2 id="textonome_medico"></h2>
+    <p id="textoespecialidade"></p>
+    <p id="textoavaliacoes"></p>
+    <img id="textoimagem" src="">
 
 
-    
-   
+
+
     <p>Avaliações:</p>
     <p> Ótimo médico, Bom atendimento, Prestativo e Educado</p>
-    <button >Saiba mais </button>
+    <button onclick="salvar ()">Salvar </button>
 
-    <img src="https://placehold.co/150x200">
    
-    <p>Avaliações:</p>
-    <p>Educado, Atencioso, Fácil Atendimento</p>
-    <button >Saiba mais </button>
-
-    <img src="https://placehold.co/150x200">
-   
-    <p>Avaliações:</p>
-    <p> Pontual, Preocupado com o paciente</p>
-    <button >Saiba mais </button>
-
-    <img src="https://placehold.co/150x200">
 
 
 
+    <script>
+
+        // Objeto Médico
+        let medico = {
+            id: 1,
+            nome_medico: "Cris Brown da Silva",
+            avaliacoes: 0,
+            imagem: "https://placehold.co/150x200",
+            especialidade: "fisioterapeuta"
+
+        }
+
+        // Montar o objeto no HTML
+        document.querySelector("#textonome_medico").innerHTML = medico.nome_medico
+        document.querySelector("#textoavaliacoes").innerHTML = medico.avaliacoes
+        document.querySelector("#textoimagem").src = medico.imagem 
+        document.querySelector("#textoespecialidade").innerHTML = medico.especialidade
+
+        function salvar() {
+            medico.id = 1
+
+
+            //mostrar os dados no console.log
+            console.log(medico)
+        }
+
+
+    </script>
 
 
 
-    
+
+
+
+
 </body>
+
 </html>
