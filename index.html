@@ -37,27 +37,27 @@
     <script>
 
         // Objeto Médico
-        let usuario = {
+        let medico = {
             id: 1,
             nome_medico: "Cris Brown da Silva",
             avaliacoes: 0,
-            imagem: "",
+            imagem: "https://placehold.co/150x200",
             especialidade: "fisioterapeuta"
 
         }
 
         // Montar o objeto no HTML
-        document.querySelector("#textonome_medico").innerHTML = usuario.nome_medico
-        document.querySelector("#textoavaliacoes").innerHTML = usuario.avaliacoes
-        document.querySelector("#textoimagem").src = "https://placehold.co/150x200"
-        document.querySelector("#textoespecialidade").innerHTML = usuario.especialidade
+        document.querySelector("#textonome_medico").innerHTML = medico.nome_medico
+        document.querySelector("#textoavaliacoes").innerHTML = medico.avaliacoes
+        document.querySelector("#textoimagem").src = medico.imagem 
+        document.querySelector("#textoespecialidade").innerHTML = medico.especialidade
 
         function salvar() {
-            usuario.id = 1
+            medico.id = 1
 
 
             //mostrar os dados no console.log
-            console.log(usuario)
+            console.log(medico)
         }
 
 
