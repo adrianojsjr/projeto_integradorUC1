@@ -21,8 +21,18 @@ Verde: #33B291 (secundário, suave)
     display: flex;
     flex-direction: column;
     justify-content: center;
-
+    box-shadow: 0 0 5px rgba(70, 69, 69, 0.089);
 }
+
+.cardInfoConsulta .infoConsulta h3{
+    margin-left: 10px;
+}
+
+.cardInfoConsulta .infoConsulta p{
+    margin-left: 10px;
+   
+}
+
 
 .cardInfoConsulta .calendario {
     display: flex;

@@ -26,7 +26,7 @@
             <div class="busca">
                 <input type="text" placeholder="Especialidade ou médico">
                 <a class="btn">Filtros</a>
-                <a class="btn">Buscar</a>
+                <a class="btn" onclick="buscar()">Buscar</a>
             </div>
 
             <div></div>
@@ -36,17 +36,16 @@
 
     <!--Card onde serão listados as informações sobre a consulta e o calendário-->
 
-    <div class="cardInfoConsulta">
+    <div id="cardInfoConsulta" class="cardInfoConsulta">
 
         <!--Informações sobre a consulta: nome do médico e foto (caso tenha), avaliações, especialidade e valor-->
 
         <div class="infoConsulta">
-            <img src="https://placeholder.pics/svg/300x150" alt="">
-            <h3>Dra. Juliana Ferraz</h3>
-            <p>Endocrinologista</p>
-            <p>5.0 <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i
-                    class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i></p>
-            <p>R$ 130</p>
+            <img id="imgMedico" src="" alt="">
+            <h3 id="nomeMedico"></h3>
+            <p><span id="especialidadeMedico"></span> <br> <br> Avaliação <span id="avaliacao"></span>
+                <br><br><span id="valorConsulta"></span>
+            </p>
         </div>
 
         <!--Calendário para agendamento-->
@@ -58,70 +57,20 @@
             <div class="disponibilidade">
 
                 <div class="dataDisponivel">
-                    <a class="btnData" href="">12/08/2025</a>
-                    <a class="btnData" href="">12:00</a>
+                    <a class="btnData" href=""><span id="dataDisponivel"></span> às <span id="horaDisponivel"></span></a>
+                
                 </div>
 
+             
+
+                
 
 
 
-                 <div class="dataDisponivel">
-                    <a class="btnData" href="">12/08/2025</a>
-                    <a class="btnData" href="">12:00</a>
-                </div>
+              
+            
 
 
-
-                 <div class="dataDisponivel">
-                    <a class="btnData" href="">12/08/2025</a>
-                    <a class="btnData" href="">12:00</a>
-                </div>
-
-
-
-                 <div class="dataDisponivel">
-                    <a class="btnData" href="">12/08/2025</a>
-                    <a class="btnData" href="">12:00</a>
-                </div>
-
-                 <div class="dataDisponivel">
-                    <a class="btnData" href="">12/08/2025</a>
-                    <a class="btnData" href="">12:00</a>
-                </div>
-
-
-
-
-                 <div class="dataDisponivel">
-                    <a class="btnData" href="">12/08/2025</a>
-                    <a class="btnData" href="">12:00</a>
-                </div>
-
-
-
-                 <div class="dataDisponivel">
-                    <a class="btnData" href="">12/08/2025</a>
-                    <a class="btnData" href="">12:00</a>
-                </div>
-
-
-
-                 <div class="dataDisponivel">
-                    <a class="btnData" href="">12/08/2025</a>
-                    <a class="btnData" href="">12:00</a>
-                </div>
-
-                 <div class="dataDisponivel">
-                    <a class="btnData" href="">12/08/2025</a>
-                    <a class="btnData" href="">12:00</a>
-                </div>
-
-
-
-                 <div class="dataDisponivel">
-                    <a class="btnData" href="">12/08/2025</a>
-                    <a class="btnData" href="">12:00</a>
-                </div>
             
 
             </div>
@@ -134,9 +83,51 @@
 
 
     <footer>
-        <h2>ConectMed</h2>
-        <p>Sua consulta na palma da mão</p>
+
+        <div class="inicio">
+
+            <div class="menu" class="rodape">
+                <img src="./logo_teste.png" alt="">
+                <p>Sua consulta na palma da mão</p>
+            </div>
+
     </footer>
+
+    <script>
+
+        esconderTudo()
+
+        let usuarioMedico = {
+            id: 1,
+            nome: "Dra. Juliana Ferraz",
+            imagem: "https://placeholder.pics/svg/300x150",
+            especialidade: "Endocrinologista",
+            valorConsulta: "R$ 130",
+            avaliacao: 5,
+            dataDisponivel: "12/10/2025",
+            horaDisponivel: "10:00"
+        }
+
+        function esconderTudo() {
+            document.querySelector("#cardInfoConsulta").style.display = "none"
+
+        }
+
+
+        function buscar() {
+            document.querySelector("#cardInfoConsulta").style.display = "flex"
+            document.querySelector("#imgMedico").src = usuarioMedico.imagem
+            document.querySelector("#nomeMedico").innerHTML = usuarioMedico.nome
+            document.querySelector("#especialidadeMedico").innerHTML = usuarioMedico.especialidade
+            document.querySelector("#avaliacao").innerHTML = usuarioMedico.avaliacao
+            document.querySelector("#valorConsulta").innerHTML = usuarioMedico.valorConsulta
+            document.querySelector("#dataDisponivel").innerHTML = usuarioMedico.dataDisponivel
+            document.querySelector("#horaDisponivel").innerHTML = usuarioMedico.horaDisponivel
+        }
+
+        
+
+    </script>
 
 </body>
 
