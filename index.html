@@ -5,61 +5,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>página inicial</title>
+
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="styleGeral.css">
+    <link rel="stylesheet" href="resultadoBusca.css">
 </head>
 
 <body>
-    <!--cabecalho do site com botao entrar----------------------------------------------------------------------------------->
-    <a href="#"> <img src="https://placehold.co/100x50" /> </a>
-    <!--Menu de pesquisa por medico e especialidade-------------------------------------------------------------------------->
-    <a href="">Entrar</a>
-    <input placeholder="Pesquisar Médico/Especialidade">
-    <button>Buscar</button>
+
+    <div class="inicioEsquerda">
+        <div class="menuPesquisa"></div>
+
+        <!--cabecalho do site com botao entrar----------------------------------------------------------------------------------->
+        <a href="#"> <img src="./logo_teste.png" /> </a>
+        <!--Menu de pesquisa por medico e especialidade-------------------------------------------------------------------------->
+        <a href="">Entrar</a>
+        <input placeholder="Pesquisar Médico/Especialidade">
+        <button>Buscar</button>
+
+    </div>
 
     <!--Catalogo com card das melhores avaliações---------------------------------------------------------------------------->
 
     <h1>Cátalogo de médicos</h1>
-    <h2 id="textonome_medico"></h2>
-    <p id="textoespecialidade"></p>
-    <p id="textoavaliacoes"></p>
-    <img id="textoimagem" src="">
 
+    <!--Card onde serão listados as informações sobre a consulta-->
 
+    <div id="cardInfoConsulta" class="cardInfoConsulta">
 
+        <!--Informações sobre a consulta: nome do médico e foto (caso tenha), avaliações, especialidade e valor-->
 
-    <p>Avaliações:</p>
-    <p> Ótimo médico, Bom atendimento, Prestativo e Educado</p>
-    <button onclick="salvar ()">Salvar </button>
+        <div class="infoConsulta">
+            <img id="imgMedico" src="" alt="">
+            <h3 id="nomeMedico"></h3>
+            <p><span id="especialidadeMedico"></span> <br> Avaliação <span id="avaliacao"></span>
+                <br /><br><span id="valorConsulta"></span>
+            </p>
+        </div>
 
-   
+    </div>
+
 
 
 
     <script>
 
-        // Objeto Médico
-        let medico = {
+        let usuarioMedico = {
             id: 1,
-            nome_medico: "Cris Brown da Silva",
-            avaliacoes: 0,
-            imagem: "https://placehold.co/150x200",
-            especialidade: "fisioterapeuta"
-
+            nome: "Dra. Juliana Ferraz",
+            imagem: "https://placeholder.pics/svg/300x150",
+            especialidade: "Endocrinologista",
+            valorConsulta: "R$ 130",
+            avaliacao: 5,
+            dataDisponivel: "12/10/2025",
+            horaDisponivel: "10:00"
         }
 
-        // Montar o objeto no HTML
-        document.querySelector("#textonome_medico").innerHTML = medico.nome_medico
-        document.querySelector("#textoavaliacoes").innerHTML = medico.avaliacoes
-        document.querySelector("#textoimagem").src = medico.imagem 
-        document.querySelector("#textoespecialidade").innerHTML = medico.especialidade
+        buscar()
+        function buscar() {
 
-        function salvar() {
-            medico.id = 1
-
-
-            //mostrar os dados no console.log
-            console.log(medico)
+            document.querySelector("#imgMedico").src = usuarioMedico.imagem
+            document.querySelector("#nomeMedico").innerHTML = usuarioMedico.nome
+            document.querySelector("#especialidadeMedico").innerHTML = usuarioMedico.especialidade
+            document.querySelector("#avaliacao").innerHTML = usuarioMedico.avaliacao
+            document.querySelector("#valorConsulta").innerHTML = usuarioMedico.valorConsulta
+            document.querySelector("#dataDisponivel").innerHTML = usuarioMedico.dataDisponivel
+            document.querySelector("#horaDisponivel").innerHTML = usuarioMedico.horaDisponivel
         }
 
+
+        //mostrar os dados no console.log
+     
 
     </script>
 
