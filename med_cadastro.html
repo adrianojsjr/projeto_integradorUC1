@@ -1,39 +1,115 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro</title>
+  <link rel="stylesheet" href="./cadastro.css">
 </head>
+
 <body>
+
+  <div class="inicio">
+
+    <div class="menu">
+      <img src="./logo_teste.png" alt="">
+      <p>Sua consulta na palma da mão</p>
+      <a href=""> Voltar ao Inicio</a>
+    </div>
+  </div>
 
   <div class="cadastro-container">
     <h2>Cadastro</h2>
 
-    <form>
-      <label >Nome Completo</label>
-      <input type="text"   placeholder="Digite seu nome" required>
+    <form onsubmit="cadastrar(event)">
 
-      <label >E-mail</label>
-      <input type="email"   placeholder="Digite seu e-mail" required>
 
-      <label >Digite seu cpf</label>
-      <input type="text"   placeholder="CPF" required>
+      <label>Nome Completo: </label>
+      <input id="inputNome" type="text" placeholder="Digite seu nome" required>
+      <br>
 
-      <label >Digite seu Telefone</label>
-      <input type="text"   placeholder="Telefone" required>
+      <label>E-mail: </label>
+      <input id="inputEmail" type="email" placeholder="Digite seu e-mail" required>
+      <br>
 
-      <label >Senha</label>
-      <input type="password"   placeholder="Digite sua senha" required>
+      <label>Digite seu cpf: </label>
+      <input id="inputCpf" type="text" placeholder="CPF" required>
+      <br>
 
-      <label >Digite a Senha Novamente</label>
-      <input type="password"   placeholder="Digite sua senha novamente" required>
+      <label>Digite seu Telefone: </label>
+      <input id="inputTelefone" type="text" placeholder="Telefone" required>
+      <br>
 
-      
+      <label>Senha: </label>
+      <input id="inputSenha" type="password" placeholder="Digite sua senha" required>
+      <br>
 
-      <a href="#"><button>Cadastrar</button></a> <!--Ao cadastrar enviar para a tela login-->
+      <label>Digite a Senha Novamente: </label>
+      <input id="inputSenha_novamente" type="password" placeholder="Digite sua senha novamente" required>
+      <br>
+
+
+
+
+      <button>Cadastrar</button> <!--Ao cadastrar enviar para a tela login-->
     </form>
   </div>
 
+
+
+   <footer >
+ 
+        <div class="inicio">
+ 
+            <div class="menu" class="rodape">
+                <img src="./logo_teste.png" alt="">
+                <h2></h2>
+            </div>
+ 
+    </footer>
+
+
+   
+
+  <script>
+    let cadastro = {
+      id: "1",
+      nome: " ",
+      email: " ",
+      cpf: " ",
+      telefone: " ",
+      senha: " ",
+
+    }
+
+
+    function cadastrar(e) {
+      e.preventDefault()
+
+      cadastro.nome = document.querySelector("#inputNome").value
+      cadastro.email = document.querySelector("#inputEmail").value
+      cadastro.cpf = document.querySelector("#inputCpf").value
+      cadastro.telefone = document.querySelector("#inputTelefone").value
+      cadastro.senha = document.querySelector("#inputSenha").value
+
+
+
+      console.log(cadastro)
+
+    }
+
+
+
+
+
+
+
+  </script>
+
+
+
+
 </body>
+
 </html>
