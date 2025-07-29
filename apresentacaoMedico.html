@@ -5,24 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apresentação do Médico</title>
+    <link rel="stylesheet" href="./styleGeral.css">
+    <link rel="stylesheet" href="./apresentacaoMedico.css">
 </head>
 
 <body>
     <!--Menu inicial-->
-    <div class="menuInicio">
+    <div class="inicio">
+
         <div class="menu">
-            <a href=""> Sou paciente</a>
-            <a href=""> Sou médico</a>
-        </div>
-        <div>
-            <h2>ConectMed</h2>
+            <img src="./logo_teste.png" alt="">
             <p>Sua consulta na palma da mão</p>
-            <input type="text" placeholder="Digite a especialidade ou nome do médico">
-            <button>Filtros</button>
-            <button>Buscar</button>
+            <a href=""> Cadastre-se</a>
         </div>
 
+
     </div>
+
 
     <!--Página com as infromações gerais sobre a consulta: nome do médico, especialidade, experiência
     avaliações e também o calendário para agendamento-->
@@ -31,104 +30,140 @@
 
         <!--Apresentação do médico: nome, especialidade, experiencia-->
         <div class="apresentacaoMedico">
-            <h3>Dra. Juliana Ferraz</h3>
-            <img src="https://placeholder.pics/svg/100x100" alt="">
-            <p>Especializado (a) no diagnóstico e tratamento de doenças
-                relacionadas ao sistema endócrino, que inclui glândulas
-                produtoras de hormônios como a tireoide, as adrenais e o
-                pâncreas. Eles cuidam de condições como diabetes,
-                problemas de tireoide, obesidade, distúrbios do crescimento
-                e puberdade, e também podem tratar doenças ósseas
-                metabólicas. </p>
+            <div class="detalhesMedico">
+                <div class="descricaoEspecialidade">
+                    <h2 id="nomeMedico"></h2>
+                    <p><span id="descricaoEspecialidade"></span>.</p>
+                </div>
 
-            <div class="experiencia">
-                <h4>Experiência</h4>
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tempora animi neque similique nostrum,
-                    sapiente
-                    maiores dolorum hic odit assumenda ad temporibus molestias magnam dignissimos nemo fugiat quos
-                    distinctio. Veniam, unde </p>
+                <di class="imgMedico">
+                    <img src="https://placeholder.pics/svg/300x150" alt="">
             </div>
         </div>
 
 
 
-        <!--Calendário para agendamento-->
-        <div class="calendario">
-            <h3>Disponibilidade</h3>
-            <p>Selecione o dia e horário de sua preferência para o atendimento</p>
+    </div>
 
+    <div class="experiencia">
+        <h3>Experiência</h3>
+        <p><span id="experiencia"></span>.</p>
+    </div>
 
-            <div class="dataDisponivel">
-                <p>12/08/2025</p>
-                <p>12:00</p>
-            </div>
-
-
-
-            <div class="dataDisponivel">
-                <p>12/08/2025</p>
-                <p>12:00</p>
-            </div>
-
-
-            <div class="dataDisponivel">
-                <p>12/08/2025</p>
-                <p>12:00</p>
-            </div>
-
-
-            <div class="dataDisponivel">
-                <p>12/08/2025</p>
-                <p>12:00</p>
-            </div>
-
-        </div>
 
 
         <!-- card onde serão exibidas, em formato de card, as avaliações mais recentes-->
         <div class="avaliacoes">
+
             <h4>Avaliações</h4>
-            <div class="avalicao">
-                <p>"Um elegio incrível"</p>
-                <img src="https://placeholder.pics/svg/30x30" alt="">
-                <p>Nome do paciente</p>
-                <p>Descrição da avaliação</p>
+
+            <div class="todasAvaliacoes">
+
+                <div class="avaliacao">
+                    <p>"Um elegio incrível"</p>
+                    <span class="detalhesPaciente">
+                        <img src="https://placeholder.pics/svg/30x30" alt="">
+                        <p>Nome do paciente</p>
+                    </span>
+
+                </div>
+
+                <div class="avaliacao">
+                    <p>"Um elegio incrível"</p>
+                    <span class="detalhesPaciente">
+                        <img src="https://placeholder.pics/svg/30x30" alt="">
+                        <p>Nome do paciente</p>
+                    </span>
+
+
+                </div>
+
+                <div class="avaliacao">
+                    <p>"Um elegio incrível"</p>
+                    <span class="detalhesPaciente">
+                        <img src="https://placeholder.pics/svg/30x30" alt="">
+                        <p>Nome do paciente</p>
+                    </span>
+
+                </div>
+
+                <div class="avaliacao">
+                    <p>"Um elegio incrível"</p>
+                    <span class="detalhesPaciente">
+                        <img src="https://placeholder.pics/svg/30x30" alt="">
+                        <p>Nome do paciente</p>
+                    </span>
+
+                </div>
 
             </div>
 
-            <div class="avalicao">
-               <p>"Um elegio incrível"</p>
-                <img src="https://placeholder.pics/svg/30x30" alt="">
-                <p>Nome do paciente</p>
-                <p>Descrição da avaliação</p>
-
-            </div>
-
-            <div class="avalicao">
-             <p>"Um elegio incrível"</p>
-                <img src="https://placeholder.pics/svg/30x30" alt="">
-                <p>Nome do paciente</p>
-                <p>Descrição da avaliação</p>
-
-            </div>
-
-            <div class="avalicao">
-                <p>"Um elegio incrível"</p>
-                <img src="https://placeholder.pics/svg/30x30" alt="">
-                <p>Nome do paciente</p>
-                <p>Descrição da avaliação</p>
-
-            </div>
 
 
         </div>
+
+        <!--Calendário para agendamento-->
+    <div id="cardInfoConsulta" class="cardInfoConsulta">
+
+        <!--Calendário para agendamento-->
+
+        <div class="calendario">
+            <h3>Disponibilidade</h3>
+            <p>Selecione o dia e horário de sua preferência para o atendimento</p>
+
+            <div class="disponibilidade">
+
+                <div class="dataDisponivel">
+                    <a class="btnData" href=""><span id="dataDisponivel"></span> às <span
+                            id="horaDisponivel"></span></a>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 
 
-<footer>
-    <h2>ConectMed</h2>
-    <p>Sua consulta na palma da mão</p>
-</footer>
+   <footer>
+
+        <div class="inicio">
+
+            <div class="menu" class="rodape">
+                <img src="./logo_teste.png" alt="">
+                <p>Sua consulta na palma da mão</p>
+            </div>
+
+    </footer>
+
+    <script>
+
+
+
+        let usuarioMedico = {
+            id: 1,
+            nome: "Dra. Juliana Ferraz",
+            imagem: "https://placeholder.pics/svg/300x150",
+            especialidade: "Endocrinologista",
+            descricaoEspecialidade: "Especializado (a) no diagnóstico e tratamento de doenças relacionadas ao sistema endócrino, que inclui glândulas produtoras de hormônios como a tireoide, as adrenais e o pâncreas. Eles cuidam de condições como diabetes, problemas de tireoide, obesidade, distúrbios do crescimento e puberdade, e também podem tratar doenças ósseas metabólicas",
+            experiencia: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tempora animi neque similique nostrum, sapiente maiores dolorum hic odit assumenda ad temporibus molestias magnam dignissimos nemo fugiat quos distinctio. Veniam, unde",
+            valorConsulta: "R$ 130",
+            avaliacao: 5,
+            dataDisponivel: "12/10/2025",
+            horaDisponivel: "10:00"
+
+        }
+        informacoesConsulta()
+
+        function informacoesConsulta() {
+            document.querySelector("#nomeMedico").innerHTML = usuarioMedico.nome
+            document.querySelector("#descricaoEspecialidade").innerHTML = usuarioMedico.descricaoEspecialidade
+            document.querySelector("#experiencia").innerHTML = usuarioMedico.experiencia
+            document.querySelector("#dataDisponivel").innerHTML = usuarioMedico.dataDisponivel
+            document.querySelector("#horaDisponivel").innerHTML = usuarioMedico.horaDisponivel
+        }
+
+
+    </script>
 
 </body>
 
