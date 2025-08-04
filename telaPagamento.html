@@ -5,64 +5,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pagamento</title>
+    <link rel="stylesheet" href="./telaPagamento.css">
+    <link rel="stylesheet" href="styleGeral.css">
+
 </head>
 
 <body>
-    <!--Informações sobre a consulta: nome do médico e foto (caso tenha),  especialidade e valor-->
+    <!--Menu inicial-->
+    <div class="inicio">
 
-    <div class="infoConsulta">
-        <div>
-            <img src="https://placeholder.pics/svg/300x150" alt="">
-            <h3>Dra. Juliana Ferraz</h3>
-            <p>Endocrinologista</p>
-
-            <p>R$ 130</p>
-            <p>12/08/2025</p>
-            <p>15:30</p>
-            <button>Alterar Data</button>
+        <div class="menu">
+            <img src="./logo_teste.png" alt="">
+            <p>Sua consulta na palma da mão</p>
+            <a>Cadastre-se</a>
         </div>
+    </div>
 
-        <div>
-            <h3>Forma de Pagamento</h3>
-            <button>Cartão</button>
-            <button>Pix</button>
-        </div>
+    <div class="alinhamentoPaginaPagamento">
+        <!--Informações sobre a consulta: nome do médico e foto (caso tenha),  especialidade e valor-->
 
-        <div class="cartao">
-            <h2>Pagamento com Cartão</h2>
-
-            <form action=""><!-- para o required funcionar precisa estar dentro do form-->
-                <!-- Dados do comprador -->
-                <label for="nome">Nome completo</label>
-                <input type="text" id="nome" placeholder="Nome do titular" required />
-
-                <label for="email">E-mail</label>
-                <input type="email" id="email" placeholder="exemplo@email.com" required />
-
-                <label for="cpf">CPF</label>
-                <input type="text" id="cpf" placeholder="000.000.000-00" required />
-
-                <!-- Dados do cartão -->
-                <label for="numero">Número do Cartão</label>
-                <input type="text" id="numero" placeholder="XXXX XXXX XXXX XXXX" required />
-
-                <div class="row">
-                    <div>
-                        <label for="validade">Validade</label>
-                        <input type="text" id="validade" placeholder="MM/AA" required />
-                    </div>
-                    <div>
-                        <label for="cvv">CVV</label>
-                        <input type="text" id="cvv" placeholder="123" required />
-                    </div>
-                </div>
-            </form>
-            <a href="#">
-                <button>Finalizar Pagamento</button>
+        <div class="infoConsulta">
+            <p class="tituloResumoConsulta">Resumo da Consulta</p>
+            <img id="imgMedico" src="" alt="">
+            <a href="./apresentacaoMedico.html">
+                <p id="nomeMedico"></p>
             </a>
+            <p><span id="especialidadeMedico"></span><br> <br> Avaliação: <span id="avaliacao"></span>
+                <br /><br><span id="valorConsulta"></span> <br /> <br /> Local: Teleconsulta Online
+            </p>
+            <div class="btnAlterarDataEirPagamento">
+                <button>Alterar data</button> 
+                <button>Ir para pagamento</button>
+            </div>
         </div>
+
+        <div class="pagamento">
+            <div class="formaPagamento">
+                <h3>Forma de Pagamento</h3>
+                <button>Cartão</button>
+                <button>Pix</button>
+            </div>
+            <div class="cartao">
+
+                <form action=""><!-- para o required funcionar precisa estar dentro do form-->
+                    <!-- Dados do comprador -->
+                    <div class="dadosComprador">
+                        <label for="nome">Nome completo</label>
+                        <input type="text" id="nome" placeholder="Nome do titular" required />
+
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" placeholder="exemplo@email.com" required />
+
+                        <label for="cpf">CPF</label>
+                        <input type="text" id="cpf" placeholder="000.000.000-00" required />
+
+                        <!-- Dados do cartão -->
+                        <label for="numero">Número do Cartão</label>
+                        <input type="text" id="numero" placeholder="XXXX XXXX XXXX XXXX" required />
+
+                        <div class="validadeCVV">
+                            <div class="cartaoValidade">
+                                <label for="validade">Validade</label>
+                                <input type="text" id="validade" placeholder="MM/AA" required />
+                            </div>
+
+                            <div class="cartaoCVV">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" placeholder="123" required />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <a href="./teladepagamentocomsucesso.html">Finalizar Pagamento</button>
+                    </a>
+
+            </div>
+
+            </form>
+
+
+        </div>
+    </div>
+    </div>
 
     </div>
+
+    </div>
+
+    <script src="./telaPagamento.js"></script>
 </body>
 
 </html>
