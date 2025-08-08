@@ -16,154 +16,162 @@
         <div class="menu">
             <img src="./logo_teste.png" alt="">
             <p>Sua consulta na palma da mão</p>
-            <a href=""> Cadastre-se</a>
+            <a onclick="esconderApresentacaoMedico()">Cadastre-se</a>
         </div>
-
-
     </div>
 
+    <div id="esconderApresentacao">
 
-    <!--Página com as infromações gerais sobre a consulta: nome do médico, especialidade, experiência
+        <div class="alinhamentoPagina ">
+
+            <!--Página com as infromações gerais sobre a consulta: nome do médico, especialidade, experiência
     avaliações e também o calendário para agendamento-->
-    <div class="dadosGeraisConsulta">
+            <div class="dadosGeraisConsulta">
 
 
-        <!--Apresentação do médico: nome, especialidade, experiencia-->
-        <div class="apresentacaoMedico">
-            <div class="detalhesMedico">
-                <div class="descricaoEspecialidade">
-                    <h2 id="nomeMedico"></h2>
-                    <p><span id="descricaoEspecialidade"></span>.</p>
+                <!--Apresentação do médico: nome, especialidade, experiencia-->
+                <div class="apresentacaoMedico">
+                    <div class="detalhesMedico">
+                        <div class="descricaoEspecialidade">
+                            <h2 id="nomeMedico"></h2>
+                            <p><span id="descricaoEspecialidade"></span></p>
+                        </div>
+
+                        <di class="imgMedico">
+                            <img src="https://placeholder.pics/svg/300x150" alt="">
+                    </div>
                 </div>
 
-                <di class="imgMedico">
-                    <img src="https://placeholder.pics/svg/300x150" alt="">
+
+
             </div>
+
+            <div class="experiencia">
+
+                <span>
+
+                    <h3>Experiência</h3>
+                    <p><span id="experiencia"></span>.</p>
+
+                </span>
+            </div>
+
+            <!--Calendário para agendamento-->
+            <div id="cardInfoConsulta" class="cardInfoConsulta">
+
+                <!--Calendário para agendamento-->
+
+                <div class="calendario">
+                    <span>
+                        <h3>Disponibilidade</h3>
+                        <p>Selecione o dia e horário de sua preferência para o atendimento</p>
+
+
+                    </span>
+
+                    <div class="disponibilidade">
+
+                        <div class="dataDisponivel">
+                            <a class="btnData" href=""><span id="dataDisponivel"></span> às <span
+                                    id="horaDisponivel"></span></a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- card onde serão exibidas, em formato de card, as avaliações mais recentes-->
+            <div class="avaliacoes">
+
+                <h3>Avaliações</h3>
+
+                <div class="todasAvaliacoes">
+
+                    <div class="avaliacao">
+                        <p><span id="avaliacaoDescricao"></span><br><br><br><span id="avaliacaoEstrela"></span></p>
+
+                        <p id="pacienteNome"></p>
+                        <p id="dataConsulta"></p>
+                    </div>
+
+                    <a href="#">Ver mais</a>
+
+                </div>
+
+
+
+            </div>
+
         </div>
+    </div>
+
+    <!--Tela de cadastro do paciente-->
+    <div class="cadastro-container" id="cadastro-container">
 
 
+        <form onsubmit="cadastrar(event)">
+            <h2>Cadastro</h2>
+
+            <label>Nome Completo: </label>
+            <input id="inputNome" type="text" placeholder="Digite seu nome" required>
+            <br>
+
+            <label>E-mail: </label>
+            <input id="inputEmail" type="email" placeholder="Digite seu e-mail" required>
+            <br>
+
+            <label>Digite seu cpf: </label>
+            <input id="inputCpf" type="text" placeholder="CPF" required>
+            <br>
+
+            <label>Digite seu Telefone: </label>
+            <input id="inputTelefone" type="text" placeholder="Telefone" required>
+            <br>
+
+            <label>Senha: </label>
+            <input id="inputSenha" type="password" placeholder="Digite sua senha" required>
+            <br>
+
+            <label>Digite a Senha Novamente: </label>
+            <input id="inputSenha_novamente" type="password" placeholder="Digite sua senha novamente" required>
+            <br>
+
+            <button>Cadastrar</button> <!--Ao cadastrar enviar para a tela login-->
+        </form>
+    </div>
+
+    <!--Tela login de usuário-->
+    <div class="login-container" id="login-container">
+
+        <form>
+            <h2>Login</h2>
+            <label for="usuario">E-mail</label>
+            <input type="text" placeholder="Digite seu usuário" required>
+
+            <label for="senha">Senha</label>
+            <input type="password" placeholder="Digite sua senha" required>
+
+            <div class="button-group">
+                <a href="#"><button>Entrar</button></a>
+                <a href="#"><button>Esqueci a senha</button></a>
+
+            </div>
+        </form>
 
     </div>
 
-    <div class="experiencia">
-        <h3>Experiência</h3>
-        <p><span id="experiencia"></span>.</p>
-    </div>
+    <footer>
 
-
-
-        <!-- card onde serão exibidas, em formato de card, as avaliações mais recentes-->
-        <div class="avaliacoes">
-
-            <h4>Avaliações</h4>
-
-            <div class="todasAvaliacoes">
-
-                <div class="avaliacao">
-                    <p>"Um elegio incrível"</p>
-                    <span class="detalhesPaciente">
-                        <img src="https://placeholder.pics/svg/30x30" alt="">
-                        <p>Nome do paciente</p>
-                    </span>
-
-                </div>
-
-                <div class="avaliacao">
-                    <p>"Um elegio incrível"</p>
-                    <span class="detalhesPaciente">
-                        <img src="https://placeholder.pics/svg/30x30" alt="">
-                        <p>Nome do paciente</p>
-                    </span>
-
-
-                </div>
-
-                <div class="avaliacao">
-                    <p>"Um elegio incrível"</p>
-                    <span class="detalhesPaciente">
-                        <img src="https://placeholder.pics/svg/30x30" alt="">
-                        <p>Nome do paciente</p>
-                    </span>
-
-                </div>
-
-                <div class="avaliacao">
-                    <p>"Um elegio incrível"</p>
-                    <span class="detalhesPaciente">
-                        <img src="https://placeholder.pics/svg/30x30" alt="">
-                        <p>Nome do paciente</p>
-                    </span>
-
-                </div>
-
-            </div>
-
-
-
+        <div class="rodape">
+            <img src="./logo_teste.png" alt="">
+            <p>Sua consulta na palma da mão</p>
         </div>
-
-        <!--Calendário para agendamento-->
-    <div id="cardInfoConsulta" class="cardInfoConsulta">
-
-        <!--Calendário para agendamento-->
-
-        <div class="calendario">
-            <h3>Disponibilidade</h3>
-            <p>Selecione o dia e horário de sua preferência para o atendimento</p>
-
-            <div class="disponibilidade">
-
-                <div class="dataDisponivel">
-                    <a class="btnData" href=""><span id="dataDisponivel"></span> às <span
-                            id="horaDisponivel"></span></a>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-
-   <footer>
-
-        <div class="inicio">
-
-            <div class="menu" class="rodape">
-                <img src="./logo_teste.png" alt="">
-                <p>Sua consulta na palma da mão</p>
-            </div>
 
     </footer>
 
-    <script>
-
-
-
-        let usuarioMedico = {
-            id: 1,
-            nome: "Dra. Juliana Ferraz",
-            imagem: "https://placeholder.pics/svg/300x150",
-            especialidade: "Endocrinologista",
-            descricaoEspecialidade: "Especializado (a) no diagnóstico e tratamento de doenças relacionadas ao sistema endócrino, que inclui glândulas produtoras de hormônios como a tireoide, as adrenais e o pâncreas. Eles cuidam de condições como diabetes, problemas de tireoide, obesidade, distúrbios do crescimento e puberdade, e também podem tratar doenças ósseas metabólicas",
-            experiencia: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tempora animi neque similique nostrum, sapiente maiores dolorum hic odit assumenda ad temporibus molestias magnam dignissimos nemo fugiat quos distinctio. Veniam, unde",
-            valorConsulta: "R$ 130",
-            avaliacao: 5,
-            dataDisponivel: "12/10/2025",
-            horaDisponivel: "10:00"
-
-        }
-        informacoesConsulta()
-
-        function informacoesConsulta() {
-            document.querySelector("#nomeMedico").innerHTML = usuarioMedico.nome
-            document.querySelector("#descricaoEspecialidade").innerHTML = usuarioMedico.descricaoEspecialidade
-            document.querySelector("#experiencia").innerHTML = usuarioMedico.experiencia
-            document.querySelector("#dataDisponivel").innerHTML = usuarioMedico.dataDisponivel
-            document.querySelector("#horaDisponivel").innerHTML = usuarioMedico.horaDisponivel
-        }
-
-
-    </script>
+    <script src="./apresentacaoMedico.js"></script>
 
 </body>
 

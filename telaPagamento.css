@@ -1,0 +1,120 @@
+/* Paleta de cores:
+Verde-água: #11b5ba (vibrante, ideal para destaque)
+Cinza azulado: #40566e (ótimo para texto, bordas e contornos)
+Azul: #1e5acd (fundo ou botões primários)
+Verde: #33B291 (secundário, suave)
+*/
+
+.alinhamentoPaginaPagamento {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.infoConsulta {
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 5px rgba(70, 69, 69, 0.089);
+    line-height: 15px;
+    border-radius: 12px;
+    padding: 40px;
+}
+
+.infoConsulta .tituloResumoConsulta{
+    text-align: center;
+    font-size: 25px;
+    margin-bottom: 50px;
+}
+
+.infoConsulta a {
+    text-decoration: none;
+    color: black;
+}
+
+.infoConsulta a p{
+    font-size: 20px;
+}
+
+
+.infoConsulta .btnAlterarDataEirPagamento {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+}
+
+.infoConsulta .btnAlterarDataEirPagamento button {
+    padding: 12px;
+    background-color: #33B291;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pagamento {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 5px rgba(70, 69, 69, 0.089);
+}
+
+
+.pagamento .cartao .dadosComprador {
+    display: flex;
+    flex-direction: column;
+    width: 390px;
+}
+
+.pagamento .cartao label {
+    color: #333;
+    font-weight: bold;
+}
+
+.pagamento .cartao input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.pagamento .cartao .validadeCVV {
+    display: flex;
+    flex-direction: row;
+}
+
+.pagamento .cartao .cartaoValidade {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+.pagamento .cartao .cartaoCVV {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+
+.pagamento .cartao a {
+    padding: 12px;
+    background-color: #33B291;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+
+}
+
+.pagamento .cartao a:hover {
+    background-color: #46b899;
+}

@@ -5,21 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultado de busca</title>
-    <script src="./font-awesome.js"></script>
     <link rel="stylesheet" href="./resultadoBusca.css">
     <link rel="stylesheet" href="./styleGeral.css">
-
 </head>
 
 <body>
-
+    <!--Menu inicial-->
     <div class="inicio">
 
         <div class="menu">
             <img src="./logo_teste.png" alt="">
             <p>Sua consulta na palma da mão</p>
-            <a href=""> Cadastre-se</a>
+            <a href="">Cadastre-se</a>
         </div>
+
+
 
         <div class="menuBusca">
             <div></div>
@@ -34,6 +34,8 @@
 
     </div>
 
+<div class="alinhamentoPagina">
+
     <!--Card onde serão listados as informações sobre a consulta e o calendário-->
 
     <div id="cardInfoConsulta" class="cardInfoConsulta">
@@ -42,9 +44,9 @@
 
         <div class="infoConsulta">
             <img id="imgMedico" src="" alt="">
-            <h3 id="nomeMedico"></h3>
+            <a href="./apresentacaoMedico.html"><h3 id="nomeMedico"></h3></a>
             <p><span id="especialidadeMedico"></span> <br> Avaliação <span id="avaliacao"></span>
-                <br/><br><span id="valorConsulta"></span>
+                <br /><br><span id="valorConsulta"></span>
             </p>
         </div>
 
@@ -57,8 +59,9 @@
             <div class="disponibilidade">
 
                 <div class="dataDisponivel">
-                    <a class="btnData" href=""><span id="dataDisponivel"></span> às <span id="horaDisponivel"></span></a>
-                
+                    <a class="btnData" href=""><span id="dataDisponivel"></span> às <span
+                            id="horaDisponivel"></span></a>
+
                 </div>
 
             </div>
@@ -68,13 +71,12 @@
     </div>
 
 
-
+</div>
 
     <footer>
 
-        <div class="inicio">
 
-            <div class="menu" class="rodape">
+            <div class="rodape">
                 <img src="./logo_teste.png" alt="">
                 <p>Sua consulta na palma da mão</p>
             </div>
@@ -113,7 +115,7 @@
             document.querySelector("#horaDisponivel").innerHTML = usuarioMedico.horaDisponivel
         }
 
-        
+
 
     </script>
 

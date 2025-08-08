@@ -1,93 +1,202 @@
-body{
-    margin-left: 30px;
-    margin-right: 30px;
-    display: flex;
-    flex-direction: column;
-    
-}
-
 .dadosGeraisConsulta .detalhesMedico {
 
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-
-}
-
-.dadosGeraisConsulta .detalhesMedico .descricaoEspecialidade p{
-    width: 500px;
-}
-
-.avaliacoes .todasAvaliacoes .avaliacao{
-    border-radius: 6px; /* Bordas arredondadas */
-    box-shadow: 0 0 5px rgba(70, 69, 69, 0.089);
-    width: 270px;
-    height: 200px;
-    display: flex;
-    flex-direction: column;
     justify-content: space-around;
-    
-    
-}
-
-.avaliacoes .todasAvaliacoes .avaliacao p{
-  height: 60px;
-}
-
-.avaliacoes .todasAvaliacoes .avaliacao .detalhesPaciente{
-    display: flex;
     align-items: center;
-    justify-content: left;
-}
------------------------------------------------------------
+    height: 200px;
+    /* Altura da área */
 
+}
+
+.dadosGeraisConsulta .detalhesMedico .descricaoEspecialidade p {
+    padding-right: 20px;
+}
 
 .cardInfoConsulta .calendario {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    width: 430px; /*largura da div*/
-    height: 360px; /*altura da div*/
-
-
+    width: 500px;
+    max-height: 500px;
 }
 
 .cardInfoConsulta .calendario .disponibilidade {
-    display: grid; /* Usa CSS Grid para organizar os itens em linhas e colunas */
-    gap: 15px; /* Espaçamento entre os itens (horizontal e vertical) */
-    overflow-y: auto; /* Adiciona rolagem vertical caso ultrapasse a altura do container */
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Cria automaticamente colunas de no mínimo 180px e ajusta conforme o espaço disponível */
-  
+    display: grid;
+    /* Usa CSS Grid para organizar os itens em linhas e colunas */
+    gap: 15px;
+    /* Espaçamento entre os itens (horizontal e vertical) */
+    overflow-y: auto;
+    /* Adiciona rolagem vertical caso ultrapasse a altura do container */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    /* Cria automaticamente colunas de no mínimo 180px e ajusta conforme o espaço disponível */
+
 }
 
 
 .cardInfoConsulta .calendario .dataDisponivel {
     display: flex;
-    gap: 5px;
     align-items: center;
-    width: 250px;
+    width: 220px;
+
 
 }
 
 
 .calendario .btnData {
-    background-color: #33B291; 
+    background-color: #33B291;
     color: #ffffff;
-    border: none; /* Sem borda padrão*/
-    border-radius: 6px; /* Bordas arredondadas */
-    padding: 15px 30px;
+    border: none;
+    /* Sem borda padrão*/
+    border-radius: 6px;
+    /* Bordas arredondadas */
+    padding: 15px 25px;
     font-size: 16px;
     font-weight: 500;
     text-decoration: none;
-    
+
 }
 
-.avaliacoes .todasAvaliacoes{
+.avaliacoes .todasAvaliacoes {
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
-    justify-content: left;
+    justify-content: space-around;
     gap: 20px;
 
+}
+
+
+.avaliacoes .todasAvaliacoes .avaliacao {
+    border-radius: 6px;
+    /* Bordas arredondadas */
+    box-shadow: 0 0 5px rgba(70, 69, 69, 0.089);
+    padding: 10px;
+}
+
+/* Tela de cadastro do paciente */
+
+.cadastro-container {
+    display: flex;
+    justify-content: center;
+}
+
+.cadastro-container h2 {
+    color: #1e5acd;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+
+.cadastro-container form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 500px;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(64, 86, 110, 0.1);
+    border: 1px solid #dce3ec;
 
 }
 
+.cadastro-container form label {
+
+    color: #40566e;
+    font-weight: bold;
+}
+
+.cadastro-container form input {
+    padding: 10px;
+    border: 1px solid #40566e;
+    border-radius: 5px;
+    outline: none;
+}
+
+.cadastro-container form input:focus {
+    border-color: #11b5ba;
+    box-shadow: 0 0 5px #11b5ba88;
+}
+
+
+.cadastro-container form button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    background-color: #1e5acd;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.cadastro-container form button:hover {
+    background-color: #1748a4;
+}
+
+/* Tela de login do paciente */
+
+.login-container {
+    display: flex;
+    justify-content: center;
+}
+
+.login-container h2 {
+    color: #1e5acd;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 500px;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(64, 86, 110, 0.1);
+    border: 1px solid #dce3ec;
+}
+
+.login-container form label {
+    color: #40566e;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.login-container form input {
+    padding: 10px;
+    border: 1px solid #40566e;
+    border-radius: 5px;
+    outline: none;
+}
+
+.login-container form input:focus {
+    border-color: #11b5ba;
+    box-shadow: 0 0 5px #11b5ba88;
+}
+
+.login-container .button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.login-container .button-group button {
+    flex: 1;
+    padding: 12px;
+    background-color: #1e5acd;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-container .button-group button:hover {
+    background-color: #1748a4;
+}

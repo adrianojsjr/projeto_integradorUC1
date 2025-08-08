@@ -14,24 +14,33 @@ Verde: #33B291 (secundário, suave)
 
    
 body {
-     /*Muda a imagem do ponteiro do mouse*/
-    cursor: default;
+    cursor: default; /*Muda a imagem do ponteiro do mouse*/
     font-family: "Rubik", sans-serif;
     margin: 0; /* Remove a margem padrão do corpo da página */
+
 }
 
-.inicio {
+.alinhamentoPagina{
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
+    margin-left: 50px;
+    margin-right: 50px;
 }
 
 /* =============================
    Cabeçalho: logo, texto e botão
    ============================= */
+
+
 .inicio .menu {
     display: flex;
-    justify-content: space-around; /* Espaçamento entre logo, texto e botão */
+    justify-content: space-between; /* Espaçamento entre logo, texto e botão */
     align-items: center; /* Alinha verticalmente ao centro */
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-bottom: 30px;
+
 }
 
 .inicio .menu img {
@@ -99,6 +108,21 @@ body {
 
 /* Rodapé */
 
-footer{
-    margin-top:100px;
+.rodape{
+    display: flex;
+    margin-top: 100px;
+    justify-content: space-between; /* Espaçamento entre logo, texto e botão */
+    align-items: center; /* Alinha verticalmente ao centro */
+    margin-left: 50px;
+    margin-right: 50px;
+
+}
+
+.rodape img{
+    width: 150px; /* Tamanho do logo */
+}
+
+.rodape p {
+    color: #40566e; /* Cor cinza azulado para texto */
+    font-size: 30px; /* Tamanho da fonte para destaque */
 }
