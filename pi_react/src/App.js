@@ -3,23 +3,30 @@ import './App.css';
 
 function App() { // Aqui é JavaScript
 
-  let oi = "Olá mundo!!";
+  function calculadora(a, b, op) {
+    if (op == '+') {
+      return a + b;
+    }
 
-  oi += " Adriano";
+    else if (op == '-') {
+      return a - b;
+    }
 
-function soma(a, b){ // parâmetros 
-  return a + b;
-}
+    else if(op == '/'){
+      return a /b;
+    }
 
-function divide (a, b){
-  return a /b;
-}
-
+    else if (op == '*') {
+      return a *b;
+    }
+  }
 
   return ( /* aqui é HTML*/
     <main className="App">
-      {soma(oi, " Junior")}<br/>
-      {divide(36, 6)}
+      {calculadora(1, calculadora(2, 1, '*'),'+')}<br />
+      {calculadora(5,1, '-')}<br />
+      {calculadora(10,2, '/')}<br />
+      {calculadora(5,2, '*')}<br />
     </main>
 
 
