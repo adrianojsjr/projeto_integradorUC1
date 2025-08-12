@@ -9,6 +9,9 @@ let usuarioMedico = {
     horaDisponivel: "10:00"
 }
 
+
+esconderPagamento()
+
 resumoAgendamento()
 
 
@@ -23,3 +26,10 @@ function resumoAgendamento() {
 }
 
 
+function esconderPagamento(){
+    document.querySelector("#pagamento").style.display = "none"
+}
+
+function mostrarPagamento(){
+    document.querySelector("#pagamento").style.display = "flex"
+}
