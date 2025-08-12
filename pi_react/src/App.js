@@ -1,25 +1,68 @@
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
+// function App() {// Aqui só javaScript
+//   let oi = "Olá mundo!!!";
+
+//   oi +=   " Marcius";
+
+// function soma(a, b){//parametros
+//   return a + b;
+
+// }
+
+
+// function divide(a, b){
+//   return a / b;
+// }
+
+//   return ( //Aqui só HTML
+//     <main className="App">
+//       {soma(oi, ", Ale")}<br/>
+//       {divide(36 , 6)}
+//     </main>
+//   );
+// }
+
+function App(){
+  function calculadora(a,b,op){
+    // if(op=="+"){
+    //   return a + b
+    // }
+    // else if(op =="-"){
+    //   return a - b;
+    // }
+    // else if(op =="/"){
+    //   return a / b;
+    // }
+    // else if(op =="*"){
+    //   return a * b;
+    // }
+    switch(op){
+      case "+":
+        return a + b
+      case "-":
+        return a - b
+      case "*":
+        return a * b
+      case "/":
+        return a / b      
+        
+      
+    }
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main className='App'>
+      {calculadora(9, calculadora(8, 7, "*"),"+")}<br/>
+      {calculadora(10, 2,"-")}<br/>
+      {calculadora(1, 2,"/")}<br/>
+      {calculadora(1, 2,"*")}<br/>
+
+    </main>
   );
+
+
 }
 
 export default App;
