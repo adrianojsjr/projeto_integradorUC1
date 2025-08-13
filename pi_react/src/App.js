@@ -100,27 +100,108 @@ import './App.css';
 //   );
 // }
 
+// function App() {
+
+//   //faça uma lista com todos os numeros ate 10, mas exiba apenas os numeros impares
+
+//   let numero = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+//   let impar = [];
+
+//   for (let i = 0; i < numero.length; i++) { // i começa em 0 e vai até o último índice (numero.length).
+//     if (numero[i] % 2 !== 0) {  //verifica se o resto é diferente de 0
+//       impar.push(<p>{numero[i]}</p>); //Se for ímpar, adiciona um <p> com o número dentro de impares
+//     }
+//   }
+
+
+
+
+// return (
+//   <main className="App">
+//     {impar}
+//   </main>
+// );
+
+// }
+
+
+
 function App() {
 
-  //faça uma lista com todos os numeros ate 10, mas exiba apenas os numeros impares
+  //variável para o email
+  let email
 
-  let numero = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  let impar = [];
+  function mudaEmail(valor) {
 
-  for (let i = 0; i < numero.length; i++) { // i começa em 0 e vai até o último índice (numero.length).
-    if (numero[i] % 2 !== 0) {  //verifica se o resto é diferente de 0
-      impar.push(<p>{numero[i]}</p>); //Se for ímpar, adiciona um <p> com o número dentro de impares
-    }
+    email = valor
+
   }
 
 
+  //variável para senha
+  let senha
+
+  function mudaSenha(valor) {
+
+    senha = valor
+
+  }
+
+  function enviar() {
+    alert("Email: " + email + " senha: " + senha)
+  }
+
+  let telaLogin = true;
+
+  function mudaTela(){
+    telaLogin = !telaLogin
+  }
+
+  return (
+    <main className="App">
+
+      <button onClick={() => mudaTela()}>
+        {telaLogin && ("Cadastrar-se")}
+        {!telaLogin && ("Login")}
+      </button>
+
+      {/* formulário de cadastro com o campo para email, senha e um botão para enviar */}
+
+      { !telaLogin && (
+        <form className='cadastro'>
+        </form>
+      )}
 
 
-return (
-  <main className="App">
-    {impar}
-  </main>
-);
+      {/* formulário de login com o campo para email, senha e um botão para enviar */}
+
+      {telaLogin && (
+        <form className='login'>
+          <p>Para logar coloque as informações abaixo</p>
+
+          <label>Digite o email
+            <input type='email' placeholder='exemplo@exemplo.com' onChange={(e) => mudaEmail(e.target.value)} />
+          </label>
+
+          <br />
+          <br />
+
+          <label>Digite a senha
+            <input type='password' placeholder='senha' onChange={(e) => mudaSenha(e.target.value)} /><br />
+          </label>
+
+          <br />
+
+          <button className="btnEntrar" onClick={() => enviar()}>Entrar</button>
+
+        </form>
+      )}
+
+
+
+
+    </main>
+  );
 
 }
 

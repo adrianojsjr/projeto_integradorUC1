@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.btnEntrar{
+  background-color: blue;
+  color: white;
+  padding: 7px;
+  font-size: 15px;
+  border-radius: 5px;
+}
