@@ -1,5 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
+import { use, useState } from 'react';
+import './cadastroMedico.css';
 
 // function App() {
 
@@ -126,78 +128,207 @@ import './App.css';
 
 
 
-function App() {
+function App() { //javaScript
 
-  //variável para o email
-  let email
+  //inserir todos os campos que tem na tela de cadatro
+  const [doctor, setDoctor] = useState({
+    email: "",
+    senha: "",
+    telefone: "",
+    nome: "",
+    cpf: "",
+    numeroCRM: "",
+    ufCRM: "",
+    dataEmissaoCRM: "",
+    especialidade: "",
+    ativo: "",
+    imagem: ""
+  });
 
-  function mudaEmail(valor) {
+  //inserir todos os campos que tem na tela de cadatro
+  const [patient, setPatient] = useState({
+    email: "",
+    senha: "",
+    telefone: "",
+    nome: "",
+    cpf: "",
+    endereco: "",
+    ativo: ""
+  });
 
-    email = valor
+  const [payment, setPayment] = useState({
+    valor: "",
+    paciente: "",
+    tipoPagamento: ""
 
-  }
+  })
+
+  const [schedule, setSchedule] = useState({
+    data: "",
+    status: "",
+    avaliacao: ""
+  })
 
 
-  //variável para senha
-  let senha
+  //esconder telas
+  const [telaLogin, setTelaLogin] = useState(true);
+  const [telaPaciente, setTelaPaciente] = useState(true);
 
-  function mudaSenha(valor) {
-
-    senha = valor
-
-  }
-
-  function enviar() {
-    alert("Email: " + email + " senha: " + senha)
-  }
-
-  let telaLogin = true;
-
-  function mudaTela(){
-    telaLogin = !telaLogin
-  }
-
-  return (
+  return ( //html
     <main className="App">
 
-      <button onClick={() => mudaTela()}>
-        {telaLogin && ("Cadastrar-se")}
-        {!telaLogin && ("Login")}
+
+      {!telaLogin  && (
+      <button onClick={() => setTelaPaciente(!telaPaciente)}>
+        {telaPaciente && ("Cadastro - Paciente")}
+        {!telaPaciente && ("Cadastro - Médico")}
+
       </button>
+      )}
 
-      {/* formulário de cadastro com o campo para email, senha e um botão para enviar */}
+      
+      
 
-      { !telaLogin && (
-        <form className='cadastro'>
+      {!telaLogin && telaPaciente && (
+
+        <form className="cadastroMedico">
+
+          <p>
+            <label htmlFor="nome">Nome do Médico</label><br />
+            <input id="nome" type="text" placeholder="Nome do titular" />
+          </p>
+
+          <p>
+            <label htmlFor="email">E-mail</label><br />
+            <input id="email" type="email" placeholder="exemplo@email.com" />
+          </p>
+
+          <p>
+            <label htmlFor="cpf">CPF</label><br />
+            <input id="cpf" type="number" placeholder="000.000.000-00" />
+          </p>
+
+          <p>
+            <label htmlFor="numerodocrm">Número do CRM</label><br />
+            <input id="numerodocrm" type="number" placeholder="CRM" />
+          </p>
+
+          <p>
+            <label htmlFor="ufdocrm">UF do CRM</label><br />
+            <input id="ufdocrm" type="text" placeholder="Insira o UF do CRM" />
+          </p>
+
+          <p>
+            <label htmlFor="telefone">Telefone</label><br />
+            <input id="telefone" type="number" placeholder="Insira o Telefone" />
+          </p>
+
+          <p>
+            <label htmlFor="especialidade">Especialidade</label><br />
+            <input id="especialidade" type="text" placeholder="Digite a especialidade" />
+          </p>
+
+          <p>
+            <label htmlFor="dataEmissao">Data de Emissão</label><br />
+            <input id="dataEmissao" type="date" />
+          </p>
+
+          <div>
+            <p>
+              <label htmlFor="residencia" className="upload-btn">Anexar residência médica</label><br />
+              <input id="residencia" type="file" name="arquivo" />
+            </p>
+
+            <p>
+              <label htmlFor="diploma" className="upload-btn">Anexar diploma acadêmico</label><br />
+              <input id="diploma" type="file" name="arquivo" />
+            </p>
+
+            <p>
+              <label htmlFor="comprovante" className="upload-btn">Comprovante de situação regular</label><br />
+              <input id="comprovante" type="file" name="arquivo" />
+            </p>
+
+
+          </div>
+
         </form>
       )}
 
+      {!telaLogin && !telaPaciente && (
+        <form className="cadastroPaciente">
 
-      {/* formulário de login com o campo para email, senha e um botão para enviar */}
+          <p>
+            <label htmlFor="nome">Nome</label><br />
+            <input id="nome" type="text" placeholder="Nome do titular" />
+          </p>
+
+          <p>
+            <label htmlFor="email">E-mail</label><br />
+            <input id="email" type="email" placeholder="exemplo@email.com" />
+          </p>
+
+          <p>
+            <label htmlFor="cpf">CPF</label><br />
+            <input id="cpf" type="number" placeholder="000.000.000-00" />
+          </p>
+
+
+          <p>
+            <label htmlFor="telefone">Telefone</label><br />
+            <input id="telefone" type="number" placeholder="Insira o Telefone" />
+          </p>
+
+          <p>
+            <label htmlFor="endereco">Endereço</label><br />
+            <input id="endereco" />
+          </p>
+
+          <p>
+            <label htmlFor="senha">Senha</label><br />
+            <input id="senha" />
+          </p>
+
+          <p>
+            <button onClick={() => setTelaLogin(!telaLogin)}>
+              {telaLogin && ("Confirmar Cadastro")}
+              {!telaLogin && ("Voltar para cadastro")}
+
+            </button>
+          </p>
+
+        </form>
+      )}
+
 
       {telaLogin && (
         <form className='login'>
           <p>Para logar coloque as informações abaixo</p>
 
           <label>Digite o email
-            <input type='email' placeholder='exemplo@exemplo.com' onChange={(e) => mudaEmail(e.target.value)} />
+            <input type='email' placeholder='exemplo@exemplo.com' onChange={(e) => setPatient({ ...patient, email: e.target.value })} />
           </label>
 
           <br />
           <br />
 
           <label>Digite a senha
-            <input type='password' placeholder='senha' onChange={(e) => mudaSenha(e.target.value)} /><br />
+            <input type='password' placeholder='senha' onChange={(e) => setPatient({ ...patient, senha: e.target.value })} /><br />
           </label>
 
           <br />
 
-          <button className="btnEntrar" onClick={() => enviar()}>Entrar</button>
+          <button className="btnEntrar">Entrar</button>
 
         </form>
       )}
 
 
+      <button onClick={() => setTelaLogin(!telaLogin)}>
+        {telaLogin && ("Cadastre-se")}
+        {!telaLogin && ("Voltar para login")}
+
+      </button>
 
 
     </main>
