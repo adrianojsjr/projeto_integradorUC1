@@ -163,31 +163,9 @@ button:active,
   transform: translateY(1px);
 }
 
-/* Links sem sublinhado (caso use <a> como botão) */
+
 a{
   text-decoration: none;
 }
 
-/* Ajuda visual para inválidos nativos do HTML5 */
-input:required:invalid{
-  border-color: #e08b8b;
-}
-input:required:invalid:focus{
-  box-shadow: 0 0 0 4px rgba(224,139,139,.25);
-}
 
-/* Responsividade */
-@media (max-width: 900px){
-  .uploads{
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 680px){
-  form{
-    grid-template-columns: 1fr;
-  }
-  .payment-container{
-    padding: 20px;
-  }
-}
