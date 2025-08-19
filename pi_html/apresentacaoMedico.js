@@ -43,13 +43,11 @@ function informacoesConsulta() {
 mostrarApresentacaoMedico()
 
 
-
 function mostrarApresentacaoMedico() {
     document.querySelector("#esconderApresentacao").style.display = "block"
     document.querySelector("#cadastro-container").style.display = "none"
+    document.querySelector("#cadastro-container-medico").style.display = "none"
     document.querySelector("#login-container").style.display = "none"
-
-
 }
 
 
@@ -68,7 +66,6 @@ function cadastrar(e) {
     usuarioPaciente.senha = document.querySelector("#inputSenha").value
     document.querySelector("#cadastro-container").style.display = "none"
     document.querySelector("#login-container").style.display = "flex"
-
 }
 
 
