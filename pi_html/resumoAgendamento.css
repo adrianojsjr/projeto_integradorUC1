@@ -1,0 +1,86 @@
+/* Paleta de cores:
+Verde-água: #11b5ba (vibrante, ideal para destaque)
+Cinza azulado: #40566e (ótimo para texto, bordas e contornos)
+Azul: #1e5acd (fundo ou botões primários)
+Verde: #33B291 (secundário, suave)
+*/
+
+.alinhamentoPaginaPagamento {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.infoConsulta {
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 5px rgba(70, 69, 69, 0.089);
+    line-height: 15px;
+    border-radius: 12px;
+    padding: 40px;
+}
+
+.infoConsulta .tituloResumoConsulta{
+    text-align: center;
+    font-size: 25px;
+    margin-bottom: 50px;
+}
+
+.infoConsulta a {
+    text-decoration: none;
+    color: black;
+}
+
+.infoConsulta a p{
+    font-size: 20px;
+}
+
+
+.infoConsulta .btnAlterarDataEirPagamento {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+}
+
+.infoConsulta .btnAlterarDataEirPagamento button {
+    padding: 12px;
+    background-color: #33B291;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.loginCadastro form{
+    display: flex;
+    flex-direction: column;
+    width: 390px;
+    gap: 8px;
+}
+
+.loginCadastro  button{
+    background-color: #33B291;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding: 12px;
+}
+
+.loginCadastro label{
+    color: #333;
+    font-weight: bold;
+}
+
+.loginCadastro input{
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    margin-bottom: 20px;
+}

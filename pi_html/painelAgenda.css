@@ -1,0 +1,38 @@
+.agendaMedica {
+  width: 100%; /* Ocupa toda a largura */
+  border-collapse: collapse; /* Junta bordas */
+  text-align: center; /* Centraliza conteúdo */
+  margin-top: 20px;
+}
+
+.agendaMedica td {
+  border: 1px solid #ddd; /* Borda cinza */
+  padding: 12px;
+}
+
+.agendaMedica th {
+  background-color: #1e5acd; /* Azul cabeçalho */
+  color: white;
+   border: 1px solid #ddd; /* Borda cinza */
+  padding: 12px;
+}
+
+/* Botões dentro da tabela */
+.agendaMedica button {
+  padding: 6px 12px;
+  margin: 0 4px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.agendaMedica button:first-of-type {
+  background-color: #e74c3c; /* Vermelho cancelar */
+  color: white;
+}
+
+.agendaMedica button:last-of-type {
+  background-color: #2ecc71; /* Verde confirmar */
+  color: white;
+}

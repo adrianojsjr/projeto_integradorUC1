@@ -9,6 +9,8 @@ let usuarioMedico = {
     horaDisponivel: "10:00"
 }
 
+
+
 resumoAgendamento()
 
 
@@ -20,6 +22,11 @@ function resumoAgendamento() {
     document.querySelector("#valorConsulta").innerHTML = usuarioMedico.valorConsulta
     document.querySelector("#dataDisponivel").innerHTML = usuarioMedico.dataDisponivel
     document.querySelector("#horaDisponivel").innerHTML = usuarioMedico.horaDisponivel
+}
+
+
+function esconderPagamento(){
+    document.querySelector("#pagamento").style.display = "none"
 }
 
 
