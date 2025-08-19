@@ -5,7 +5,7 @@ import './App.css';
 
  
 function Doctors() {                  //aqui javascript
-  const [Doctors, setUser] = useState({
+  const [user, setUser] = useState({
     email: "",
     password:"",
     phone:"",

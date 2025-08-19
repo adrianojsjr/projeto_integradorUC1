@@ -1,12 +1,14 @@
 
 import './App.css';
-import Doctors from './doctors'
-import Patients from './patients'
-import Payment from './payment'
-import Schedule from './schedule'
+import Doctors from './Doctors'
+import Patients from './Patients'
+import Payment from './Payment'
+import Schedule from './Schedule'
+import User from './User'
 
 
-import { BrowserRouter as Router, Routes, Route, Navigate, link, outlet }
+
+import { BrowserRouter as Router, Routes, Route, Navigate, Link, Outlet }
   from 'react-router-dom';
 
 
