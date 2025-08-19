@@ -1,0 +1,193 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+:root{
+  --azul: #1e5acd;
+  --cinza-azulado: #40566e;
+  --verde-agua: #11b5ba;
+  --verde: #33B291;
+  --bg: #f2f3f3;
+  --borda: #dce3ec;
+}
+
+/* Base */
+body {
+  background-color: var(--bg);
+  color: var(--cinza-azulado);
+  padding: 20px;
+  line-height: 1.4;
+}
+
+/* Container principal */
+.payment-container {
+  background: #fff;
+  max-width: 900px;
+  margin: 24px auto;
+  padding: 28px;
+  border-radius: 12px;
+  border: 1px solid var(--borda);
+  box-shadow: 0 4px 18px rgba(64, 86, 110, 0.08);
+}
+
+.payment-container h2{
+  color: var(--azul);
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+/* Formulário em grid */
+form{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+  margin-top: 8px;
+}
+
+/* Labels e inputs */
+form label{
+  display: block;
+  margin-bottom: 6px;
+  color: var(--cinza-azulado);
+  font-weight: 700;
+  font-size: .95rem;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="number"],
+form input[type="date"],
+form select {
+  width: 100%;
+  padding: 12px 12px;
+  border: 1px solid var(--cinza-azulado);
+  border-radius: 8px;
+  outline: none;
+  font-size: .95rem;
+  background: #fff;
+  transition: border-color .2s, box-shadow .2s, transform .02s;
+}
+
+form input:focus,
+form select:focus{
+  border-color: var(--verde-agua);
+  box-shadow: 0 0 0 4px #11b5ba22;
+}
+
+form input:active{
+  transform: translateY(0.5px);
+}
+
+/* Faz cada par (label+input) ocupar a coluna inteira quando necessário */
+form > label,
+form > input,
+form > select,
+form > .field {
+  grid-column: span 1;
+}
+
+/* Campos que devem ocupar a linha toda (ajuste se quiser) */
+.field--full{
+  grid-column: 1 / -1;
+}
+
+/* Área de uploads (linha inteira) */
+.uploads{
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 6px;
+}
+
+/* Esconde o input de arquivo e estiliza o label como botão */
+input[type="file"]{
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.upload-btn{
+  display: inline-block;
+  text-align: center;
+  padding: 12px 14px;
+  background: var(--verde-agua);
+  color: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color .2s, transform .02s, box-shadow .2s;
+  font-weight: 700;
+  font-size: .95rem;
+}
+
+.upload-btn:hover{
+  background: #0e9fa3;
+  box-shadow: 0 4px 12px rgba(17,181,186,0.25);
+}
+
+.upload-btn:active{
+  transform: translateY(1px);
+}
+
+/* Botão de ação */
+button,
+.button{
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--azul);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color .2s, transform .02s, box-shadow .2s;
+  margin-top: 8px;
+}
+
+button:hover,
+.button:hover{
+  background: #1748a4;
+  box-shadow: 0 6px 18px rgba(30,90,205,0.25);
+}
+
+button:active,
+.button:active{
+  transform: translateY(1px);
+}
+
+/* Links sem sublinhado (caso use <a> como botão) */
+a{
+  text-decoration: none;
+}
+
+/* Ajuda visual para inválidos nativos do HTML5 */
+input:required:invalid{
+  border-color: #e08b8b;
+}
+input:required:invalid:focus{
+  box-shadow: 0 0 0 4px rgba(224,139,139,.25);
+}
+
+/* Responsividade */
+@media (max-width: 900px){
+  .uploads{
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px){
+  form{
+    grid-template-columns: 1fr;
+  }
+  .payment-container{
+    padding: 20px;
+  }
+}

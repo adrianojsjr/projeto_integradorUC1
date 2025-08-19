@@ -10,7 +10,6 @@ let usuarioMedico = {
 }
 
 
-esconderPagamento()
 
 resumoAgendamento()
 
@@ -30,6 +29,4 @@ function esconderPagamento(){
     document.querySelector("#pagamento").style.display = "none"
 }
 
-function mostrarPagamento(){
-    document.querySelector("#pagamento").style.display = "flex"
-}
+

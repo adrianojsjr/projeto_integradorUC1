@@ -12,44 +12,6 @@ body {
   padding: 20px;
 }
 
-/* Topo/menu */
-.inicio {
-  background-color: #1e5acd;
-  color: white;
-  padding: 20px ;
-}
-
-.menu {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  
-}
-
-.menu img {
-  height: 50px;
-   width: 150px; /* Tamanho do logo */
-}
-
-.menu p {
-  font-size: 1.2rem;
-  margin-left: 15px;
-}
-
-.menu a {
-  text-decoration: none;
-  background-color: #11b5ba;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-.menu a:hover {
-  background-color: #0e9fa3;
-}
-
 /* Container de cadastro */
 .cadastro-container {
   background-color: white;
@@ -104,18 +66,4 @@ form button {
 
 form button:hover {
   background-color: #1748a4;
-}
-
-/* Rodapé */
-footer {
-  margin-top: 50px;
-  background-color: #40566e;
-  color: white;
-  padding: 20px;
-  text-align: center;
-}
-
-footer img {
-  height: 40px;
-  margin-bottom: px;
 }
