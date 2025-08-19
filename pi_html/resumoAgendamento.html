@@ -5,75 +5,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agendamento</title>
+    <link rel="stylesheet" href="./resumoAgendamento.css">
+    <link rel="stylesheet" href="./styleGeral.css">
 </head>
 
 <body>
 
+     <!--Menu inicial-->
+    <div class="inicio">
+
+        <div class="menu">
+            <img src="./logo_teste.png" alt="">
+            <p>Sua consulta na palma da mão</p>
+            <a>Cadastre-se</a>
+        </div>
+    </div>
+
     <!--Informações sobre a consulta: nome do médico e foto (caso tenha), avaliações, especialidade e valor-->
 
-    <div class="infoConsulta">
-        <img src="https://placeholder.pics/svg/300x150" alt="">
-        <h3>Dra. Juliana Ferraz</h3>
-        <p>Endocrinologista</p>
+    <div class="alinhamentoPaginaPagamento">
+        <!--Informações sobre a consulta: nome do médico e foto (caso tenha),  especialidade e valor-->
 
-        <p>R$ 130</p>
-        <p>12/08/2025</p>
-        <p>15:30</p>
-        <button>Alterar Data</button>
-
-        <h3>Já possui cadastro</h3>
-        <input type="radio" required>
-        <p>Sim</p>
-        <!--Aqui depende onde vai cliar, vai aparecer tela de cadastrar ou tela de login-->
-        <input type="radio" required>
-        <p>Não</p>
-    </div>
-
-
-    <div class="login-container">
-        <h2>Login</h2>
-
-        <form>
-            <label for="usuario">Usuário ou E-mail</label>
-            <input type="text" placeholder="Digite seu usuário" required>
-
-            <label for="senha">Senha</label>
-            <input type="password" placeholder="Digite sua senha" required>
-
-            <div class="button-group">
-                <a href="#"><button>Enviar</button></a>
-                <a href="#"><button>Cadastrar</button></a>
-
+        <div class="infoConsulta">
+            <p class="tituloResumoConsulta">Resumo da Consulta</p>
+            <img id="imgMedico" src="" alt="">
+            <a href="./apresentacaoMedico.html">
+                <p id="nomeMedico"></p>
+            </a>
+            <p><span id="especialidadeMedico"></span><br> <br> Avaliação: <span id="avaliacao"></span>
+                <br /><br><span id="valorConsulta"></span> <br /> <br /> Local: Teleconsulta Online
+            </p>
+            <div class="btnAlterarDataEirPagamento">
+                <button>Alterar data</button>
+                <button>Ir para pagamento</button>
             </div>
-        </form>
-    </div>
+        </div>
 
-    <div class="cadastro-container">
-        <h2>Cadastro</h2>
+        <div class="loginCadastro">
+            <h2>Login</h2>
 
-        <form>
-            <label>Nome Completo</label>
-            <input type="text" placeholder="Digite seu nome" required>
-
-            <label>E-mail</label>
-            <input type="email" placeholder="Digite seu e-mail" required>
-
-            <label>Digite seu cpf</label>
-            <input type="text" placeholder="CPF" required>
-
-            <label>Digite seu Telefone</label>
-            <input type="text" placeholder="Telefone" required>
-
-            <label>Senha</label>
-            <input type="password" placeholder="Digite sua senha" required>
-
-            <label>Digite a Senha Novamente</label>
-            <input type="password" placeholder="Digite sua senha novamente" required>
+            <form>
+                <label for="usuario">Usuário ou E-mail</label>
+                <input type="text" placeholder="Digite seu usuário" required>
 
 
+                <label for="senha">Senha</label>
+                <input type="password" placeholder="Digite sua senha" required>
 
-            <a href="#"><button>Cadastrar</button></a> <!--Ao cadastrar enviar para a tela login-->
-        </form>
+
+                <div class="bntEntrarCadastrar">
+                    <button>Enviar</button>
+                    <button>Cadastrar</button>
+
+                </div>
+            </form>
+        </div>
+
+        <div class="loginCadastro">
+            <h2>Cadastro</h2>
+
+            <form>
+                <label>Nome Completo</label>
+                <input type="text" placeholder="Digite seu nome" required>
+
+                <label>E-mail</label>
+                <input type="email" placeholder="Digite seu e-mail" required>
+
+                <label>Digite seu cpf</label>
+                <input type="text" placeholder="CPF" required>
+
+                <label>Digite seu Telefone</label>
+                <input type="text" placeholder="Telefone" required>
+
+                <label>Senha</label>
+                <input type="password" placeholder="Digite sua senha" required>
+
+                <label>Digite a Senha Novamente</label>
+                <input type="password" placeholder="Digite sua senha novamente" required>
+
+
+
+                <button class="bntEntrarCadastrar">Cadastrar</button> <!--Ao cadastrar enviar para a tela login-->
+            </form>
+        </div>
     </div>
 </body>
 
