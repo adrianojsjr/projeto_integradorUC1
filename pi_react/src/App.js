@@ -1,6 +1,11 @@
 
 import './App.css';
-import User from './User'
+import Doctors from './doctors'
+import Patients from './patients'
+import Payment from './payment'
+import Schedule from './schedule'
+
+
 import { BrowserRouter as Router, Routes, Route, Navigate, link, outlet }
   from 'react-router-dom';
 
@@ -21,17 +26,17 @@ function App() {                  //aqui javascript
         <nav>
           {hasSession ? (
             <>
-              <Link to="/Home">Inicial</Link>
-              <Link to="/Search">busca</Link>
-              <Link to="/MedicalPresentation">apresentação do médico.</Link>
-              <Link to="/Schedule">agendamento</Link>
-              <Link to="/Payment">pagamento</Link>
+              <Link to="/doctors">Inicial</Link>
+              <Link to="/schedule">agendamento</Link>
+              <Link to="/payment">pagamento</Link>
+              <Link to="/patients">pacientes</Link>
             </>
 
           ) : (
             <>
-              <Link to="/Home">Inicial</Link>
-              <Link to="/Search">busca</Link>
+              <Link to="/doctors">Inicial</Link>
+              <Link to="/user">Login</Link>
+
             </>
           )
           }
@@ -40,18 +45,22 @@ function App() {                  //aqui javascript
 
         <Routes>
           {/*Rotas Públicas*/}
-          <Route path='/Search' element={<Home />} />
-          <Route path='/Login' element={<User />} />
+          <Route path='/doctors' element={<Doctors />} />
+          <Route path='/user' element={<User />} />
+
 
           <Route element={<PrivateSession />}>
 
             {/*Rotas Logado*/}
-            <Route path='/Payment' element={<Register />} />
             
+            <Route path='/schedule' element={<Schedule/>} />
+            <Route path='/payment' element={<Payment />} />
+            <Route path='/patients' element={<Patients />} />
 
-            </Route>
-                
-                <Route path='/' element={<Navigate to= '/Login' replace />} />
+
+          </Route>
+
+          <Route path='/' element={<Navigate to='/doctors' replace />} />
         </Routes>
 
       </main>
