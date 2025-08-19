@@ -50,6 +50,8 @@ function App() {                  //aqui javascript
             
 
             </Route>
+                
+                <Route path='/' element={<Navigate to= '/Login' replace />} />
         </Routes>
 
       </main>
