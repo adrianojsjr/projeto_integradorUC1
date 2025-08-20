@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import './cadastroMedico.css'
 import { use, useState } from 'react';
+import './resultadoBusca.css';
 
 
 function Doctor() { //javaScript
@@ -48,14 +49,13 @@ function Doctor() { //javaScript
         </div>
 
 
-
         <div class="menuBusca">
           <div></div>
-          <div class="busca">
-            <input type="text" placeholder="Especialidade ou médico" />
-            <a class="btn">Filtros</a>
-            <a class="btn" onclick="buscar()">Buscar</a>
-          </div>
+            <div class="busca">
+              <input type="text" placeholder="Especialidade ou médico" />
+              <a class="btn">Filtros</a>
+              <a class="btn" onclick="buscar()">Buscar</a>
+            </div>
           <div></div>
         </div>
 
@@ -63,10 +63,7 @@ function Doctor() { //javaScript
 
       <div class="alinhamentoPagina">
 
-
         <div id="cardInfoConsulta" class="cardInfoConsulta">
-
-
 
           <div class="infoConsulta">
             <img id="imgMedico" src="" alt="" />
@@ -76,24 +73,20 @@ function Doctor() { //javaScript
             </p>
           </div>
 
-
-
           <div class="calendario">
+            
             <h3>Disponibilidade</h3>
             <p>Selecione o dia e horário de sua preferência para o atendimento</p>
 
             <div class="disponibilidade">
-
               <div class="dataDisponivel">
                 <a class="btnData" href=""><span id="dataDisponivel"></span> às <span
                   id="horaDisponivel"></span></a>
 
               </div>
-
             </div>
+          
           </div >
-
-
 
         </div >
       </div>

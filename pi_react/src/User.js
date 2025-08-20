@@ -64,7 +64,7 @@ function User() { //javaScript
       localStorage.setItem('supaSession', data.session) //setItem -> guardar o item
 
       setTimeout(
-        nav("./doctor", {replace: true}),
+        nav("/doctors", {replace: true}),
         5002//aqui navega para tela principal
       );
 
