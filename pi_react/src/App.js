@@ -29,9 +29,9 @@ function App() {                  //aqui javascript
           {hasSession ? (
             <>
               <Link to="/doctors">Inicial</Link>
-              <Link to="/schedule">agendamento</Link>
-              <Link to="/payment">pagamento</Link>
-              <Link to="/patients">pacientes</Link>
+              <Link to="/schedule">Agendamento</Link>
+              <Link to="/payment">Pagamento</Link>
+              <Link to="/patients">Pacientes</Link>
             </>
 
           ) : (
@@ -62,7 +62,7 @@ function App() {                  //aqui javascript
 
           </Route>
 
-          <Route path='/' element={<Navigate to='/doctors' replace />} />
+          <Route path='/' element={<Navigate to='/user' replace />} />
         </Routes>
 
       </main>

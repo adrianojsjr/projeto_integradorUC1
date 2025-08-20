@@ -1,78 +1,103 @@
 import logo from './logo.svg';
-import {useState} from 'react';
 import './App.css';
+import './cadastroMedico.css'
+import { use, useState } from 'react';
 
 
- 
-function Doctors() {                  //aqui javascript
-  const [user, setUser] = useState({
+function Doctor() { //javaScript
+
+  //inserir todos os campos que tem na tela de cadatro
+  const [doctor, setDoctor] = useState({
     email: "",
-    password:"",
-    phone:"",
-    name:""
-
-
+    senha: "",
+    telefone: "",
+    nome: "",
+    cpf: "",
+    numeroCRM: "",
+    ufCRM: "",
+    dataEmissaoCRM: "",
+    especialidade: "",
+    ativo: "",
+    imagem: ""
   });
- 
-  
- 
- 
- 
-  function enviar(){
-    alert("email:"+user.email+" senha:"+user.password)
-  }
- 
- 
- 
-  //const [email, setEmail] = useState("")//
-  //const [senha, setSenha] = useState("")//
 
-  const [isLogin, setIsLogin] = useState(true)
-  
- 
-  return (                         /* Aqui html */
+  //inserir todos os campos que tem na tela de cadatro
+  const [patient, setPatient] = useState({
+    email: "",
+    senha: "",
+    telefone: "",
+    nome: "",
+    cpf: "",
+    endereco: "",
+    ativo: ""
+  });
+
+
+
+
+  return ( //html
     <main className="App">
- 
-      <button onClick={() => setIsLogin (!isLogin)} >
-        {isLogin &&("Cadastrar-se")}
-        {!isLogin &&("Voltar para o login")}
-      </button>
-     
-      {!isLogin &&(
-     <form className="register"></form>
-      )}
- 
-      {isLogin &&(
-      <form className="login">
- 
-        <label >Digite Seus Dados</label>
- 
-        <br></br>
-        <label>
-          Email: <input  type='email' placeholder='Email' onChange={(e) => setUser({...user, email: e.target.value}) } ></input>
-        </label>
- 
-        <br></br>
-        <br></br>
-        <label>
-          Senha: <input type='password' placeholder=' Senha ' onChange={(e) => setUser ({... user, password: e.target.value})}></input>
-        </label>
- 
-        <p><button style={{background:"white", color: "black"}} type='submit' onClick={() => enviar()} >Entrar</button></p>
-      </form>
-      )}
- 
-     
- 
- 
-     
- 
- 
- 
- 
-    </main>
-  );
+
+
+      <div class="inicio">
+
+        <div class="menu">
+          <img src="./logo_teste.png" alt="" />
+          <p>Sua consulta na palma da mão</p>
+          <a href="">Cadastre-se</a>
+        </div>
+
+
+
+        <div class="menuBusca">
+          <div></div>
+          <div class="busca">
+            <input type="text" placeholder="Especialidade ou médico" />
+            <a class="btn">Filtros</a>
+            <a class="btn" onclick="buscar()">Buscar</a>
+          </div>
+          <div></div>
+        </div>
+
+      </div>
+
+      <div class="alinhamentoPagina">
+
+
+        <div id="cardInfoConsulta" class="cardInfoConsulta">
+
+
+
+          <div class="infoConsulta">
+            <img id="imgMedico" src="" alt="" />
+            <a href="./apresentacaoMedico.html"><h3 id="nomeMedico"></h3></a>
+            <p><span id="especialidadeMedico"></span> <br /> Avaliação <span id="avaliacao"></span>
+              <br /><br /><span id="valorConsulta"></span>
+            </p>
+          </div>
+
+
+
+          <div class="calendario">
+            <h3>Disponibilidade</h3>
+            <p>Selecione o dia e horário de sua preferência para o atendimento</p>
+
+            <div class="disponibilidade">
+
+              <div class="dataDisponivel">
+                <a class="btnData" href=""><span id="dataDisponivel"></span> às <span
+                  id="horaDisponivel"></span></a>
+
+              </div>
+
+            </div>
+            <div />
+
+
+
+            <div />
+          </main>
+          );
+
 }
- 
- 
-export default Doctors;
+          export default Doctor;

@@ -5,7 +5,7 @@ import './App.css';
 
  
 function Payment() {                  //aqui javascript
-  const [Payment, setUser] = useState({
+  const [user, setUser] = useState({
     email: "",
     password:"",
     phone:"",
