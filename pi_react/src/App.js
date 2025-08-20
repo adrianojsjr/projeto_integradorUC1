@@ -47,9 +47,9 @@ function App() {                  //aqui javascript
 
         <Routes>
           {/*Rotas Públicas*/}
-          <Route path='/doctors' element={<Doctors />} />
+          
           <Route path='/user' element={<User />} />
-
+          <Route path='/doctors' element={<Doctors />} />
 
           <Route element={<PrivateSession />}>
 
