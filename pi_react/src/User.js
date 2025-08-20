@@ -52,18 +52,21 @@ function User() { //javaScript
 
     try {
 
-      let { data, error } = await supabase.auth.signInWithPassword({
+      let { data, error } = await supabase.auth.signInWithPassword({  //data retorna sucesso
+
         email: doctor.email,
         password: doctor.senha
-      })
+      });
+
       if (error) throw error
 
       setMsg("Logou") //assim que logar aparece a mensagem e logo em seguida navega para tela principal
-      
+      localStorage.setItem('supaSession', data.session) //setItem -> guardar o item
+
       setTimeout(
         nav("./doctor", {replace: true}),
         5002//aqui navega para tela principal
-      )
+      );
 
     } catch (err) {
       setMsg("Error: " + err);

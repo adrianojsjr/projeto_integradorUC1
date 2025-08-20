@@ -98,7 +98,7 @@ function Doctor() { //javaScript
         </div >
       </div>
     </main>
-          );
+  );
 
 }
-          export default Doctor;
+export default Doctor;
