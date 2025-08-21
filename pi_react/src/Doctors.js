@@ -1,7 +1,6 @@
-import logo from './logo.svg';
 import './App.css';
 import { use, useState } from 'react';
-import './resultadoBusca.css';
+import './resultadoBusca.css'
 
 
 function Doctor() { //javaScript

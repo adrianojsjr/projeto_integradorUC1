@@ -5,6 +5,7 @@ import Patients from './Patients'
 import Payment from './Payment'
 import Schedule from './Schedule'
 import User from './User'
+import "./logo_teste.png"
 
 
 
@@ -28,10 +29,11 @@ function App() {                  //aqui javascript
 
         <div className='inicio'>
 
-          <nav className='menu'>
+          <nav>
             {hasSession ? (
-              <div>
-                <Link to="/doctors">Inicial</Link>
+              <div className='menu'>
+                <img src="./logo_teste.png" alt="" />
+                <Link to="/doctors">Inicio</Link>
                 <Link to="/schedule">Agendamento</Link>
                 <Link to="/payment">Pagamento</Link>
                 <Link to="/patients">Pacientes</Link>
