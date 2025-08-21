@@ -1,78 +1,73 @@
+// import logo from './logo.svg';
+// import {useState} from 'react';
+// import './App.css';
+
 import logo from './logo.svg';
-import {useState} from 'react';
 import './App.css';
+import './cadastroMedico.css'
+import { use, useState } from 'react';
+import { createClient } from "@supabase/supabase-js";
+import { replace, useNavigate } from 'react-router-dom';
+
+const supabaseUrl = "https://mayrahcoiqpxrhqtcnry.supabase.co"
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1heXJhaGNvaXFweHJocXRjbnJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNTAzMzgsImV4cCI6MjA2OTkyNjMzOH0.8jpiw7cQHMy4KaBl5qquKBptbjfO1FqtdE7u7X2C_OU"
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 
- 
+
 function Payment() {                  //aqui javascript
-  const [user, setUser] = useState({
-    email: "",
-    password:"",
-    phone:"",
-    name:""
+  const nav = useNavigate();
+
+  const [payment, setpayment] = useState({
+    tipo_pagamento: '',
+    user_id: ''
 
 
-  });
- 
-  
- 
- 
- 
-  function enviar(){
-    alert("email:"+user.email+" senha:"+user.password)
+  })
+
+
+
+
+
+  async function fazerPagamento() {
+
+    const { data: dU, error: eU } = await supabase.auth.getUser();
+
+    if (eU) nav('/login', { replace: true })
+    if (!dU) nav('login', { replace: true })
+    if (dU && !dU.id) nav('/login', { replace: true })
+
+
+    const { data, error } = await supabase
+      .from('payment')
+      .insert([
+        payment
+      ])
+      .select()
+
   }
- 
- 
- 
-  //const [email, setEmail] = useState("")//
-  //const [senha, setSenha] = useState("")//
-
-  const [isLogin, setIsLogin] = useState(true)
-  
- 
   return (                         /* Aqui html */
-    <main className="App">
- 
-      <button onClick={() => setIsLogin (!isLogin)} >
-        {isLogin &&("Cadastrar-se")}
-        {!isLogin &&("Voltar para o login")}
-      </button>
-     
-      {!isLogin &&(
-     <form className="register"></form>
-      )}
- 
-      {isLogin &&(
-      <form className="login">
- 
-        <label >Digite Seus Dados</label>
- 
-        <br></br>
-        <label>
-          Email: <input  type='email' placeholder='Email' onChange={(e) => setUser({...user, email: e.target.value}) } ></input>
-        </label>
- 
-        <br></br>
-        <br></br>
-        <label>
-          Senha: <input type='password' placeholder=' Senha ' onChange={(e) => setUser ({... user, password: e.target.value})}></input>
-        </label>
- 
-        <p><button style={{background:"white", color: "black"}} type='submit' onClick={() => enviar()} >Entrar</button></p>
+    <div className="screen">
+
+      <form>
+        <input type="text" placeholder='Tipo de Pagamento : Cartão/Pix' onChange={(e) => setpayment({ ...payment, tipo_pagamento: e.target.value })} />
+        <button onClick={fazerPagamento()}>Salvar</button>
       </form>
-      )}
- 
-     
- 
- 
-     
- 
- 
- 
- 
-    </main>
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
   );
 }
- 
- 
+
+
 export default Payment;
