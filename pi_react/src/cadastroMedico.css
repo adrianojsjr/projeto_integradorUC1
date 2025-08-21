@@ -23,25 +23,8 @@ body {
   line-height: 1.4;
 }
 
-/* Container principal */
-.cadastro {
-  background: #fff;
-  max-width: 900px;
-  margin: 24px auto;
-  padding: 28px;
-  border-radius: 12px;
-  border: 1px solid var(--borda);
-  box-shadow: 0 4px 18px rgba(64, 86, 110, 0.08);
-}
-
-.cadastro h2 {
-  color: var(--azul);
-  text-align: center;
-  margin-bottom: 18px;
-}
-
-/* Formulário em grid */
-form {
+/* Formulário */
+.cadastroMedico {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px 20px;
@@ -49,7 +32,7 @@ form {
 }
 
 /* Labels e inputs */
-form label {
+.cadastroMedico label {
   display: block;
   margin-bottom: 6px;
   color: var(--cinza-azulado);
@@ -57,104 +40,122 @@ form label {
   font-size: .95rem;
 }
 
-form input[type="text"],
-form input[type="email"],
-form input[type="number"],
-form input[type="date"],
-form select {
+.cadastroMedico input[type="text"],
+.cadastroMedico input[type="email"],
+.cadastroMedico input[type="number"],
+.cadastroMedico input[type="date"],
+.cadastroMedico input[type="password"],
+.cadastroMedico select {
   width: 100%;
-  padding: 12px 12px;
+  padding: 12px;
   border: 1px solid var(--cinza-azulado);
   border-radius: 8px;
   outline: none;
   font-size: .95rem;
   background: #fff;
-  transition: border-color .2s, box-shadow .2s, transform .02s;
 }
 
-form input:focus,
-form select:focus {
+/* Foco */
+.cadastroMedico input:focus,
+.cadastroMedico select:focus {
   border-color: var(--verde-agua);
-  box-shadow: 0 0 0 4px #11b5ba22;
 }
 
-form input:active {
-  transform: translateY(0.5px);
-}
-
-/* Faz cada par (label+input) ocupar a coluna inteira quando necessário */
-form > label,
-form > input,
-form > select,
-form > .field {
-  grid-column: span 1;
-}
-
-/* Campos que devem ocupar a linha toda */
-.field--full {
+/* Campos que ocupam linha toda */
+.cadastroMedico .field--full {
   grid-column: 1 / -1;
 }
 
-/* Área de uploads (centralizada) */
-.uploads {
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 12px;
-  flex-wrap: wrap; /* quebra linha se tiver muitos botões */
+/* Uploads */
+.cadastroMedico input[type="file"] {
+  display: none;
 }
 
-/* Esconde o input de arquivo e estiliza o label como botão */
-input[type="file"] {
-  position: absolute;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
-
-.upload-btn {
+.cadastroMedico .upload-btn {
   display: inline-block;
   text-align: center;
   padding: 12px 14px;
   background: var(--verde-agua);
   color: #fff;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
-  border: 1px solid transparent;
-  transition: background-color .2s, box-shadow .2s;
   font-weight: 700;
   font-size: .95rem;
 }
 
-.upload-btn:hover {
-  background: #0e9fa3;
-  box-shadow: 0 4px 12px rgba(17, 181, 186, 0.25);
-}
-
-/* Botão de ação */
-button,
-.button {
+/* Botão principal */
+.cadastroMedico button {
   width: 100%;
-  padding: 14px 18px;
+  padding: 14px;
   background: var(--azul);
   color: #fff;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color .2s, box-shadow .2s;
   margin-top: 8px;
 }
 
-button:hover,
-.button:hover {
-  background: #1748a4;
-  box-shadow: 0 6px 18px rgba(30, 90, 205, 0.25);
+
+/* Formulário de login */
+.login {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-a {
-  text-decoration: none;
+/* Texto inicial */
+.login p {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--cinza-azulado);
+  margin-bottom: 10px;
+}
+
+/* Labels */
+.login label {
+  font-weight: 700;
+  font-size: .95rem;
+  color: var(--cinza-azulado);
+  margin-bottom: 6px;
+}
+
+/* Inputs */
+.login input[type="email"],
+.login input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--cinza-azulado);
+  border-radius: 8px;
+  font-size: .95rem;
+  outline: none;
+  background: #fff;
+}
+
+/* Foco */
+.login input:focus {
+  border-color: var(--verde-agua);
+}
+
+/* Botão */
+.login button {
+  padding: 14px;
+  background: var(--azul);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.login button:hover {
+  background: #1748a4;
 }

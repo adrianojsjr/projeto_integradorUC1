@@ -181,7 +181,7 @@ function User() { //javaScript
               <input id="password" type="password" onChange={(e) => setDoctor({ ...doctor, password: e.target.value })} required />
             </p>
 
-            <button type="button" className="buttonSucess" onClick={register} disabled={loading}>
+            <button type="button" className="field--full" onClick={register} disabled={loading}>
               {loading ? "Cadastrando..." : "Cadastrar"}
             </button>
 
@@ -232,18 +232,11 @@ function User() { //javaScript
           <form className='login'>
             <p>Para logar coloque as informações abaixo</p>
 
-            <label>Digite o email
-              <input type='email' placeholder='exemplo@exemplo.com' onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} />
-            </label>
+            <label>Digite o email</label>
+            <input type='email' placeholder='exemplo@exemplo.com' onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} />
 
-
-
-
-            <label>Digite a senha
-              <input type='password' placeholder='senha' onChange={(e) => setDoctor({ ...doctor, senha: e.target.value })} />
-            </label>
-
-
+            <label>Digite a senha</label>
+            <input type='password' placeholder='senha' onChange={(e) => setDoctor({ ...doctor, senha: e.target.value })} />
 
 
             <button
@@ -251,16 +244,16 @@ function User() { //javaScript
               {loading ? "Entrando..." : "Login"}
             </button>
 
+          
           </form>
-
-
         )}
 
 
-        <button class="btn" onClick={() => setTelaLogin(!telaLogin)}>
-          {telaLogin && ("Cadastrar-se")}
-          {!telaLogin && ("Login")}
-        </button>
+  <button class="btn" onClick={() => setTelaLogin(!telaLogin)}>
+              {telaLogin && ("Cadastre-se")}
+              {!telaLogin && ("Login")}
+            </button>
+
 
       </div>
       {msg && (<div className='toast'>{msg}</div>)}
