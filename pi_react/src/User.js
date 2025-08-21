@@ -12,7 +12,7 @@ export const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 function User() { //javaScript
-  
+
   const nav = useNavigate();
 
   //inserir todos os campos que tem na tela de cadatro
@@ -26,8 +26,11 @@ function User() { //javaScript
     ufCRM: "",
     dataEmissaoCRM: "",
     especialidade: "",
+    residencia: [],
     ativo: "",
-    imagem: ""
+    imagem: "",
+    diploma: "",
+    situacaoRegular: ""
   });
 
   const [msg, setMsg] = useState("");
@@ -64,7 +67,7 @@ function User() { //javaScript
       localStorage.setItem('supaSession', data.session) //setItem -> guardar o item
 
       setTimeout(
-        nav("/doctors", {replace: true}),
+        nav("/doctors", { replace: true }),
         5002//aqui navega para tela principal
       );
 
@@ -117,75 +120,71 @@ function User() { //javaScript
           <form className="cadastroMedico">
 
             <p>
-              <label htmlFor="nome">Nome do Médico</label><br />
-              <input id="nome" type="text" placeholder="Nome do titular" />
+              <label>Nome do Médico</label>
+              <input id="nome" type="text" placeholder="Nome do titular" onChange={(e) => setDoctor({ ...doctor, nome: e.target.value })} />
             </p>
 
             <p>
-              <label htmlFor="email">E-mail</label><br />
-              <input id="email" type="email" placeholder="exemplo@email.com" onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} required />
-
+              <label>CPF</label>
+              <input id="cpf" type="number" placeholder="000.000.000-00" onChange={(e) => setDoctor({ ...doctor, cpf: e.target.value })} />
             </p>
 
             <p>
-              <label htmlFor="password">Senha</label><br />
-              <input id="email" type="password" onChange={(e) => setDoctor({ ...doctor, password: e.target.value })} required />
-
-            </p>
-            <p>
-              <label htmlFor="cpf">CPF</label><br />
-              <input id="cpf" type="number" placeholder="000.000.000-00" />
+              <label>Número do CRM</label>
+              <input id="numerodocrm" type="number" placeholder="CRM" onChange={(e) => setDoctor({ ...doctor, numeroCRM: e.target.value })} />
             </p>
 
             <p>
-              <label htmlFor="numerodocrm">Número do CRM</label><br />
-              <input id="numerodocrm" type="number" placeholder="CRM" />
+              <label>UF do CRM</label>
+              <input id="ufdocrm" type="text" placeholder="Insira o UF do CRM" onChange={(e) => setDoctor({ ...doctor, ufCRM: e.target.value })} />
             </p>
 
             <p>
-              <label htmlFor="ufdocrm">UF do CRM</label><br />
-              <input id="ufdocrm" type="text" placeholder="Insira o UF do CRM" />
+              <label>Telefone</label>
+              <input id="telefone" type="number" placeholder="Insira o Telefone" onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} />
             </p>
 
             <p>
-              <label htmlFor="telefone">Telefone</label><br />
-              <input id="telefone" type="number" placeholder="Insira o Telefone" />
+              <label>Especialidade</label>
+              <input id="especialidade" type="text" placeholder="Digite a especialidade" onChange={(e) => setDoctor({ ...doctor, especialidade: e.target.value })} />
             </p>
 
             <p>
-              <label htmlFor="especialidade">Especialidade</label><br />
-              <input id="especialidade" type="text" placeholder="Digite a especialidade" />
-            </p>
-
-            <p>
-              <label htmlFor="dataEmissao">Data de Emissão</label><br />
-              <input id="dataEmissao" type="date" />
+              <label>Data de Emissão</label>
+              <input id="dataEmissao" type="date" onChange={(e) => setDoctor({ ...doctor, dataEmissaoCRM: e.target.value })} />
             </p>
 
             <div>
               <p>
-                <label htmlFor="residencia" className="upload-btn">Anexar residência médica</label><br />
-                <input id="residencia" type="file" name="arquivo" />
+                <label className="upload-btn">Anexar residência médica</label>
+                <input id="residencia" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, residencia: e.target.value })} />
               </p>
 
               <p>
-                <label htmlFor="diploma" className="upload-btn">Anexar diploma acadêmico</label><br />
-                <input id="diploma" type="file" name="arquivo" />
+                <label className="upload-btn">Anexar diploma acadêmico</label>
+                <input id="diploma" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, diploma: e.target.value })} />
               </p>
 
               <p>
-                <label htmlFor="comprovante" className="upload-btn">Comprovante de situação regular</label><br />
-                <input id="comprovante" type="file" name="arquivo" />
+                <label className="upload-btn">Comprovante de situação regular</label>
+                <input id="comprovante" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, situacaoRegular: e.target.value })} />
               </p>
             </div>
-            <button
-              type="button"
-              className="buttonSucess"
-              onClick={register}
-              disabled={loading}
-            >
+
+            <p>
+              <label>E-mail</label>
+              <input id="email" type="email" placeholder="exemplo@email.com" onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} required />
+            </p>
+
+            <p>
+              <label>Senha</label>
+              <input id="password" type="password" onChange={(e) => setDoctor({ ...doctor, password: e.target.value })} required />
+            </p>
+
+            <button type="button" className="field--full" onClick={register} disabled={loading}>
               {loading ? "Cadastrando..." : "Cadastrar"}
             </button>
+
           </form>
         )}
 
@@ -193,33 +192,33 @@ function User() { //javaScript
           <form className="cadastroPaciente">
 
             <p>
-              <label htmlFor="nome">Nome</label><br />
+              <label">Nome</label>
               <input id="nome" type="text" placeholder="Nome do titular" required />
             </p>
 
             <p>
-              <label htmlFor="email">E-mail</label><br />
+              <labell">E-mail</label>
               <input id="email" type="email" placeholder="exemplo@email.com" required />
             </p>
 
             <p>
-              <label htmlFor="cpf">CPF</label><br />
+              <label>CPF</label>
               <input id="cpf" type="number" placeholder="000.000.000-00" required />
             </p>
 
 
             <p>
-              <label htmlFor="telefone">Telefone</label><br />
+              <labelfone">Telefone</label>
               <input id="telefone" type="number" placeholder="Insira o Telefone" required />
             </p>
 
             <p>
-              <label htmlFor="endereco">Endereço</label><br />
+              <labelreco">Endereço</label>
               <input id="endereco" required />
             </p>
 
             <p>
-              <label htmlFor="senha">Senha</label><br />
+              <labela">Senha</label>
               <input id="senha" required />
             </p>
 
@@ -233,18 +232,11 @@ function User() { //javaScript
           <form className='login'>
             <p>Para logar coloque as informações abaixo</p>
 
-            <label>Digite o email
-              <input type='email' placeholder='exemplo@exemplo.com' onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} />
-            </label>
+            <label>Digite o email</label>
+            <input type='email' placeholder='exemplo@exemplo.com' onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} />
 
-            <br />
-            <br />
-
-            <label>Digite a senha
-              <input type='password' placeholder='senha' onChange={(e) =>  setDoctor({ ...doctor, senha: e.target.value })} /><br />
-            </label>
-
-            <br />
+            <label>Digite a senha</label>
+            <input type='password' placeholder='senha' onChange={(e) => setDoctor({ ...doctor, senha: e.target.value })} />
 
 
             <button
@@ -252,16 +244,16 @@ function User() { //javaScript
               {loading ? "Entrando..." : "Login"}
             </button>
 
+          
           </form>
-
-
         )}
 
 
-        <button class="btn" onClick={() => setTelaLogin(!telaLogin)}>
-          {telaLogin && ("Cadastrar-se")}
-          {!telaLogin && ("Login")}
-        </button>
+  <button class="btn" onClick={() => setTelaLogin(!telaLogin)}>
+              {telaLogin && ("Cadastre-se")}
+              {!telaLogin && ("Login")}
+            </button>
+
 
       </div>
       {msg && (<div className='toast'>{msg}</div>)}

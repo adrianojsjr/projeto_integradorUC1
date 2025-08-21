@@ -36,7 +36,6 @@ body {
   display: flex;
   justify-content: space-between;
   /* Espaçamento entre logo, texto e botão */
-  display: flex;
   align-items: center;
   background-color: white;
   font-family: Arial, sans-serif;

@@ -1,7 +1,7 @@
-import logo from './logo.svg';
 import './App.css';
 import { use, useState } from 'react';
-import './resultadoBusca.css';
+import './resultadoBusca.css'
+import './logo_teste.png'
 
 
 function Doctor() { //javaScript
@@ -33,49 +33,59 @@ function Doctor() { //javaScript
   });
 
 
+function buscar() {
+  const dadosBuscados = {
+    imagem: "https://placeholder.pics/svg/300x150",
+    nome: "Dr. João",
+    especialidade: "Cardiologia",
+    dataDisponivel: "25/08/2025",
+    horaDisponivel: "14:00",
+    avaliacao: "5"
+  };
 
-
+  setDoctor(dadosBuscados);
+}
   return ( //html
     <main>
 
-      <div class="inicio">
-        <div class="menuBusca">
+      <div className="inicio">
+        <div className="menuBusca">
           <div></div>
-            <div class="busca">
-              <input type="text" placeholder="Especialidade ou médico" />
-              <a class="btn">Filtros</a>
-              <a class="btn" onclick="buscar()">Buscar</a>
-            </div>
+          <div className="busca">
+            <input type="text" placeholder="Especialidade ou médico" />
+            <a className="btn">Filtros</a>
+            <a className="btn" onClick={buscar}>Buscar</a>
+          </div>
           <div></div>
         </div>
 
       </div>
 
-      <div class="alinhamentoPagina">
+      <div className="alinhamentoPagina">
 
-        <div id="cardInfoConsulta" class="cardInfoConsulta">
+        <div id="cardInfoConsulta" className="cardInfoConsulta">
 
-          <div class="infoConsulta">
-            <img id="imgMedico" src="" alt="" />
-            <a href="./apresentacaoMedico.html"><h3 id="nomeMedico"></h3></a>
-            <p><span id="especialidadeMedico"></span> <br /> Avaliação <span id="avaliacao"></span>
+          <div className="infoConsulta">
+            <img src={doctor.imagem} alt="Foto do médico" />
+            <a href="./apresentacaoMedico.html"><h3>{doctor.nome}</h3></a>
+            <p><span id="especialidadeMedico">{doctor.especialidade}</span> <br/> Avaliação <span id="avaliacao">{doctor.avaliacao}</span>
               <br /><br /><span id="valorConsulta"></span>
             </p>
           </div>
 
-          <div class="calendario">
-            
+          <div className="calendario">
+
             <h3>Disponibilidade</h3>
             <p>Selecione o dia e horário de sua preferência para o atendimento</p>
 
-            <div class="disponibilidade">
-              <div class="dataDisponivel">
-                <a class="btnData" href=""><span id="dataDisponivel"></span> às <span
-                  id="horaDisponivel"></span></a>
+            <div className="disponibilidade">
+              <div className="dataDisponivel">
+                <a className="btnData" href=""><span id="dataDisponivel">{doctor.dataDisponivel}</span> às <span
+                  id="horaDisponivel">{doctor.horaDisponivel}</span></a>
 
               </div>
             </div>
-          
+
           </div >
 
         </div >
