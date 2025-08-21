@@ -24,38 +24,47 @@ function App() {                  //aqui javascript
 
   return (                         /* Aqui html */
     <Router>
-      <main className="App">
-        <nav>
-          {hasSession ? (
-            <>
-              <Link to="/doctors">Inicial</Link>
-              <Link to="/schedule">Agendamento</Link>
-              <Link to="/payment">Pagamento</Link>
-              <Link to="/patients">Pacientes</Link>
-            </>
+      <main>
 
-          ) : (
-            <>
-              <Link to="/doctors">Inicial</Link>
-              <Link to="/user">Login</Link>
+        <div className='inicio'>
 
-            </>
-          )
-          }
+          <nav className='menu'>
+            {hasSession ? (
+              <div>
+                <Link to="/doctors">Inicial</Link>
+                <Link to="/schedule">Agendamento</Link>
+                <Link to="/payment">Pagamento</Link>
+                <Link to="/patients">Pacientes</Link>
+              </div>
 
-        </nav>
+            ) : (
+              <div className='menu'>
+
+                <img src="./logo_teste.png" alt="" />
+                <p>Sua consulta na palma da mão</p>
+                <Link to="/doctors">Inicio</Link>
+                <Link to="/user">Login/Cadastro</Link>
+
+              </div>
+            )
+            }
+
+          </nav>
+
+
+        </div>
 
         <Routes>
           {/*Rotas Públicas*/}
-          
+
           <Route path='/user' element={<User />} />
           <Route path='/doctors' element={<Doctors />} />
 
           <Route element={<PrivateSession />}>
 
             {/*Rotas Logado*/}
-            
-            <Route path='/schedule' element={<Schedule/>} />
+
+            <Route path='/schedule' element={<Schedule />} />
             <Route path='/payment' element={<Payment />} />
             <Route path='/patients' element={<Patients />} />
 

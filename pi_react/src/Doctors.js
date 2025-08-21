@@ -1,6 +1,5 @@
 import logo from './logo.svg';
 import './App.css';
-import './cadastroMedico.css'
 import { use, useState } from 'react';
 import './resultadoBusca.css';
 
@@ -37,18 +36,9 @@ function Doctor() { //javaScript
 
 
   return ( //html
-    <main className="App">
-
+    <main>
 
       <div class="inicio">
-
-        <div class="menu">
-          <img src="./logo_teste.png" alt="" />
-          <p>Sua consulta na palma da mão</p>
-          <a href="">Cadastre-se</a>
-        </div>
-
-
         <div class="menuBusca">
           <div></div>
             <div class="busca">

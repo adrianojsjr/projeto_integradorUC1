@@ -1,88 +1,162 @@
-.App {
-  min-height: calc(100vh - 70vh);
-  padding-top: 37px;
+/* Paleta de cores:
+Verde-água: #11b5ba (vibrante, ideal para destaque)
+Cinza azulado: #40566e (ótimo para texto, bordas e contornos)
+Azul: #1e5acd (fundo ou botões primários)
+Verde: #33B291 (secundário, suave)
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+
+/* =============================
+   Reset e estrutura básica
+   ============================= */
+
+
+body {
+  cursor: default;
+  font-family: "Rubik", sans-serif;
+  margin: 0;
+}
+
+.alinhamentoPagina {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+/* =============================
+   Cabeçalho: logo, texto e botão
+   ============================= */
+
+
+.inicio .menu {
+  display: flex;
+  justify-content: space-between;
+  /* Espaçamento entre logo, texto e botão */
   display: flex;
   align-items: center;
-  justify-content: center;
   background-color: white;
   font-family: Arial, sans-serif;
 }
 
-.card{
-  background-color: white;
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgb(0, 0, 0, 0.5);
-  min-height: 250px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.btn{
-  background-color: blue;
-  color: white;
-  padding: 7px;
-  font-size: 15px;
-  border-radius: 5px;
+.inicio .menu img {
+  width: 150px;
+  /* Tamanho do logo */
 }
 
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width:100%;
-  background-color: #333;
-  padding: 12px 24px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  z-index: 1000;
+.inicio .menu p {
+  color: #40566e;
+  /* Cor cinza azulado para texto */
+  font-size: 30px;
+  /* Tamanho da fonte para destaque */
 }
-/* Estilo dos links*/
-nav a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: 500;
-  padding: 6px 10px;
+
+/* Botão "CADASTRE-SE" */
+.inicio .menu a {
+  background-color: #1e5acd;
+  /* Cor de fundo azul principal */
+  color: #ffffff;
+  /* Cor do texto: branco */
   border-radius: 6px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  /* Bordas arredondadas */
+  padding: 12px 24px;
+  /* Espaçamento interno vertical e horizontal */
+  font-size: 16px;
+  /* Tamanho da fonte */
+  font-weight: 600;
+  /* Negrito */
+  cursor: pointer;
+  /* Cursor tipo "mãozinha" */
+  text-decoration: none;
+  /* Remove sublinhado do link */
+  box-shadow: 0 4px 8px rgba(30, 90, 205, 0.25);
+  /* Sombra sutil para destaque */
 }
 
-/*Hover com highlight (rilight)*/
-nav a:hover{
-  background-color: #fff;
-  color: #00f
+/* =============================
+   Área do campo de busca com gradiente
+   ============================= */
+.inicio .menuBusca {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Alinha verticalmente ao centro */
+  background: linear-gradient(90deg, #1e5acd 0%, #1e5acd 20%, #33B291 100%);
+  height: 200px;
+  /* Altura da área */
+}
 
+/* Container dos elementos de busca */
+.inicio .menuBusca .busca {
+  display: flex;
+  align-items: center;
+  /* Centraliza verticalmente input e botões */
+  gap: 5px;
+  /* Espaçamento entre eles */
+}
+
+/* Campo de busca */
+.inicio .menuBusca input {
+  padding: 10px 20px;
+  /* Espaçamento confortável para digitar */
+  border: none;
+  /* Remove borda padrão */
+  border-radius: 6px;
+  /* Bordas arredondadas */
+  font-size: 16px;
+  /* Tamanho da fonte */
+  color: #333;
+  /* Cor do texto digitado */
+  width: 250px;
+  /* Largura fixa */
+}
+
+/* Botões "Buscar" e "Filtros" */
+.btn {
+  background-color: #11b5ba;
+  /* Verde-água vibrante para destaque */
+  color: #ffffff;
+  /* Texto branco */
+  border: none;
+  /* Sem borda */
+  border-radius: 6px;
+  /* Bordas arredondadas */
+  padding: 10px 20px;
+  /* Espaçamento interno */
+  font-size: 16px;
+  /* Tamanho da fonte */
+  font-weight: 500;
+  /* Peso médio */
+  margin-left: 5px;
+  /* Espaço à esquerda para separar dos elementos anteriores */
 }
 
 
-.toast {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #333;
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  opacity: 0;
-  transform: translateY(-20px);
-  animation: toastFadeInOut 5s forwards;
-  z-index: 9999;
+/* Rodapé */
+
+.rodape {
+  display: flex;
+  margin-top: 100px;
+  justify-content: space-between;
+  /* Espaçamento entre logo, texto e botão */
+  align-items: center;
+  /* Alinha verticalmente ao centro */
+  margin-left: 50px;
+  margin-right: 50px;
+
 }
 
-@keyframes toastFadeInOut {
-  0% {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  10%, 90% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
+.rodape img {
+  width: 150px;
+  /* Tamanho do logo */
+}
+
+.rodape p {
+  color: #40566e;
+  /* Cor cinza azulado para texto */
+  font-size: 30px;
+  /* Tamanho da fonte para destaque */
 }
