@@ -24,13 +24,15 @@ function Schedule() {                  //aqui javascript
   async function creatSchedule() {
     const { data: dU, error: eU } = await supabase.auth.getUser();
    
-    const uid = dU?.user?.uid
+    const uid = dU?.user?.id;
    
     if (!uid) nav("/user", {replace: true});
 
     /*if (eU) nav('/user', { replace: true })
     if (!dU) nav('/user', { replace: true })
     if (dU && !dU.id) nav('/user', { replace: true })*/
+
+    console.log ({...schedule, user_id: uid})
 
     const { data, error } = await supabase
       .from('schedule')
@@ -43,7 +45,7 @@ function Schedule() {                  //aqui javascript
 
   return (                         /* Aqui html */
     <div className="Screen">
-      <form>
+      <form onSubmit={(e)=> e.preventDefault()}>
         <input type="text" placeholder="status" onChange={(e) => setSchedule({ ...schedule, status: e.target.value })} required />
         <input type="text" placeholder="avaliacao" onChange={(e) => setSchedule({ ...schedule, avaliacao: e.target.value })} required />
         <input type="text" placeholder="doctor_id" onChange={(e) => setSchedule({ ...schedule, doctor_id: e.target.value })} required />
