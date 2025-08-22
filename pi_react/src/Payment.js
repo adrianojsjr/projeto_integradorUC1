@@ -33,9 +33,13 @@ function Payment() {                  //aqui javascript
 
     const { data: dU, error: eU } = await supabase.auth.getUser();
 
-    if (eU) nav('/login', { replace: true })
-    if (!dU) nav('login', { replace: true })
-    if (dU && !dU.id) nav('/login', { replace: true })
+    const uid = dU?.user.id
+
+    if(!uid) nav("/login" , {replace: true})
+
+    // if (eU) nav('/login', { replace: true })
+    // if (!dU) nav('login', { replace: true })
+    // if (dU && !dU.id) nav('/login', { replace: true })
 
 
     const { data, error } = await supabase
@@ -50,8 +54,9 @@ function Payment() {                  //aqui javascript
     <div className="screen">
 
       <form>
-        <input type="text" placeholder='Tipo de Pagamento : Cartão/Pix' onChange={(e) => setpayment({ ...payment, tipo_pagamento: e.target.value })} />
-        <button onClick={fazerPagamento()}>Salvar</button>
+        <input type="text"  placeholder='Digite o Tipo de Pagamento : Cartão ou Pix' onChange={(e) => setpayment({ ...payment, tipo_pagamento: e.target.value })} />
+        {/* <button onClick={fazerPagamento()}>Salvar</button> */}
+        <button onClick={(e) => { e.preventDefault(); fazerPagamento(); }}>Salvar</button>
       </form>
 
 
