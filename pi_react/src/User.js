@@ -30,7 +30,8 @@ function User() { //javaScript
     ativo: "",
     imagem: "",
     diploma: "",
-    situacaoRegular: ""
+    situacaoRegular: "",
+    disponibilidade: []
   });
 
   const [msg, setMsg] = useState("");
