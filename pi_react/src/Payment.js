@@ -4,7 +4,7 @@
 
 import logo from './logo.svg';
 import './App.css';
-import './cadastroMedico.css'
+import './user.css'
 import { use, useState } from 'react';
 import { createClient } from "@supabase/supabase-js";
 import { replace, useNavigate } from 'react-router-dom';

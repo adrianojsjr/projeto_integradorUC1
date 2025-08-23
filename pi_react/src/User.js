@@ -1,9 +1,11 @@
 import logo from './logo.svg';
-import './App.css';
-import './cadastroMedico.css'
 import { use, useState } from 'react';
 import { createClient } from "@supabase/supabase-js";
 import { useNavigate } from 'react-router-dom';
+
+import './App.css';
+import './user.css';
+import './styleGeral.css';
 
 const supabaseUrl = "https://mayrahcoiqpxrhqtcnry.supabase.co"
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1heXJhaGNvaXFweHJocXRjbnJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNTAzMzgsImV4cCI6MjA2OTkyNjMzOH0.8jpiw7cQHMy4KaBl5qquKBptbjfO1FqtdE7u7X2C_OU"
@@ -109,6 +111,7 @@ function User() { //javaScript
 
   //esconder telas
   const [telaLogin, setTelaLogin] = useState(true);
+  const [souMedico, setSouMedico] = useState(false);
 
   return ( //html
     <main className="App">
@@ -117,22 +120,27 @@ function User() { //javaScript
       <div class="card">
         {/* formulário de cadastro com o campo para email, senha e um botão para enviar */}
 
-        {!telaLogin && (
-          <form className="cadastroMedico">
+        {!telaLogin && souMedico &&(
+          <form>
 
             <p>
-              <label>Nome do Médico</label>
+              <label>Nome</label>
               <input id="nome" type="text" placeholder="Nome do titular" onChange={(e) => setDoctor({ ...doctor, nome: e.target.value })} />
+            </p>
+
+             <p>
+              <label>E-mail</label>
+              <input id="email" type="email" placeholder="exemplo@email.com" onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} required />
             </p>
 
             <p>
               <label>CPF</label>
-              <input id="cpf" type="number" placeholder="000.000.000-00" onChange={(e) => setDoctor({ ...doctor, cpf: e.target.value })} />
+              <input id="cpf" type="text" placeholder="000.000.000-00" onChange={(e) => setDoctor({ ...doctor, cpf: e.target.value })} />
             </p>
 
             <p>
               <label>Número do CRM</label>
-              <input id="numerodocrm" type="number" placeholder="CRM" onChange={(e) => setDoctor({ ...doctor, numeroCRM: e.target.value })} />
+              <input id="numerodocrm" type="text" placeholder="CRM" onChange={(e) => setDoctor({ ...doctor, numeroCRM: e.target.value })} />
             </p>
 
             <p>
@@ -142,7 +150,7 @@ function User() { //javaScript
 
             <p>
               <label>Telefone</label>
-              <input id="telefone" type="number" placeholder="Insira o Telefone" onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} />
+              <input id="telefone" type="text" placeholder="Insira o Telefone" onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} />
             </p>
 
             <p>
@@ -157,105 +165,108 @@ function User() { //javaScript
 
             <div>
               <p>
-                <label className="upload-btn">Anexar residência médica</label>
+                <label className="btnUpload">Anexar residência médica</label>
                 <input id="residencia" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, residencia: e.target.value })} />
               </p>
 
               <p>
-                <label className="upload-btn">Anexar diploma acadêmico</label>
+                <label className="btnUpload">Anexar diploma acadêmico</label>
                 <input id="diploma" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, diploma: e.target.value })} />
               </p>
 
               <p>
-                <label className="upload-btn">Comprovante de situação regular</label>
+                <label className="btnUpload">Comprovante de situação regular</label>
                 <input id="comprovante" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, situacaoRegular: e.target.value })} />
               </p>
             </div>
-
-            <p>
-              <label>E-mail</label>
-              <input id="email" type="email" placeholder="exemplo@email.com" onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} required />
-            </p>
 
             <p>
               <label>Senha</label>
               <input id="password" type="password" onChange={(e) => setDoctor({ ...doctor, password: e.target.value })} required />
             </p>
 
-            <button type="button" className="field--full" onClick={register} disabled={loading}>
+            <button className="buttonSucess" type="button" onClick={register} disabled={loading}>
               {loading ? "Cadastrando..." : "Cadastrar"}
             </button>
 
           </form>
         )}
 
-        {/* {!telaLogin && (
-          <form className="cadastroPaciente">
+      
+        {!telaLogin && !souMedico && (
+          <form>
 
             <p>
-              <label">Nome</label>
-              <input id="nome" type="text" placeholder="Nome do titular" required />
+              <label>Nome</label>
+              <input id="nome" type="text" placeholder="Nome do titular" onChange={(e) => setPatient({ ...patient, nome: e.target.value })} required />
             </p>
 
             <p>
-              <labell">E-mail</label>
-              <input id="email" type="email" placeholder="exemplo@email.com" required />
+              <label>E-mail</label>
+              <input id="email" type="email" placeholder="exemplo@email.com"  onChange={(e) => setPatient({ ...patient, email: e.target.value })} required />
             </p>
 
             <p>
               <label>CPF</label>
-              <input id="cpf" type="number" placeholder="000.000.000-00" required />
+              <input id="cpf" type="text" placeholder="000.000.000-00"  onChange={(e) => setPatient({ ...patient, cpf: e.target.value })} required />
             </p>
 
 
             <p>
-              <labelfone">Telefone</label>
-              <input id="telefone" type="number" placeholder="Insira o Telefone" required />
+              <label>Telefone</label>
+              <input id="telefone" type="text" placeholder="Insira o Telefone"  onChange={(e) => setPatient({ ...patient, telefone: e.target.value })} required />
             </p>
 
             <p>
-              <labelreco">Endereço</label>
-              <input id="endereco" required />
+              <label>Senha</label>
+              <input id="senha" type="password"  onChange={(e) => setPatient({ ...patient, senha: e.target.value })} required />
             </p>
 
-            <p>
-              <labela">Senha</label>
-              <input id="senha" required />
-            </p>
+             <button className="buttonSucess" type="button" onClick={register} disabled={loading}>
+              {loading ? "Cadastrando..." : "Cadastrar"}
+            </button>
 
           </form>
-        )} */}
+        )}
 
 
         {/* formulário de login com o campo para email, senha e um botão para enviar */}
 
         {telaLogin && (
-          <form className='login'>
+          <form>
+
             <p>Para logar coloque as informações abaixo</p>
-
-            <label>Digite o email</label>
-            <input type='email' placeholder='exemplo@exemplo.com' onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} />
-
-            <label>Digite a senha</label>
-            <input type='password' placeholder='senha' onChange={(e) => setDoctor({ ...doctor, senha: e.target.value })} />
-
-
+            <input type='email' placeholder='Digite seu email' onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} />
+            <br/>
+            <br/>
+            <input type='password' placeholder='Digite sua senha' onChange={(e) => setDoctor({ ...doctor, senha: e.target.value })} />
             <button
               type="button" className="buttonSucess" onClick={logar} disabled={loading} >
               {loading ? "Entrando..." : "Login"}
             </button>
 
-          
           </form>
         )}
 
+        <div className="btnCadLogin">
 
-  <button class="btn" onClick={() => setTelaLogin(!telaLogin)}>
-              {telaLogin && ("Cadastre-se")}
-              {!telaLogin && ("Login")}
-            </button>
+          {telaLogin && (
+            <>
+              <p className='txtCadastrar'>Cadastre-se</p>
+              <div>
+                <button onClick = {() => {setTelaLogin(false); setSouMedico(true)}}>Sou médico</button>
+                <button onClick = {() => {setTelaLogin(false); setSouMedico(false)}} >Sou paciente</button>
+              </div>
+            </>
+          )}
+          {!telaLogin && (
+            <button onClick={() => setTelaLogin(!telaLogin)}>Voltar para Login</button>
+          )}
+          
 
+        </div>
 
+        
       </div>
       {msg && (<div className='toast'>{msg}</div>)}
     </main>

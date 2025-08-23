@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import './cadastroMedico.css'
+import './user.css'
 import { use, useState } from 'react';
 import { createClient } from "@supabase/supabase-js";
 import { useNavigate } from 'react-router-dom';
@@ -14,11 +14,8 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 function Schedule() {                  //aqui javascript
   const nav = useNavigate();
   const [schedule, setSchedule] = useState({
-    status: "",
-    avaliacao: "",
-    doctor_id: "",
-    patient_id: "",
-    payment_id: "",
+    dateTime:"",
+    doctor_id: ""
   })
 
   async function creatSchedule() {
@@ -34,7 +31,7 @@ function Schedule() {                  //aqui javascript
 
     const { data, error } = await supabase
       .from('schedule')
-      .insert({...schedule, user_id: uid});
+      .insert({...schedule, doctor_id: uid});
       //.select();
         
       
@@ -44,11 +41,7 @@ function Schedule() {                  //aqui javascript
   return (                         /* Aqui html */
     <div className="Screen">
       <form>
-        <input type="text" placeholder="status" onChange={(e) => setSchedule({ ...schedule, status: e.target.value })} required />
-        <input type="text" placeholder="avaliacao" onChange={(e) => setSchedule({ ...schedule, avaliacao: e.target.value })} required />
-        <input type="text" placeholder="doctor_id" onChange={(e) => setSchedule({ ...schedule, doctor_id: e.target.value })} required />
-        <input type="text" placeholder="patient_id" onChange={(e) => setSchedule({ ...schedule, patient_id: e.target.value })} required />
-        <input type="text" placeholder="payment_id" onChange={(e) => setSchedule({ ...schedule, payment_id: e.target.value })} required />
+        <input type="dateime-local" placeholder="data" onChange={(e) => setSchedule({ ...schedule, date: e.target.value })} required />
 
         <button onClick={creatSchedule}>Salvar</button>
       </form>

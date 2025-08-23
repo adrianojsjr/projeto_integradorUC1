@@ -1,0 +1,98 @@
+:root {
+  --azul: #1e5acd;
+  --cinza-azulado: #40566e;
+  --verde-agua: #11b5ba;
+  --verde: #33B291;
+  --borda: #dce3ec;
+}
+
+/* Formulário de login */
+.card {
+  max-width:500px;
+  margin: 0 auto; /*centraliza o formulário*/
+  padding: 20px;
+  background: #fff;
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+
+}
+
+
+/* Labels*/
+.card label {
+  margin-bottom: 6px;
+  color: var(--cinza-azulado);
+  font-weight: 700;
+}
+
+/*Inputs*/
+
+form input[type="text"],
+.card input[type="email"],
+.card input[type="number"],
+.card input[type="date"],
+.card input[type="password"],
+.card input[type="email"],
+.card input[type="password"],
+.card select {
+  width:93%;
+  border: 1px solid var(--cinza-azulado);
+  border-radius: 8px;
+  font-size: .95rem;
+  padding: 13px;
+}
+
+/* Uploads */
+.card input[type="file"] {
+  display: none; /*junta o label com o input */
+}
+
+.card .btnUpload {
+  display: flex;
+  text-align: center;
+  background: var(--verde-agua);
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: .95rem;
+  width:93%;
+  padding: 15px;
+}
+
+.txtCadastrar{
+  text-decoration: underline;
+
+}
+
+button{
+  margin-top: 10px;
+  margin-bottom: 15px;
+  width: 100%;
+  padding: 14px;
+  background: var(--azul);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+
+}
+
+.btnCadLogin button{
+  background-color: var(--verde);
+}
+
+
+.card button:hover {
+  border: white solid 1px;
+}
+
+
+/* Foco */
+.card input:focus {
+  border-color: var(--verde-agua);
+}

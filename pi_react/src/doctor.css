@@ -14,8 +14,15 @@ Verde: #33B291 (secundário, suave)
     margin-top: 30px;
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 100px;
 }
+
+.cardInfoConsulta img{
+    width: 250px;
+    height: 150px;
+}
+
 
 .cardInfoConsulta .infoConsulta {
     display: flex;
@@ -64,16 +71,4 @@ Verde: #33B291 (secundário, suave)
     gap: 5px;
     align-items: center;
 
-}
-
-
-.calendario .btnData {
-    background-color: #33B291; 
-    color: #ffffff;
-    border: none; /* Sem borda padrão*/
-    border-radius: 6px; /* Bordas arredondadas */
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 500;
-    text-decoration: none;
 }

@@ -5,7 +5,7 @@ import Patients from './Patients'
 import Payment from './Payment'
 import Schedule from './Schedule'
 import User from './User'
-import "./logo_teste.png"
+import logo from "./logo_teste.png"
 
 
 
@@ -32,20 +32,23 @@ function App() {                  //aqui javascript
           <nav>
             {hasSession ? (
               <div className='menu'>
-                <img src="./logo_teste.png" alt="" />
-                <Link to="/doctors">Inicio</Link>
+                <img src={logo} />
+                <div className='btnNav'>
                 <Link to="/schedule">Agendamento</Link>
                 <Link to="/payment">Pagamento</Link>
                 <Link to="/patients">Pacientes</Link>
+                </div>
               </div>
 
             ) : (
               <div className='menu'>
 
-                <img src="./logo_teste.png" alt="" />
+                <img src={logo} to="/doctors"/>
                 <p>Sua consulta na palma da mão</p>
+                <div className='btnNav'>
                 <Link to="/doctors">Inicio</Link>
                 <Link to="/user">Login/Cadastro</Link>
+                </div>
 
               </div>
             )

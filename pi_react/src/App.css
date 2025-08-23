@@ -46,6 +46,11 @@ body {
   /* Tamanho do logo */
 }
 
+.inicio .menu .btnNav{
+  display: flex;
+  gap: 10px;
+}
+
 .inicio .menu p {
   color: #40566e;
   /* Cor cinza azulado para texto */
