@@ -1,78 +1,123 @@
-// import logo from './logo.svg';
-// import {useState} from 'react';
-// import './App.css';
+// Payment.js
 
-import logo from './logo.svg';
 import './App.css';
-import './user.css'
-import { use, useState } from 'react';
-import { createClient } from "@supabase/supabase-js";
-import { replace, useNavigate } from 'react-router-dom';
+import './cadastroMedico.css';
 
-const supabaseUrl = "https://mayrahcoiqpxrhqtcnry.supabase.co"
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1heXJhaGNvaXFweHJocXRjbnJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNTAzMzgsImV4cCI6MjA2OTkyNjMzOH0.8jpiw7cQHMy4KaBl5qquKBptbjfO1FqtdE7u7X2C_OU"
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { createClient } from '@supabase/supabase-js';
+
+// 🔐 Use variáveis de ambiente em produção!
+const supabaseUrl = 'https://mayrahcoiqpxrhqtcnry.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1heXJhaGNvaXFweHJocXRjbnJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNTAzMzgsImV4cCI6MjA2OTkyNjMzOH0.8jpiw7cQHMy4KaBl5qquKBptbjfO1FqtdE7u7X2C_OU';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+function Payment() {
+  const navigate = useNavigate();
 
-
-function Payment() {                  //aqui javascript
-  const nav = useNavigate();
-
-  const [payment, setpayment] = useState({
+  // Estado para armazenar os dados do pagamento
+  const [payment, setPayment] = useState({
     tipo_pagamento: '',
-    user_id: ''
+    user_id: '',
+  });
 
+  // Estado para armazenar os pagamentos buscados
+  const [payments, setPayments] = useState([]);
 
-  })
-
-
-
-
-
+  // Função para salvar o pagamento no Supabase
   async function fazerPagamento() {
+    try {
+      const { data: dU, error: eU } = await supabase.auth.getUser();
+      const uid = dU?.user?.id;
 
-    const { data: dU, error: eU } = await supabase.auth.getUser();
+      if (!uid) {
+        navigate('/login', { replace: true });
+        return;
+      }
 
-    const uid = dU?.user.id
+      const novoPagamento = {
+        tipo_pagamento: payment.tipo_pagamento,
+        user_id: uid,
+      };
 
-    if(!uid) nav("/login" , {replace: true})
+      const { data, error } = await supabase
+        .from('payment')
+        .insert([novoPagamento])
+        .select();
 
-    // if (eU) nav('/login', { replace: true })
-    // if (!dU) nav('login', { replace: true })
-    // if (dU && !dU.id) nav('/login', { replace: true })
-
-
-    const { data, error } = await supabase
-      .from('payment')
-      .insert([
-        payment
-      ])
-      .select()
-
+      if (error) {
+        console.error('Erro ao salvar pagamento:', error);
+        alert('Erro ao salvar pagamento');
+      } else {
+        alert('Pagamento salvo com sucesso!');
+        setPayment({ tipo_pagamento: '', user_id: '' });
+      }
+    } catch (err) {
+      console.error('Erro inesperado:', err);
+    }
   }
-  return (                         /* Aqui html */
+
+  // Função para listar todos os pagamentos
+  async function listarPagamento() {
+    try {
+      const { data, error } = await supabase
+        .from('payment')
+        .select('*');
+
+      if (error) {
+        console.error('Erro ao listar pagamentos:', error);
+        alert('Erro ao buscar pagamentos');
+      } else {
+        setPayments(data || []);
+      }
+    } catch (err) {
+      console.error('Erro inesperado ao listar:', err);
+    }
+  }
+
+  return (
     <div className="screen">
+      <h2>Cadastro de Pagamento</h2>
 
       <form>
-        <input type="text"  placeholder='Digite o Tipo de Pagamento : Cartão ou Pix' onChange={(e) => setpayment({ ...payment, tipo_pagamento: e.target.value })} />
-        {/* <button onClick={fazerPagamento()}>Salvar</button> */}
-        <button onClick={(e) => { e.preventDefault(); fazerPagamento(); }}>Salvar</button>
+        <input
+          type="text"
+          placeholder="Digite o Tipo de Pagamento: Cartão ou Pix"
+          value={payment.tipo_pagamento}
+          onChange={(e) => setPayment({ ...payment, tipo_pagamento: e.target.value })}
+        />
+
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            fazerPagamento();
+          }}
+        >
+          Salvar
+        </button>
+
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            listarPagamento();
+          }}
+        >
+          Buscar
+        </button>
       </form>
 
-
-
-
-
-
-
-
-
-
-
-
+      <div>
+        <h3>Pagamentos Cadastrados:</h3>
+        {payments.length === 0 && <p>Nenhum pagamento encontrado.</p>}
+        {payments.map((pagamento) => (
+          <div key={pagamento.id} className="payment-item">
+            <p><strong>Tipo:</strong> {pagamento.tipo_pagamento}</p>
+            <p><strong>ID do Usuário:</strong> {pagamento.user_id}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
-
 
 export default Payment;
