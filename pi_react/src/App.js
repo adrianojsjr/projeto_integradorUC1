@@ -1,7 +1,7 @@
 
 import './App.css';
 import Doctors from './Views/Doctor/Doctors'
-import Patients from './Patients'
+import Patients from './Views/Patients/Patients'
 import Payment from './Payment'
 import Schedule from './Schedule'
 import User from './User'
