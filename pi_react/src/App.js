@@ -1,6 +1,6 @@
 
 import './App.css';
-import Doctors from './Doctors'
+import Doctors from './Views/Doctor/Doctors'
 import Patients from './Patients'
 import Payment from './Payment'
 import Schedule from './Views/Schedule/Schedule'
