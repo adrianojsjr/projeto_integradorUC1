@@ -1,7 +1,7 @@
 // Payment.js
 
 import './App.css';
-import './cadastroMedico.css';
+import './doctor.css';
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
