@@ -33,10 +33,13 @@ function App() {                  //aqui javascript
             {hasSession ? (
               <div className='menu'>
                 <img src={logo} />
+                
                 <div className='btnNav'>
+                  <Link to="/doctors">Inicio</Link>
                 <Link to="/schedule">Agendamento</Link>
                 <Link to="/payment">Pagamento</Link>
                 <Link to="/patients">Pacientes</Link>
+                
                 </div>
               </div>
 
