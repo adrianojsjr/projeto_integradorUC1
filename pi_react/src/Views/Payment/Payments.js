@@ -1,7 +1,5 @@
 // Payment.js
-
-import './App.css';
-import './Doctor.css';
+import './Payment.css';
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
