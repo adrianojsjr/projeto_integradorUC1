@@ -3,7 +3,7 @@ import './App.css';
 import Doctors from './Doctors'
 import Patients from './Patients'
 import Payment from './Payment'
-import Schedule from './Schedule'
+import Schedule from './Views/Schedule/Schedule'
 import User from './User'
 import logo from "./logo_teste.png"
 
