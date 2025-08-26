@@ -121,7 +121,7 @@ function User() { //javaScript
         {/* formulário de cadastro com o campo para email, senha e um botão para enviar */}
 
         {!telaLogin && souMedico &&(
-          <form>
+          <form onSubmit={(e) => e.preventDefault()}>
 
             <p>
               <label>Nome</label>
@@ -194,7 +194,7 @@ function User() { //javaScript
 
       
         {!telaLogin && !souMedico && (
-          <form>
+          <form onSubmit={(e) => e.preventDefault()}>
 
             <p>
               <label>Nome</label>
@@ -233,7 +233,7 @@ function User() { //javaScript
         {/* formulário de login com o campo para email, senha e um botão para enviar */}
 
         {telaLogin && (
-          <form>
+          <form onSubmit={(e) => e.preventDefault()}>
 
             <p>Para logar coloque as informações abaixo</p>
             <input type='email' placeholder='Digite seu email' onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} />

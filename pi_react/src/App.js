@@ -1,11 +1,12 @@
 
 import './App.css';
 import Doctors from './Views/Doctor/Index'
-import Patients from './Views/Patients/Patients'
-import Payment from './Views/Payment/Index'
-import Schedule from './Views/Schedule/Schedule'
-import User from './User'
-import logo from "./logo_teste.png"
+import DoctorShow from './Views/Doctor/Show';
+import Patients from './Views/Patients/Patients';
+import Payment from './Views/Payment/Index';
+import Schedule from './Views/Schedule/Schedule';
+import User from './User';
+import logo from "./logo_teste.png";
 
 
 
@@ -35,7 +36,7 @@ function App() {                  //aqui javascript
                 <img src={logo} />
                 
                 <div className='btnNav'>
-                  <Link to="/doctors">Inicio</Link>
+                <Link to="/doctors">Inicio</Link>
                 <Link to="/schedule">Agendamento</Link>
                 <Link to="/payment">Pagamento</Link>
                 <Link to="/patients">Pacientes</Link>
@@ -60,6 +61,7 @@ function App() {                  //aqui javascript
           </nav>
 
 
+
         </div>
 
         <Routes>
@@ -75,6 +77,7 @@ function App() {                  //aqui javascript
             <Route path='/schedule' element={<Schedule />} />
             <Route path='/payment' element={<Payment />} />
             <Route path='/patients' element={<Patients />} />
+            <Route path='/doctor/:id' element={<DoctorShow/>}/>
 
 
           </Route>

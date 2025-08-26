@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createClient } from "@supabase/supabase-js";
+import { useNavigate } from 'react-router-dom';
 
 import './Style.css';
 
@@ -11,6 +12,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 function Doctor() { //javaScript
 
+  const nav = useNavigate();
   const [doctors, setDoctors] = useState([])
 
   useEffect(() => {
@@ -60,13 +62,13 @@ function Doctor() { //javaScript
 
       {doctors.map(
         medico => (
-          <div key={medico.id}>
+          <div key={medico.id} >
 
             <div class="alinhamentoPagina">
 
               <div class="cardInfoConsulta">
 
-                <div>
+                <div onClick={()=> nav (`/doctors/${medico.id}`, {replace:true})}>
 
                   <img src={medico.imagem} />
                   {medico.nome}<br />
@@ -91,6 +93,8 @@ function Doctor() { //javaScript
                 </div>
 
               </div>
+
+              
 
             </div>
 
