@@ -3,6 +3,7 @@ import './App.css';
 import Doctors from './Views/Doctor/Index'
 import Patients from './Views/Patients/Patients'
 import Payment from './Views/Payment/Index'
+import PaymentShow from './Views/Payment/Show';
 import Schedule from './Views/Schedule/Schedule'
 import User from './User'
 import logo from "./logo_teste.png"
@@ -75,6 +76,7 @@ function App() {                  //aqui javascript
             <Route path='/schedule' element={<Schedule />} />
             <Route path='/payment' element={<Payment />} />
             <Route path='/patients' element={<Patients />} />
+            <Route path='/payment:id' element={<PaymentShow />} />
 
 
           </Route>
