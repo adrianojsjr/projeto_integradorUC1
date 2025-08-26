@@ -1,4 +1,4 @@
-import { use, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from "@supabase/supabase-js";
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -15,7 +15,12 @@ function Schedule() {                  //aqui javascript
 
   const [schedule, setSchedule] = useState({
     dateTime:"",
-    doctor_id: ""
+    doctor_id: "",
+    status: "",
+    avaliacao: "",
+    patient_id: "",
+    payment_id:""
+
   })
 
   useEffect(() => {
@@ -53,16 +58,38 @@ function Schedule() {                  //aqui javascript
   }
 
 
-  return (                         /* Aqui html */
-    <div className="Screen" key= {s.id} onClick={()=> nav(`/schedule/${g.id}`, {replace:true})}>
-      <form>
-        <input type="dateime-local" value = {schedule.date} placeholder="data" onChange={(e) => setSchedule({ ...schedule, date: e.target.value })} required />
+  return (     
 
-        <button onClick={creatSchedule}>Salvar</button>
-      </form>
+    <main>
+       {schedule.map(
+      agenda => (
+        <div className="Screen" key= {agenda.id} onClick={()=> nav(`/schedule/${agenda.id}`, {replace:true})}>
+        <form>
+          <input type="dateime-local" value = {schedule.date} placeholder="data" onChange={(e) => setSchedule({ ...schedule, date: e.target.value })} required />
+          <button onClick={creatSchedule}>Salvar</button>
+
+          {agenda.dateTime}
+          {agenda.doctor_id}<br/>
+          {agenda.status}<br/>
+          {agenda.avaliacao}<br/>
+          {agenda.patient_id}<br/>
+          {agenda.payment_id}
+
+        </form>
 
 
     </div>
+      )
+    )
+
+    }
+
+
+
+    </main>                    /* Aqui html */
+
+
+ 
   );
 }
 

@@ -1,10 +1,13 @@
 
 import './App.css';
-import Doctors from './Views/Doctor/Index'
-import Patients from './Views/Patients/Patients'
-import Payment from './Views/Payment/Index'
+import Doctors from './Views/Doctor/Index';
+import DoctorShow from './Views/Doctor/Show';
+import Patients from './Views/Patients/Patients';
+import Payment from './Views/Payment/Index';
 import PaymentShow from './Views/Payment/Show';
-import Schedule from './Views/Schedule/Schedule'
+import Schedule from './Views/Schedule/Index';
+import ScheduleShow from './Views/Schedule/Show';
+
 
 import User from './User'
 import logo from "./logo_teste.png"
