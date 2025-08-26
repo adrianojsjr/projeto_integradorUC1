@@ -2,17 +2,10 @@
 import './App.css';
 import Doctors from './Views/Doctor/Index'
 import Patients from './Views/Patients/Patients'
-<<<<<<< HEAD
-import Payment from './Views/Payment/Payments'
-import Schedule from './Views/Schedule/Index'
-import ScheduleShow from './Views/Schedule/Show'
-
-=======
 import Payment from './Views/Payment/Index'
 import PaymentShow from './Views/Payment/Show';
 import Schedule from './Views/Schedule/Schedule'
 
->>>>>>> 248623b2ecef07a7d6442e44c7343277dc0bd6e1
 import User from './User'
 import logo from "./logo_teste.png"
 
