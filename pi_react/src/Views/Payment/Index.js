@@ -1,5 +1,5 @@
 // Payment.js
-import './Payment.css';
+import './Style.css';
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
