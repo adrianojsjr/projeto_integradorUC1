@@ -41,19 +41,7 @@ function Doctor() {
       listarMedicos()
     }, [])
   
-  
-  
-    async function listarMedicos() {
-  
-      let { data: dataDoctors, error } = await supabase
-        .from('doctors')
-        .select('*')
-        .eq('id', id)
-        .single(); /*retorna um só*/ 
-        setDoctor(dataDoctors);
-  
-    }
-
+    
     async function register() {
         setLoading(true);
     
@@ -77,6 +65,19 @@ function Doctor() {
         setTimeout(() => setMsg(""), 5000);
       }
     
+  
+  
+    async function listarMedicos() {
+  
+      let { data: dataDoctors, error } = await supabase
+        .from('doctors')
+        .select('*')
+        .eq('id', id)
+        .single(); /*retorna um só*/ 
+        setDoctor(dataDoctors);
+  
+    }
+
 
   return (
     <main>

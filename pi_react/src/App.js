@@ -2,7 +2,8 @@
 import './App.css';
 import Doctors from './Views/Doctor/Index';
 import DoctorShow from './Views/Doctor/Show';
-import Patients from './Views/Patients/Patients';
+import Patients from './Views/Patients/Index';
+import PatientShow from './Views/Patients/Show';
 import Payment from './Views/Payment/Index';
 import PaymentShow from './Views/Payment/Show';
 import Schedule from './Views/Schedule/Index';
@@ -38,7 +39,6 @@ function App() {                  //aqui javascript
             {hasSession ? (
               <div className='menu'>
                 <img src={logo} />
-                
                 <div className='btnNav'>
                 <Link to="/doctors">Inicio</Link>
                 <Link to="/schedule">Agendamento</Link>

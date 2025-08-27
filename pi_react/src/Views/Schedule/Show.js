@@ -27,16 +27,6 @@ function Schedule() {                  //aqui javascript
     readSchedule()
   }, [])
 
-  async function readSchedule() {
-   let {data: dataSchedule,error} = await supabase
-   .from('schedule')
-   .select('*')
-   .eq('id', id)
-   .single();
-
-   setSchedule(dataSchedule)
-      
-  }
 
   async function creatSchedule() {
     const { data: dU, error: eU } = await supabase.auth.getUser();
@@ -56,6 +46,19 @@ function Schedule() {                  //aqui javascript
         
       
   }
+
+  //listar a agenda
+  async function readSchedule() {
+   let {data: dataSchedule,error} = await supabase
+   .from('schedule')
+   .select('*')
+   .eq('id', id)
+   .single();
+
+   setSchedule(dataSchedule)
+      
+  }
+
 
 
   return (     

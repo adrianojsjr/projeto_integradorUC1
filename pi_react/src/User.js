@@ -96,6 +96,12 @@ function User() { //javaScript
 
       if (data.status == 400) throw data.message
 
+      const uid = data?.user?.id
+
+      let send = {...doctor, supra_id: uid}
+
+      let { data: dD, error: eD } = await supabase.from('doctors').insert(send); /*doctors é o nome da tabela no supabase*/
+
       setMsg("Cadastro realizado!");
     } catch (e) {
       setMsg(`Error: ${e.message}`);
@@ -106,7 +112,30 @@ function User() { //javaScript
     setTimeout(() => setMsg(""), 5000);
   }
 
+    async function registerPatient() {
+    setLoading(true);
 
+    try {
+      let { data, error } = await supabase.auth.signUp({
+        email: patient.email,
+        password: patient.password
+      })
+
+      if (error) throw error
+
+      if (data.status == 400) throw data.message
+
+      setMsg("Cadastro realizado!");
+    } catch (e) {
+      setMsg(`Error: ${e.message}`);
+    }
+
+    setLoading(false);
+
+    setTimeout(() => setMsg(""), 5000);
+  }
+
+  
 
 
   //esconder telas
@@ -222,7 +251,7 @@ function User() { //javaScript
               <input id="senha" type="password"  onChange={(e) => setPatient({ ...patient, senha: e.target.value })} required />
             </p>
 
-             <button className="buttonSucess" type="button" onClick={register} disabled={loading}>
+             <button className="buttonSucess" type="button" onClick={registerPatient} disabled={loading}>
               {loading ? "Cadastrando..." : "Cadastrar"}
             </button>
 
