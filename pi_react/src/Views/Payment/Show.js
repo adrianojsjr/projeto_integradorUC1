@@ -13,12 +13,14 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 function Payment() {
   const navigate = useNavigate();
-  const {id} = useParams;
+  const {id} = useParams();
 
   // Estado para armazenar os dados do pagamento
   const [payment, setPayment] = useState({
     tipo_pagamento: '',
-    user_id: '',
+    patient_id: '',
+    doctor_id: '',
+    user_id:''
   });
 
   // Estado para armazenar os pagamentos buscados
@@ -50,7 +52,7 @@ function Payment() {
         alert('Erro ao salvar pagamento');
       } else {
         alert('Pagamento salvo com sucesso!');
-        setPayment({ tipo_pagamento: '', user_id: '' });
+        setPayment({ tipo_pagamento: '', patient_id: '' });
       }
     } catch (err) {
       console.error('Erro inesperado:', err);
@@ -106,7 +108,8 @@ function Payment() {
         {payments.map((pagamento) => (
           <div key={pagamento.id} className="payment-item">
             <p><strong>Tipo:</strong> {pagamento.tipo_pagamento}</p>
-            <p><strong>ID do Usuário:</strong> {pagamento.user_id}</p>
+            <p><strong>ID do Usuário:</strong> {pagamento.patient_id}</p>
+            <p><strong>ID do Médico:</strong> {pagamento.doctor_id}</p>
           </div>
         ))}
       </div>

@@ -17,7 +17,8 @@ function Payment() {
   // Estado para armazenar os dados do pagamento
   const [payment, setPayment] = useState({
     tipo_pagamento: '',
-    user_id: '',
+    patient_id: '',
+    doctor_id: ''
   });
 
   // Estado para armazenar os pagamentos buscados
@@ -36,20 +37,20 @@ function Payment() {
 
       const novoPagamento = {
         tipo_pagamento: payment.tipo_pagamento,
-        user_id: uid,
+        patient_id: uid
       };
 
       const { data, error } = await supabase
         .from('payment')
         .insert([novoPagamento])
-        .select();
+        .select('*');
 
       if (error) {
         console.error('Erro ao salvar pagamento:', error);
         alert('Erro ao salvar pagamento');
       } else {
         alert('Pagamento salvo com sucesso!');
-        setPayment({ tipo_pagamento: '', user_id: '' });
+        setPayment({ tipo_pagamento: '', patient_id: '', doctor_id: '' });
       }
     } catch (err) {
       console.error('Erro inesperado:', err);
