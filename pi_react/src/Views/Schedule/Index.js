@@ -44,7 +44,7 @@ function Schedule() {                  //aqui javascript
         <button onClick={creatSchedule}>Salvar</button>
       </form>
 
-      <CloseButton />;
+      <CloseButton/>
     </div>
   );
 }
