@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { createClient } from "@supabase/supabase-js";
 import { useNavigate } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
+
 
 import './Style.css';
 
@@ -29,13 +31,13 @@ function Doctor() { //javaScript
         .from('doctors')
         .select('*')
         .eq('especialidade', filtro)
-        setDoctors(dataDoctors);
+      setDoctors(dataDoctors);
 
     } else {
       let { data: dataDoctors, error } = await supabase
         .from('doctors')
         .select('*')
-        setDoctors(dataDoctors);
+      setDoctors(dataDoctors);
     }
 
   }
@@ -68,11 +70,13 @@ function Doctor() { //javaScript
 
               <div class="cardInfoConsulta">
 
-                <div onClick={()=> nav (`/doctors/${medico.id}`, {replace:true})}>
+                <div onClick={() => nav(`/doctors/${medico.id}`, { replace: true })}>
 
                   <img src={medico.imagem} />
                   {medico.nome}<br />
                   {medico.especialidade}
+                  <Button variant="danger">Deletar</Button>
+                  <Button variant="warning">Editar</Button>
 
                 </div>
 
@@ -94,10 +98,8 @@ function Doctor() { //javaScript
 
               </div>
 
-              
-
             </div>
-
+           
           </div>
         )
 
