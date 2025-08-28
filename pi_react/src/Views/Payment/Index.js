@@ -1,5 +1,6 @@
 // Payment.js
 import './Style.css';
+import Button from 'react-bootstrap/Button';
 
 import { useState } from 'react';
 import { replace, useNavigate } from 'react-router-dom';
@@ -81,7 +82,7 @@ function Payment() {
       <form>
         <input
           type="text"
-          placeholder="Digite o Tipo de Pagamento: Cartão ou Pix"
+          placeholder="Cartão/Pix"
           value={payment.tipo_pagamento}
           onChange={(e) => setPayment({ ...payment, tipo_pagamento: e.target.value })}
         />
@@ -112,9 +113,9 @@ function Payment() {
         {payments.map((pagamento) => (
           <div key={pagamento.id} className="payment-item" onClick={()=>(`/payment/${pagamento.id}`,{replace:true})}>
 
-          <p><strong>Tipo:</strong> {pagamento.tipo_pagamento}</p>
-          <p><strong>ID do Usuário:</strong> {pagamento.patient_id}</p>
-          <p><strong>ID do Médico:</strong> {pagamento.doctor_id}</p>
+            <p><strong>Tipo:</strong> {pagamento.tipo_pagamento}</p>
+            <p><strong>ID do Usuário:</strong> {pagamento.user_id}</p>
+             <Button variant="danger">Danger</Button>
 
           </div>
         ))}
