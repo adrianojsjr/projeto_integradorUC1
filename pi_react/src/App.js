@@ -2,6 +2,7 @@
 import './App.css';
 import Doctors from './Views/Doctor/Index';
 import DoctorShow from './Views/Doctor/Show';
+import DoctorsEdit from './Views/Doctor/Edit';
 import Patients from './Views/Patients/Index';
 import PatientShow from './Views/Patients/Show';
 import Payment from './Views/Payment/Index';
@@ -77,12 +78,14 @@ function App() {                  //aqui javascript
           <Route element={<PrivateSession />}>
 
             {/*Rotas Logado*/}
-
+            <Route path='/doctor/edit/:id' element={<DoctorsEdit />} />
             <Route path='/schedule' element={<Schedule />} />
             <Route path='/schedule/:id' element={<ScheduleShow />} />
             <Route path='/payment' element={<Payment />} />
             <Route path='/patients' element={<Patients />} />
             <Route path='/payment:id' element={<PaymentShow />} />
+            
+            
 
 
           </Route>

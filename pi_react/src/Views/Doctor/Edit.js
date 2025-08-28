@@ -1,190 +1,114 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import { createClient } from "@supabase/supabase-js";
+import { useNavigate } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
+
+
 
 import './Style.css';
 
 const supabaseUrl = "https://mayrahcoiqpxrhqtcnry.supabase.co"
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1heXJhaGNvaXFweHJocXRjbnJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNTAzMzgsImV4cCI6MjA2OTkyNjMzOH0.8jpiw7cQHMy4KaBl5qquKBptbjfO1FqtdE7u7X2C_OU"
+
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-
-function Doctor() {
+function Doctor() { //javaScript
 
   const nav = useNavigate();
-  const { id } = useParams();
-
-  const [doctor, setDoctor] = useState({
-    email: "",
-    senha: "",
-    telefone: "",
-    nome: "",
-    cpf: "",
-    numeroCRM: "",
-    ufCRM: "",
-    dataEmissaoCRM: "",
-    especialidade: "",
-    residencia: [],
-    ativo: "",
-    imagem: "",
-    diploma: "",
-    situacaoRegular: "",
-    disponibilidade: []
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [msg, setMsg] = useState("");
-
+  const [doctors, setDoctors] = useState([])
 
   useEffect(() => {
     listarMedicos()
   }, [])
 
 
-  async function register() {
-    setLoading(true);
 
-    try {
-       // 1. Cadastra no Auth
-      let { data, error } = await supabase.auth.signUp({
-        email: doctor.email,
-        password: doctor.password
-      })
+  async function listarMedicos(filtro = null) {
 
-      if (error) throw error
-      const user = data.user; // pega o usuário criado  
+    if (filtro) {
 
-       if (!user) throw new Error("Usuário não retornado pelo Supabase Auth");
+      let { data: dataDoctors, error } = await supabase
+        .from('doctors')
+        .select('*')
+        .eq('especialidade', filtro)
+      setDoctors(dataDoctors);
 
-    // 2. Insere na tabela doctor
-    const { error: insertError } = await supabase
-      .from("doctos") // cuidado: no listar você usou "doctors", unifique isso
-      .insert([
-        {
-          user_id: user.id,
-          nome: doctor.nome,
-          email: doctor.email,
-          telefone: doctor.telefone,
-          cpf: doctor.cpf,
-          numeroCRM: doctor.numeroCRM,
-          ufCRM: doctor.ufCRM,
-          dataEmissaoCRM: doctor.dataEmissaoCRM,
-          especialidade: doctor.especialidade,
-          residencia: doctor.residencia,
-          diploma: doctor.diploma,
-          situacaoRegular: doctor.situacaoRegular,
-          ativo: true,
-        },
-      ]);
-
-        if (insertError) throw insertError;
-
-        setMsg("Cadastro realizado com sucesso!");
-
-    } catch (e) {
-      setMsg(`Error: ${e.message}`);
+    } else {
+      let { data: dataDoctors, error } = await supabase
+        .from('doctors')
+        .select('*')
+      setDoctors(dataDoctors);
     }
 
-    setLoading(false);
-
-    setTimeout(() => setMsg(""), 5000);
   }
 
- 
 
 
-async function listarMedicos() {
+  return ( //html
+    <main>
 
-  let { data: dataDoctors, error } = await supabase
-    .from('doctors')
-    .select('*')
-    .eq('id', id)
-    .single(); /*retorna um só*/
-  setDoctor(dataDoctors);
-
-}
-
-
-return (
-  <main>
-
-    <div class="card">
-      {/* formulário de cadastro com o campo para email, senha e um botão para enviar */}
-      <form onSubmit={(e) => e.preventDefault()}>
-
-        <p>
-          <label>Nome</label>
-          <input id="nome" type="text" value={doctor.nome} placeholder="Nome do titular" onChange={(e) => setDoctor({ ...doctor, nome: e.target.value })} />
-        </p>
-
-        <p>
-          <label>E-mail</label>
-          <input id="email" type="email" value={doctor.email} placeholder="exemplo@email.com" onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} required />
-        </p>
-
-        <p>
-          <label>CPF</label>
-          <input id="cpf" type="text" value={doctor.cpf} placeholder="000.000.000-00" onChange={(e) => setDoctor({ ...doctor, cpf: e.target.value })} />
-        </p>
-
-        <p>
-          <label>Número do CRM</label>
-          <input id="numerodocrm" type="text" value={doctor.numeroCRM} placeholder="CRM" onChange={(e) => setDoctor({ ...doctor, numeroCRM: e.target.value })} />
-        </p>
-
-        <p>
-          <label>UF do CRM</label>
-          <input id="ufdocrm" type="text" value={doctor.ufCRM} placeholder="Insira o UF do CRM" onChange={(e) => setDoctor({ ...doctor, ufCRM: e.target.value })} />
-        </p>
-
-        <p>
-          <label>Telefone</label>
-          <input id="telefone" type="text" value={doctor.telefone} placeholder="Insira o Telefone" onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} />
-        </p>
-
-        <p>
-          <label>Especialidade</label>
-          <input id="especialidade" type="text" value={doctor.especialidade} placeholder="Digite a especialidade" onChange={(e) => setDoctor({ ...doctor, especialidade: e.target.value })} />
-        </p>
-
-        <p>
-          <label>Data de Emissão</label>
-          <input id="dataEmissao" type="date" value={doctor.dataEmissaoCRM} onChange={(e) => setDoctor({ ...doctor, dataEmissaoCRM: e.target.value })} />
-        </p>
-
-        <div>
-          <p>
-            <label className="btnUpload">Anexar residência médica</label>
-            <input id="residencia" value={doctor.residencia} type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, residencia: e.target.value })} />
-          </p>
-
-          <p>
-            <label className="btnUpload">Anexar diploma acadêmico</label>
-            <input id="diploma" type="file" value={doctor.diploma} name="arquivo" onChange={(e) => setDoctor({ ...doctor, diploma: e.target.value })} />
-          </p>
-
-          <p>
-            <label className="btnUpload">Comprovante de situação regular</label>
-            <input id="comprovante" value={doctor.situacaoRegular} type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, situacaoRegular: e.target.value })} />
-          </p>
+      <div className="inicio">
+        <div className="menuBusca">
+          <div></div>
+          <div className="busca">
+            <input type="text" placeholder="Especialidade ou médico" />
+            <button className="btn" onClick={() => listarMedicos("Dermatologista")}>Dermatologista</button>
+            <button className="btn" onClick={() => listarMedicos("Cardiologista")}>Cardiologista</button>
+            <button className="btn" onClick={() => listarMedicos("Endocrinologista")}>Endocrinologista</button>
+            <button className="btn" onClick={() => listarMedicos()}>Buscar Todos</button>
+          </div>
+          <div></div>
         </div>
 
-        <p>
-          <label>Senha</label>
-          <input id="password" type="password" value={doctor.senha} onChange={(e) => setDoctor({ ...doctor, senha: e.target.value })} required />
-        </p>
+      </div>
 
-        <button className="buttonSucess" type="button" onClick={register} disabled={loading}>
-          {loading ? "Cadastrando..." : "Cadastrar"}
-        </button>
+      {doctors.map(
+        medico => (
+          <div key={medico.id} >
 
-      </form>
-    </div>
+            <div class="alinhamentoPagina">
 
+              <div class="cardInfoConsulta">
 
-  </main>
-);
+                <div onClick={() => nav(`/doctors/${medico.id}`, { replace: true })}>
+
+                  <img src={medico.imagem} />
+                  {medico.nome}<br />
+                  {medico.especialidade}
+                  <Button variant="danger">Deletar</Button>
+                  <Button variant="warning">Editar</Button>
+
+                </div>
+
+                <div class="calendario">
+
+                  <h3>Disponibilidade</h3>
+                  <p>Selecione o dia e horário de sua preferência para o atendimento</p>
+
+                  <div class="disponibilidade">
+
+                    <div class="dataDisponivel">
+                      <a class="btn" href=""><span>   </span> às <span>   </span></a>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+           
+          </div>
+        )
+
+      )
+      }
+
+    </main>
+  );
+
 }
-
 export default Doctor;

@@ -60,6 +60,7 @@ function Doctor() { //javaScript
           <div></div>
         </div>
 
+
       </div>
 
       {doctors.map(
@@ -76,7 +77,7 @@ function Doctor() { //javaScript
                   {medico.nome}<br />
                   {medico.especialidade}
                   <Button variant="danger">Deletar</Button>
-                  <Button variant="warning">Editar</Button>
+                  <Button variant="warning" onClick={() => nav(`/doctors/edit/${medico.id}`, { replace: true })}>Editar</Button>
 
                 </div>
 

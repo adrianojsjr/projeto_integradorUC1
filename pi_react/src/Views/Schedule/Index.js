@@ -47,7 +47,7 @@ function Schedule() {                  //aqui javascript
       </form>
 
        <Button variant="danger">Deletar</Button>
-                  <Button variant="warning">Editar</Button>
+       <Button variant="warning">Editar</Button>
 
     </div>
   );
