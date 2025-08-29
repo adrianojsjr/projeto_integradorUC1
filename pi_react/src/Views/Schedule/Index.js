@@ -37,6 +37,12 @@ function Schedule() {                  //aqui javascript
 
   }
 
+  async function delSchedule(id) {
+    const { error } = await supabase
+      .from('schedule')
+      .delete()
+      .eq('supra_id', id)
+  }
 
   return (                         /* Aqui html */
     <div className="Screen">
@@ -46,8 +52,8 @@ function Schedule() {                  //aqui javascript
         <button onClick={creatSchedule}>Salvar</button>
       </form>
 
-       <Button variant="danger">Deletar</Button>
-       <Button variant="warning">Editar</Button>
+      <Button variant="danger" onClick={() => delSchedule(schedule.id)}>Deletar</Button>
+      <Button variant="warning">Editar</Button>
 
     </div>
   );
