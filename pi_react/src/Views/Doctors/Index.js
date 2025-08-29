@@ -31,15 +31,22 @@ function Doctor() { //javaScript
         .from('doctors')
         .select('*')
         .eq('especialidade', filtro)
-      setDoctors(dataDoctors);
+        setDoctors(dataDoctors);
 
     } else {
       let { data: dataDoctors, error } = await supabase
         .from('doctors')
         .select('*')
-      setDoctors(dataDoctors);
+        setDoctors(dataDoctors);
     }
 
+  }
+
+  async function deletarMedico(id){
+      const { error } = await supabase
+        .from('doctors')
+        .delete()
+        .eq('supra_id', id)
   }
 
 
@@ -71,13 +78,14 @@ function Doctor() { //javaScript
 
               <div class="cardInfoConsulta">
 
-                <div onClick={() => nav(`/doctors/${medico.id}`, { replace: true })}>
+                <div>
 
                   <img src={medico.imagem} />
                   {medico.nome}<br />
                   {medico.especialidade}
-                  <Button variant="danger">Deletar</Button>
-                  <Button variant="warning" onClick={() => nav(`/doctors/edit/${medico.id}`, { replace: true })}>Editar</Button>
+                  <Button variant="danger" onClick={() => deletarmedico(gc.supra_id)}>Deletar</Button>
+                  <Button variant="warning" onClick={() => nav(`/doctors/edit/${medico.supra_id}`, { replace: true })}>Editar</Button>
+                  <Button variant="primary" onClick={() => nav(`/doctors/${medico.supra_id}`, { replace: true })}>Ver</Button>
 
                 </div>
 

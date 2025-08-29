@@ -1,14 +1,16 @@
 
 import './App.css';
-import Doctors from './Views/Doctor/Index';
-import DoctorShow from './Views/Doctor/Show';
-import DoctorsEdit from './Views/Doctor/Edit';
+import Doctors from './Views/Doctors/Index';
+import DoctorsShow from './Views/Doctors/Show';
+import DoctorsEdit from './Views/Doctors/Edit';
 import Patients from './Views/Patients/Index';
 import PatientShow from './Views/Patients/Show';
 import Payment from './Views/Payment/Index';
 import PaymentShow from './Views/Payment/Show';
 import Schedule from './Views/Schedule/Index';
 import ScheduleShow from './Views/Schedule/Show';
+import ScheduleEdit from './Views/Schedule/Edit';
+
 
 
 import User from './User'
@@ -73,12 +75,13 @@ function App() {                  //aqui javascript
           {/*Rotas Públicas*/}
 
           <Route path='/user' element={<User />} />
-          <Route path='/doctors' element={<Doctors />} />
+          <Route path='/doctors' element={<Doctors/>} />
 
           <Route element={<PrivateSession />}>
 
             {/*Rotas Logado*/}
-            <Route path='/doctor/edit/:id' element={<DoctorsEdit />} />
+            <Route path='/doctors/edit/:id' element={<DoctorsEdit />} />
+            <Route path='/doctors/:id' element={<DoctorsShow />} />
             <Route path='/schedule' element={<Schedule />} />
             <Route path='/schedule/:id' element={<ScheduleShow />} />
             <Route path='/payment' element={<Payment />} />

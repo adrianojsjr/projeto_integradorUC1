@@ -99,7 +99,7 @@ async function listarMedicos() {
   let { data: dataDoctors, error } = await supabase
     .from('doctors')
     .select('*')
-    .eq('id', id)
+    .eq('supra_id', id)
     .single(); /*retorna um só*/
   setDoctor(dataDoctors);
 
