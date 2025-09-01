@@ -1,190 +1,98 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { createClient } from "@supabase/supabase-js";
+import { useState, useEffect } from 'react'; // Importa hooks do React
+import { createClient } from "@supabase/supabase-js"; // Importa client do Supabase
+import { useNavigate, useParams } from 'react-router-dom'; // Importa hooks para navegação e parâmetros de URL
+import Button from 'react-bootstrap/Button'; // Importa botão do React Bootstrap
 
-import './Style.css';
+import { supabase } from '../../User'; // Importa instância do Supabase
 
-const supabaseUrl = "https://mayrahcoiqpxrhqtcnry.supabase.co"
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1heXJhaGNvaXFweHJocXRjbnJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNTAzMzgsImV4cCI6MjA2OTkyNjMzOH0.8jpiw7cQHMy4KaBl5qquKBptbjfO1FqtdE7u7X2C_OU"
-const supabase = createClient(supabaseUrl, supabaseKey);
+function Doctor() { // Função componente Doctor (JavaScript/React)
+  const nav = useNavigate(); // Hook para navegação programática
+  const [doctor, setDoctor] = useState(null); // Estado para armazenar dados do médico
+  const { id } = useParams(); // Pega o ID do médico a partir da URL
 
-
-
-function Doctor() {
-
-  const nav = useNavigate();
-  const { id } = useParams();
-
-  const [doctor, setDoctor] = useState({
-    email: "",
-    senha: "",
-    telefone: "",
-    nome: "",
-    cpf: "",
-    numeroCRM: "",
-    ufCRM: "",
-    dataEmissaoCRM: "",
-    especialidade: "",
-    residencia: [],
-    ativo: "",
-    imagem: "",
-    diploma: "",
-    situacaoRegular: "",
-    disponibilidade: []
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [msg, setMsg] = useState("");
-
-
+  // useEffect para listar dados do médico ao carregar o componente ou quando id mudar
   useEffect(() => {
-    listarMedicos()
-  }, [])
+    listarMedicos(id)
+  }, [id])
 
-
-  async function register() {
-    setLoading(true);
-
-    try {
-       // 1. Cadastra no Auth
-      let { data, error } = await supabase.auth.signUp({
-        email: doctor.email,
-        password: doctor.password
-      })
-
-      if (error) throw error
-      const user = data.user; // pega o usuário criado  
-
-       if (!user) throw new Error("Usuário não retornado pelo Supabase Auth");
-
-    // 2. Insere na tabela doctor
-    const { error: insertError } = await supabase
-      .from("doctos") // cuidado: no listar você usou "doctors", unifique isso
-      .insert([
-        {
-          user_id: user.id,
-          nome: doctor.nome,
-          email: doctor.email,
-          telefone: doctor.telefone,
-          cpf: doctor.cpf,
-          numeroCRM: doctor.numeroCRM,
-          ufCRM: doctor.ufCRM,
-          dataEmissaoCRM: doctor.dataEmissaoCRM,
-          especialidade: doctor.especialidade,
-          residencia: doctor.residencia,
-          diploma: doctor.diploma,
-          situacaoRegular: doctor.situacaoRegular,
-          ativo: true,
-        },
-      ]);
-
-        if (insertError) throw insertError;
-
-        setMsg("Cadastro realizado com sucesso!");
-
-    } catch (e) {
-      setMsg(`Error: ${e.message}`);
-    }
-
-    setLoading(false);
-
-    setTimeout(() => setMsg(""), 5000);
+  // Função para buscar os dados do médico no Supabase
+  async function listarMedicos(id) {
+    let { data: dataDoctor, error } = await supabase
+      .from('doctors') // Tabela 'doctors'
+      .select('*') // Seleciona todas as colunas
+      .eq('supra_id', id) // Filtra pelo id do médico
+      .single() // Retorna apenas um registro
+    setDoctor(dataDoctor); // Atualiza o estado com os dados do médico
   }
 
- 
+  if (!doctor) return <p>Carregando...</p>; // Mostra mensagem enquanto os dados não carregam
 
+  return ( // JSX/HTML retornado pelo componente
+    <main>
+      <div className="alinhamentoPagina"> {/* Container principal */}
+        
+        {/* Seção de dados gerais do médico */}
+        <div className="dadosGeraisConsulta">
+          <div className="apresentacaoMedico">
+            <div className="detalhesMedico">
 
-async function listarMedicos() {
+              {/* Descrição e especialidade */}
+              <div className="descricaoEspecialidade">
+                <h2>{doctor.nome}</h2> {/* Nome do médico */}
+                <p>{doctor.especialidade}</p> {/* Especialidade */}
+                <p>jvcnjf vnvkjnfdkjnvf vfjdnvjkfd vfjdnvikjfdib vjdfnvjfdnv
+                  jf vnvkjnfdkjnvf vfjdnvjkfd v jf vnvkjnfdkjnvf vfjdnvjkfd vjf vnvkjnfdkjnvf vfjdnvjkfd v jf vnvkjnfdkjnvf vfjdnvjkfd v
+                </p> {/* Texto de exemplo */}
+              </div>
 
-  let { data: dataDoctors, error } = await supabase
-    .from('doctors')
-    .select('*')
-    .eq('supra_id', id)
-    .single(); /*retorna um só*/
-  setDoctor(dataDoctors);
+              {/* Imagem do médico */}
+              <div className="imgMedico">
+                <img src={doctor.imagem}/> {/* URL da imagem do médico */}
+              </div>
 
-}
-
-
-return (
-  <main>
-
-    <div class="card">
-      {/* formulário de cadastro com o campo para email, senha e um botão para enviar */}
-      <form onSubmit={(e) => e.preventDefault()}>
-
-        <p>
-          <label>Nome</label>
-          <input id="nome" type="text" value={doctor.nome} placeholder="Nome do titular" onChange={(e) => setDoctor({ ...doctor, nome: e.target.value })} />
-        </p>
-
-        <p>
-          <label>E-mail</label>
-          <input id="email" type="email" value={doctor.email} placeholder="exemplo@email.com" onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} required />
-        </p>
-
-        <p>
-          <label>CPF</label>
-          <input id="cpf" type="text" value={doctor.cpf} placeholder="000.000.000-00" onChange={(e) => setDoctor({ ...doctor, cpf: e.target.value })} />
-        </p>
-
-        <p>
-          <label>Número do CRM</label>
-          <input id="numerodocrm" type="text" value={doctor.numeroCRM} placeholder="CRM" onChange={(e) => setDoctor({ ...doctor, numeroCRM: e.target.value })} />
-        </p>
-
-        <p>
-          <label>UF do CRM</label>
-          <input id="ufdocrm" type="text" value={doctor.ufCRM} placeholder="Insira o UF do CRM" onChange={(e) => setDoctor({ ...doctor, ufCRM: e.target.value })} />
-        </p>
-
-        <p>
-          <label>Telefone</label>
-          <input id="telefone" type="text" value={doctor.telefone} placeholder="Insira o Telefone" onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} />
-        </p>
-
-        <p>
-          <label>Especialidade</label>
-          <input id="especialidade" type="text" value={doctor.especialidade} placeholder="Digite a especialidade" onChange={(e) => setDoctor({ ...doctor, especialidade: e.target.value })} />
-        </p>
-
-        <p>
-          <label>Data de Emissão</label>
-          <input id="dataEmissao" type="date" value={doctor.dataEmissaoCRM} onChange={(e) => setDoctor({ ...doctor, dataEmissaoCRM: e.target.value })} />
-        </p>
-
-        <div>
-          <p>
-            <label className="btnUpload">Anexar residência médica</label>
-            <input id="residencia" value={doctor.residencia} type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, residencia: e.target.value })} />
-          </p>
-
-          <p>
-            <label className="btnUpload">Anexar diploma acadêmico</label>
-            <input id="diploma" type="file" value={doctor.diploma} name="arquivo" onChange={(e) => setDoctor({ ...doctor, diploma: e.target.value })} />
-          </p>
-
-          <p>
-            <label className="btnUpload">Comprovante de situação regular</label>
-            <input id="comprovante" value={doctor.situacaoRegular} type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, situacaoRegular: e.target.value })} />
-          </p>
+            </div>
+          </div>
         </div>
 
-        <p>
-          <label>Senha</label>
-          <input id="password" type="password" value={doctor.senha} onChange={(e) => setDoctor({ ...doctor, senha: e.target.value })} required />
-        </p>
+        {/* Seção de resumo profissional */}
+        <div className="experiencia">
+          <h3>Resumo Profissional</h3>
+          <p>{doctor.resumoProfissional}</p> {/* Texto do resumo profissional */}
+        </div>
 
-        <button className="buttonSucess" type="button" onClick={register} disabled={loading}>
-          {loading ? "Cadastrando..." : "Cadastrar"}
-        </button>
+        {/* Seção de avaliações */}
+        <div className="avaliacoes">
+          <h3>Avaliações</h3>
 
-      </form>
-    </div>
+          <div className="todasAvaliacoes">
 
+            <div className="avaliacao">
+                <p><span id="avaliacaoDescricao"></span><span id="avaliacaoEstrela"></span></p> {/* Descrição e estrelas da avaliação */}
+                <p id="pacienteNome"></p> {/* Nome do paciente */}
+                <p id="dataConsulta"></p> {/* Data da consulta */}
+            </div>
 
-  </main>
-);
+            <a href="#">Ver mais</a> {/* Link para ver mais avaliações */}
+
+          </div>
+        </div>
+
+        {/* Seção de disponibilidade do médico */}
+        <div className="calendario">
+          <h3>Disponibilidade</h3>
+          <p>Selecione o dia e horário de sua preferência para o atendimento</p>
+
+          <div className="disponibilidade">
+            <div className="dataDisponivel">
+              <a className="btn" href=""><span>   </span> às <span>   </span></a> {/* Botão para selecionar horário */}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  );
+
 }
 
-export default Doctor;
+export default Doctor; // Exporta o componente para uso em outros arquivos

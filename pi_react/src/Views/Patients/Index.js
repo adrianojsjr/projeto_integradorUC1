@@ -6,10 +6,10 @@ import {useState} from 'react';
 function Patients() {                  //aqui javascript
   const [user, setUser] = useState({
     email: "",
-    password:"",
-    phone:"",
-    name:""
-
+    senha:"",
+    telefone:"",
+    nome:"",
+    cpf: ""
 
   });
  

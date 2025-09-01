@@ -7,17 +7,18 @@ import './App.css';
 import './User.css';
 import './StyleGeral.css';
 
+// informações para conexão com Supabase
 const supabaseUrl = "https://mayrahcoiqpxrhqtcnry.supabase.co"
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1heXJhaGNvaXFweHJocXRjbnJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNTAzMzgsImV4cCI6MjA2OTkyNjMzOH0.8jpiw7cQHMy4KaBl5qquKBptbjfO1FqtdE7u7X2C_OU"
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase = createClient(supabaseUrl, supabaseKey); // cria cliente Supabase
+const defaultAvatar = "./doctoravatar.svg"; // caminho da imagem padrão de médico
 
+function User() { // componente principal User
 
-function User() { //javaScript
+  const nav = useNavigate(); // hook para navegar entre telas
 
-  const nav = useNavigate();
-
-  //inserir todos os campos que tem na tela de cadatro
+  // estado para os dados do médico no cadastro
   const [doctor, setDoctor] = useState({
     email: "",
     senha: "",
@@ -30,117 +31,182 @@ function User() { //javaScript
     especialidade: "",
     residencia: [],
     ativo: "",
-    imagem: "",
+    imagem: defaultAvatar,
     diploma: "",
     situacaoRegular: "",
-    disponibilidade: []
+    resumoProfissional: ""
   });
 
-  const [msg, setMsg] = useState("");
+  const [msg, setMsg] = useState(""); // estado para mensagens de feedback (erro, sucesso)
 
-  //inserir todos os campos que tem na tela de cadatro
+  // estado para os dados do paciente no cadastro
   const [patient, setPatient] = useState({
     email: "",
     senha: "",
     telefone: "",
     nome: "",
     cpf: "",
-    endereco: "",
     ativo: ""
   });
 
+  let tipoUsuario;
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // estado para indicar carregamento
 
+  // função de login do médico
   async function logar() {
-
-    setLoading(true)
-
+    setLoading(true) // ativa indicador de carregamento
     try {
-
-      let { data, error } = await supabase.auth.signInWithPassword({  //data retorna sucesso
-
+      // tenta logar usando Supabase Auth
+      let { data, error } = await supabase.auth.signInWithPassword({
         email: doctor.email,
         password: doctor.senha
       });
 
-      if (error) throw error
+      const uid = data.user.id;
 
-      setMsg("Logou") //assim que logar aparece a mensagem e logo em seguida navega para tela principal
-      localStorage.setItem('supaSession', data.session) //setItem -> guardar o item
+      let { data: dataDoctor } = await supabase
+        .from('doctors')
+        .select('*')
+        .eq('supra_id', uid)
+        .single();
 
-      setTimeout(
-        nav("/doctors", { replace: true }),
-        5002//aqui navega para tela principal
-      );
+      let tipoUsuario;
 
-    } catch (err) {
-      setMsg("Error: " + err);
+      if (dataDoctor) {
+        tipoUsuario = 'doctor';
 
+      } else {
+
+        let { data: dataPatient } = await supabase
+          .from('patients')
+          .select('*')
+          .eq('supra_id', uid)
+          .single();
+          
+        if (dataPatient) tipoUsuario = 'patient';
+      }
+      if (!tipoUsuario) throw new Error("Usuário não encontrado em nenhuma tabela");
+
+
+      if (error) throw error // se houver erro, entra no catch
+
+      setMsg("Logou") // exibe mensagem de sucesso
+      localStorage.setItem('tipoUsuario', tipoUsuario);
+      localStorage.setItem('supaSession', data.session); // salva sessão no localStorage
+
+      if (tipoUsuario === 'doctor') {
+      nav("/schedule", { replace: true });
+    } else {
+      nav("/doctors", { replace: true });
     }
 
-    setLoading(false)
-
+      setTimeout(
+        nav("/doctors", { replace: true }), // navega para tela principal dos médicos
+        5002
+      );
+    } catch (err) {
+      setMsg("Error: " + err); // exibe erro
+    }
+    setLoading(false) // desativa carregamento
   }
 
+  // função de cadastro de médico
   async function register() {
     setLoading(true);
 
     try {
+      // cria usuário no Supabase Auth
       let { data, error } = await supabase.auth.signUp({
         email: doctor.email,
-        password: doctor.password
-      })
-
+        password: doctor.senha
+      });
       if (error) throw error
+      if (data.status == 400) throw data.message // trata caso o status seja 400
 
-      if (data.status == 400) throw data.message
+      const uid = data?.user?.id // pega o ID do usuário criado
 
-      const uid = data?.user?.id
+      // insere dados do médico na tabela "doctors"
+      let { data: dD, error: eD } = await supabase
+        .from('doctors')
+        .insert([
+          {
+            supra_id: uid,
+            nome: doctor.nome,
+            email: doctor.email,
+            telefone: doctor.telefone,
+            cpf: doctor.cpf,
+            numeroCRM: doctor.numeroCRM,
+            ufCRM: doctor.ufCRM,
+            dataEmissaoCRM: doctor.dataEmissaoCRM,
+            especialidade: doctor.especialidade,
+            residencia: doctor.residencia,
+            diploma: doctor.diploma,
+            situacaoRegular: doctor.situacaoRegular,
+            resumoProfissional: doctor.resumoProfissional,
+            ativo: true
+          }
+        ]); /* tabela doctors no Supabase */
 
-      let send = {...doctor, supra_id: uid}
+      if (eD) throw eD; // só continua se não houver erro na inserção
 
-      let { data: dD, error: eD } = await supabase.from('doctors').insert(send); /*doctors é o nome da tabela no supabase*/
+      setMsg("Cadastro realizado! Verifique seu e-mail para confirmar o cadastro."); // feedback
+      setTelaLogin(true); // volta para tela de escolha
+      let tipoUsuario = "medico";
 
-      setMsg("Cadastro realizado!");
     } catch (e) {
-      setMsg(`Error: ${e.message}`);
+      setMsg(`Error: ${e.message}`); // mostra mensagem de erro
     }
 
     setLoading(false);
-
-    setTimeout(() => setMsg(""), 5000);
+    setTimeout(() => setMsg(""), 5000); // limpa mensagem depois de 5s
   }
 
-    async function registerPatient() {
+  // função de cadastro de paciente
+  async function registerPatient() {
     setLoading(true);
 
     try {
       let { data, error } = await supabase.auth.signUp({
         email: patient.email,
-        password: patient.password
-      })
-
+        password: patient.senha
+      });
       if (error) throw error
-
       if (data.status == 400) throw data.message
 
-      setMsg("Cadastro realizado!");
+      const uid = data?.user?.id
+
+      // insere dados do paciente na tabela "patients"
+      let { data: dD, error: eD } = await supabase
+        .from('patients')
+        .insert([
+          {
+            supra_id: uid,
+            email: patient.email,
+            telefone: patient.telefone,
+            nome: patient.nome,
+            cpf: patient.cpf,
+            ativo: true
+          }
+        ]);
+      if (eD) throw eD; // só continua se não houver erro
+
+      setMsg("Cadastro realizado! Verifique seu e-mail para confirmar o cadastro."); // feedback
+      setTelaLogin(true); // volta para tela de escolha
+      let tipoUsuario = "paciente";
     } catch (e) {
       setMsg(`Error: ${e.message}`);
     }
 
     setLoading(false);
-
     setTimeout(() => setMsg(""), 5000);
   }
 
-  
 
+  // estados para controle de telas
+  const [telaLogin, setTelaLogin] = useState(true); // define se mostra login ou cadastro
+  const [souMedico, setSouMedico] = useState(false); // define se usuário é médico ou paciente
 
-  //esconder telas
-  const [telaLogin, setTelaLogin] = useState(true);
-  const [souMedico, setSouMedico] = useState(false);
 
   return ( //html
     <main className="App">
@@ -149,7 +215,7 @@ function User() { //javaScript
       <div class="card">
         {/* formulário de cadastro com o campo para email, senha e um botão para enviar */}
 
-        {!telaLogin && souMedico &&(
+        {!telaLogin && souMedico && (
           <form onSubmit={(e) => e.preventDefault()}>
 
             <p>
@@ -157,7 +223,7 @@ function User() { //javaScript
               <input id="nome" type="text" placeholder="Nome do titular" onChange={(e) => setDoctor({ ...doctor, nome: e.target.value })} />
             </p>
 
-             <p>
+            <p>
               <label>E-mail</label>
               <input id="email" type="email" placeholder="exemplo@email.com" onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} required />
             </p>
@@ -178,6 +244,11 @@ function User() { //javaScript
             </p>
 
             <p>
+              <label>Data de Emissão</label>
+              <input id="dataEmissao" type="date" onChange={(e) => setDoctor({ ...doctor, dataEmissaoCRM: e.target.value })} />
+            </p>
+
+            <p>
               <label>Telefone</label>
               <input id="telefone" type="text" placeholder="Insira o Telefone" onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} />
             </p>
@@ -188,19 +259,19 @@ function User() { //javaScript
             </p>
 
             <p>
-              <label>Data de Emissão</label>
-              <input id="dataEmissao" type="date" onChange={(e) => setDoctor({ ...doctor, dataEmissaoCRM: e.target.value })} />
+              <label>Resumo Profissional</label>
+              <textarea id="resumoProfissional" type='text' onChange={(e) => setDoctor({ ...doctor, resumoProfissional: e.target.value })} />
             </p>
 
             <div>
               <p>
                 <label className="btnUpload">Anexar residência médica</label>
-                <input id="residencia" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, residencia: e.target.value })} />
+                <input id="residencia" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, residencia: e.target.type })} />
               </p>
 
               <p>
                 <label className="btnUpload">Anexar diploma acadêmico</label>
-                <input id="diploma" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, diploma: e.target.value })} />
+                <input id="diploma" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, diploma: e.target.file })} />
               </p>
 
               <p>
@@ -211,7 +282,7 @@ function User() { //javaScript
 
             <p>
               <label>Senha</label>
-              <input id="password" type="password" onChange={(e) => setDoctor({ ...doctor, password: e.target.value })} required />
+              <input id="password" type="password" onChange={(e) => setDoctor({ ...doctor, senha: e.target.value })} required />
             </p>
 
             <button className="buttonSucess" type="button" onClick={register} disabled={loading}>
@@ -221,7 +292,7 @@ function User() { //javaScript
           </form>
         )}
 
-      
+
         {!telaLogin && !souMedico && (
           <form onSubmit={(e) => e.preventDefault()}>
 
@@ -232,26 +303,26 @@ function User() { //javaScript
 
             <p>
               <label>E-mail</label>
-              <input id="email" type="email" placeholder="exemplo@email.com"  onChange={(e) => setPatient({ ...patient, email: e.target.value })} required />
+              <input id="email" type="email" placeholder="exemplo@email.com" onChange={(e) => setPatient({ ...patient, email: e.target.value })} required />
             </p>
 
             <p>
               <label>CPF</label>
-              <input id="cpf" type="text" placeholder="000.000.000-00"  onChange={(e) => setPatient({ ...patient, cpf: e.target.value })} required />
+              <input id="cpf" type="text" placeholder="000.000.000-00" onChange={(e) => setPatient({ ...patient, cpf: e.target.value })} required />
             </p>
 
 
             <p>
               <label>Telefone</label>
-              <input id="telefone" type="text" placeholder="Insira o Telefone"  onChange={(e) => setPatient({ ...patient, telefone: e.target.value })} required />
+              <input id="telefone" type="text" placeholder="Insira o Telefone" onChange={(e) => setPatient({ ...patient, telefone: e.target.value })} required />
             </p>
 
             <p>
               <label>Senha</label>
-              <input id="senha" type="password"  onChange={(e) => setPatient({ ...patient, senha: e.target.value })} required />
+              <input id="senha" type="password" onChange={(e) => setPatient({ ...patient, senha: e.target.value })} required />
             </p>
 
-             <button className="buttonSucess" type="button" onClick={registerPatient} disabled={loading}>
+            <button className="buttonSucess" type="button" onClick={registerPatient} disabled={loading}>
               {loading ? "Cadastrando..." : "Cadastrar"}
             </button>
 
@@ -266,8 +337,8 @@ function User() { //javaScript
 
             <p>Para logar coloque as informações abaixo</p>
             <input type='email' placeholder='Digite seu email' onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} />
-            <br/>
-            <br/>
+            <br />
+            <br />
             <input type='password' placeholder='Digite sua senha' onChange={(e) => setDoctor({ ...doctor, senha: e.target.value })} />
             <button
               type="button" className="buttonSucess" onClick={logar} disabled={loading} >
@@ -283,21 +354,23 @@ function User() { //javaScript
             <>
               <p className='txtCadastrar'>Cadastre-se</p>
               <div>
-                <button onClick = {() => {setTelaLogin(false); setSouMedico(true)}}>Sou médico</button>
-                <button onClick = {() => {setTelaLogin(false); setSouMedico(false)}} >Sou paciente</button>
+                <button onClick={() => { setTelaLogin(false); setSouMedico(true) }}>Sou médico</button>
+                <button onClick={() => { setTelaLogin(false); setSouMedico(false) }} >Sou paciente</button>
               </div>
             </>
           )}
           {!telaLogin && (
             <button onClick={() => setTelaLogin(!telaLogin)}>Voltar para Login</button>
           )}
-          
+
 
         </div>
 
-        
+
       </div>
       {msg && (<div className='toast'>{msg}</div>)}
+
+
     </main>
   );
 

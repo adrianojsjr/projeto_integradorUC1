@@ -1,0 +1,83 @@
+/* Container do botão do médico */
+.addScheduleContainer {
+  display: flex; /* Usa flexbox para organizar itens em linha */
+  justify-content: right; /* Alinha o botão à direita */
+  margin-bottom: 15px; /* Espaço abaixo do container */
+}
+
+/* Botão do médico */
+.addScheduleBtn {
+  background-color: #33B291; /* Verde secundário */
+  color: white; /* Cor do texto */
+  padding: 15px 16px; /* Espaçamento interno do botão */
+  border: none; /* Sem borda */
+  border-radius: 6px; /* Cantos arredondados */
+  cursor: pointer; /* Cursor muda para mão ao passar por cima */
+  font-weight: bold; /* Texto em negrito */
+  width: 280px; /* Largura fixa do botão */
+  text-align: center; /* Centraliza o texto */
+}
+
+/* Formulário de adição de horário */
+.addScheduleForm {
+  margin-top: 10px; /* Espaço acima do formulário */
+  display: flex; /* Flexbox para organizar inputs e botão */
+  gap: 10px; /* Espaçamento entre elementos do formulário */
+}
+
+/* Input do formulário */
+.addScheduleForm input {
+  padding: 6px; /* Espaçamento interno do input */
+  border-radius: 6px; /* Cantos arredondados */
+  border: 1px solid #40566e; /* Borda cinza-azulada */
+}
+
+/* Botão dentro do formulário */
+.addScheduleForm button {
+  background-color: #11b5ba; /* Verde-água */
+  color: white; /* Cor do texto */
+  padding: 6px 12px; /* Espaçamento interno */
+  border: none; /* Sem borda */
+  border-radius: 6px; /* Cantos arredondados */
+  cursor: pointer; /* Cursor muda para mão */
+}
+
+/* Tabela da agenda */
+.tabelaAgenda {
+  width: 100%; /* Ocupa toda a largura disponível */
+  border-collapse: collapse; /* Junta bordas da tabela */
+  text-align: center; /* Centraliza conteúdo das células */
+  margin-top: 20px; /* Espaço acima da tabela */
+}
+
+/* Cabeçalho da tabela */
+.tabelaAgenda th {
+  background-color: #1e5acd; /* Azul primário */
+  color: white; /* Cor do texto */
+  padding: 12px; /* Espaçamento interno */
+  border: 1px solid #40566e; /* Borda cinza-azulada */
+}
+
+/* Células da tabela */
+.tabelaAgenda td {
+  border: 1px solid #ddd; /* Borda cinza clara */
+  padding: 12px; /* Espaçamento interno */
+}
+
+/* Botão de cancelar dentro da tabela */
+.btnCancel {
+  background-color: #e74c3c; /* Vermelho */
+  color: white; /* Cor do texto */
+  padding: 6px 12px; /* Espaçamento interno */
+  border: none; /* Sem borda */
+  border-radius: 6px; /* Cantos arredondados */
+  cursor: pointer; /* Cursor muda para mão */
+}
+
+/* Mensagem quando não há consulta */
+.semConsulta {
+  text-align: center; /* Centraliza o texto */
+  margin-top: 30px; /* Espaço acima da mensagem */
+  color: #40566e; /* Cinza-azulado */
+  font-weight: bold; /* Texto em negrito */
+}
