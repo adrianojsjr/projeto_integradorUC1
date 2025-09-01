@@ -206,16 +206,16 @@ function User() { // componente principal User
   }
 
   // esconde telas
-  const [telaLogin, setTelaLogin] = useState(true); 
-  const [souMedico, setSouMedico] = useState(false); 
+  const [telaLogin, setTelaLogin] = useState(true);
+  const [souMedico, setSouMedico] = useState(false);
 
 
-  return ( 
+  return (
     <main className="App">
 
 
       <div class="card">
-      
+
 
         {!telaLogin && souMedico && (
           <form onSubmit={(e) => e.preventDefault()}>
@@ -256,8 +256,13 @@ function User() { // componente principal User
             </p>
 
             <p>
-              <label>Especialidade</label>
-              <input id="especialidade" type="text" placeholder="Digite a especialidade" onChange={(e) => setDoctor({ ...doctor, especialidade: e.target.value })} />
+              <label for="especialidade">Especialidade</label>
+              <select id="especialidade" onChange={(e) => setDoctor({ ...doctor, especialidade: e.target.value })}>
+                <option value="maca">Maçã</option>
+                <option value="banana">Banana</option>
+                <option value="laranja">Laranja</option>
+              </select>
+              
             </p>
 
             <p>

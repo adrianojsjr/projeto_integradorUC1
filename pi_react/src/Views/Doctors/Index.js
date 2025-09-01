@@ -88,6 +88,21 @@ function Doctor() {
     //poderia ser também return dataFormatada + ' ' + horaFormatada;
   }
 
+    const validarSessao = async () => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const uid = sessionData?.session?.user?.id;
+  
+      if (!uid) {
+        // Salva a rota atual para voltar depois do login
+        const redirect = encodeURIComponent(window.location.pathname);
+        nav(`/user?redirect=${redirect}`, { replace: true });
+        return;
+      }
+  
+      nav(`/payment/`, { replace: true });
+    };
+  
+
 
   return (
     <main>
@@ -136,7 +151,7 @@ function Doctor() {
                       schedule
                         .filter(agenda => agenda.doctor_id === medico.supra_id)
                         .map(agenda => (
-                          <a key={agenda.id} className="btnData">{formatarData(agenda.date)}</a>
+                          <button key={agenda.id} className="btnData" onClick={validarSessao}>{formatarData(agenda.date)} </button>
                         ))
                     )}
 
