@@ -1,6 +1,3 @@
-// Payment.js
-import './Style.css';
-
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';

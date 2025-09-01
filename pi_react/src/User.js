@@ -1,11 +1,10 @@
 
 import { use, useState } from 'react';
 import { createClient } from "@supabase/supabase-js";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import './App.css';
 import './User.css';
-import './StyleGeral.css';
 
 // informações para conexão com Supabase
 const supabaseUrl = "https://mayrahcoiqpxrhqtcnry.supabase.co"
@@ -16,7 +15,8 @@ const defaultAvatar = "./doctoravatar.svg"; // caminho da imagem padrão de méd
 
 function User() { // componente principal User
 
-  const nav = useNavigate(); // hook para navegar entre telas
+  const nav = useNavigate(); //navegar entre telas
+  const location = useLocation();
 
   // estado para os dados do médico no cadastro
   const [doctor, setDoctor] = useState({
@@ -49,67 +49,8 @@ function User() { // componente principal User
     ativo: ""
   });
 
-  let tipoUsuario;
 
   const [loading, setLoading] = useState(false); // estado para indicar carregamento
-
-  // função de login do médico
-  async function logar() {
-    setLoading(true) // ativa indicador de carregamento
-    try {
-      // tenta logar usando Supabase Auth
-      let { data, error } = await supabase.auth.signInWithPassword({
-        email: doctor.email,
-        password: doctor.senha
-      });
-
-      const uid = data.user.id;
-
-      let { data: dataDoctor } = await supabase
-        .from('doctors')
-        .select('*')
-        .eq('supra_id', uid)
-        .single();
-
-      let tipoUsuario;
-
-      if (dataDoctor) {
-        tipoUsuario = 'doctor';
-
-      } else {
-
-        let { data: dataPatient } = await supabase
-          .from('patients')
-          .select('*')
-          .eq('supra_id', uid)
-          .single();
-          
-        if (dataPatient) tipoUsuario = 'patient';
-      }
-      if (!tipoUsuario) throw new Error("Usuário não encontrado em nenhuma tabela");
-
-
-      if (error) throw error // se houver erro, entra no catch
-
-      setMsg("Logou") // exibe mensagem de sucesso
-      localStorage.setItem('tipoUsuario', tipoUsuario);
-      localStorage.setItem('supaSession', data.session); // salva sessão no localStorage
-
-      if (tipoUsuario === 'doctor') {
-      nav("/schedule", { replace: true });
-    } else {
-      nav("/doctors", { replace: true });
-    }
-
-      setTimeout(
-        nav("/doctors", { replace: true }), // navega para tela principal dos médicos
-        5002
-      );
-    } catch (err) {
-      setMsg("Error: " + err); // exibe erro
-    }
-    setLoading(false) // desativa carregamento
-  }
 
   // função de cadastro de médico
   async function register() {
@@ -203,17 +144,78 @@ function User() { // componente principal User
   }
 
 
-  // estados para controle de telas
-  const [telaLogin, setTelaLogin] = useState(true); // define se mostra login ou cadastro
-  const [souMedico, setSouMedico] = useState(false); // define se usuário é médico ou paciente
+  async function logar() {
+    setLoading(true) // ativa indicador de carregamento
+    try {
+      // tenta logar usando Supabase Auth
+      let { data, error } = await supabase.auth.signInWithPassword({
+        email: doctor.email,
+        password: doctor.senha
+      });
+
+      const uid = data.user.id;
+
+      let { data: dataDoctor } = await supabase
+        .from('doctors')
+        .select('*')
+        .eq('supra_id', uid)
+        .single();
+
+      let tipoUsuario;
+
+      if (dataDoctor) {
+        tipoUsuario = 'doctor';
+
+      } else {
+
+        let { data: dataPatient } = await supabase
+          .from('patients')
+          .select('*')
+          .eq('supra_id', uid)
+          .single();
+
+        if (dataPatient) tipoUsuario = 'patient';
+      }
+      if (!tipoUsuario) throw new Error("Usuário não encontrado em nenhuma tabela");
 
 
-  return ( //html
+      if (!tipoUsuario) throw new Error("Usuário não encontrado em nenhuma tabela");
+
+      localStorage.setItem('tipoUsuario', tipoUsuario);
+      localStorage.setItem('supaSession', data.session);
+
+      // redirecionamento de volta pra tela que escolheu o horário
+      const params = new URLSearchParams(location.search);
+      const redirect = params.get("redirect");
+
+      if (redirect) {
+        nav(redirect, { replace: true });
+      } else {
+        if (tipoUsuario === 'doctor') {
+          nav("/schedule", { replace: true });
+        } else {
+          nav("/doctors", { replace: true });
+        }
+      }
+
+      setMsg("Login realizado com sucesso!");
+    } catch (err) {
+      setMsg("Error: " + err.message);
+    }
+    setLoading(false);
+  }
+
+  // esconde telas
+  const [telaLogin, setTelaLogin] = useState(true); 
+  const [souMedico, setSouMedico] = useState(false); 
+
+
+  return ( 
     <main className="App">
 
 
       <div class="card">
-        {/* formulário de cadastro com o campo para email, senha e um botão para enviar */}
+      
 
         {!telaLogin && souMedico && (
           <form onSubmit={(e) => e.preventDefault()}>
@@ -328,9 +330,6 @@ function User() { // componente principal User
 
           </form>
         )}
-
-
-        {/* formulário de login com o campo para email, senha e um botão para enviar */}
 
         {telaLogin && (
           <form onSubmit={(e) => e.preventDefault()}>

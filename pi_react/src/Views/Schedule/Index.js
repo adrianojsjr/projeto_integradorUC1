@@ -1,60 +1,55 @@
-import { useState, useEffect } from 'react'; // Importa hooks do React para estado e efeitos
-import { createClient } from "@supabase/supabase-js"; // Importa função para criar cliente Supabase (não usado aqui)
-import { useNavigate, useParams } from 'react-router-dom'; // Importa hooks do React Router
-import Button from 'react-bootstrap/Button'; // Importa botão do React Bootstrap
+import { useState, useEffect } from 'react'; 
+import { createClient } from "@supabase/supabase-js"; 
+import { useNavigate, useParams } from 'react-router-dom'; 
+import Button from 'react-bootstrap/Button'; 
 
-import { supabase } from '../../User'; // Importa instância do Supabase configurada
+import { supabase } from '../../User'; 
 
-import "./Style.css"; // Importa CSS local
+import "./schedule.css"; 
 
-function Schedule() { // Componente principal
-  const nav = useNavigate(); // Hook de navegação
-  const { id } = useParams(); // Pega parâmetro 'id' da rota
 
-  // Estado inicial da agenda
+function Schedule() { 
+  const nav = useNavigate(); 
+  const { id } = useParams(); 
+
+  
   const [schedule, setSchedule] = useState([{
-    date: "", // Data da consulta
-    doctor_id: "", // ID do médico
-    status: "", // Status da consulta
-    avaliacao: "", // Avaliação da consulta
-    patient_id: "", // ID do paciente
-    payment_id: "" // ID do pagamento
+    date: "", 
+    doctor_id: "", 
+    status: "", 
+    avaliacao: "", 
+    patient_id: "", 
+    payment_id: "" 
   }]);
 
-  useEffect(() => { // Hook que executa ao montar o componente
-    readSchedule(); // Chama função para ler agenda
+  useEffect(() => { 
+    readSchedule(); 
   }, []);
 
-  async function creatSchedule() { // Função para criar horário
+  async function creatSchedule() {
     const { data: sessionData } = await supabase.auth.getSession(); // Pega sessão atual
     const uid = sessionData?.session?.user?.id; // Pega ID do usuário logado
 
     if (!uid) return nav("/user", { replace: true }); // Redireciona se não houver UID
-    if (!uid) nav("/user", { replace: true }); // Redireciona se não houver UID (linha repetida no código original)
-
-    /* Comentário de código antigo mantido
-    if (eU) nav('/user', { replace: true })
-    if (!dU) nav('/user', { replace: true })
-    if (dU && !dU.id) nav('/user', { replace: true })*/
-
+  
     // Insere novo horário no Supabase
     const { data, error } = await supabase
       .from('schedule')
       .insert([
         {
-          date: schedule[0].date, // Pega a data do estado
-          doctor_id: uid, // ID do médico
-          status: "Disponível" // Status inicial
+          date: schedule[0].date, 
+          doctor_id: uid, 
+          status: "Disponível" 
         },
       ])
       .select(); // Retorna os dados inseridos
 
     setSchedule(prev => [...prev, ...[data]]); // Atualiza estado adicionando novo horário
     setInserirAgenda(false); // Fecha formulário
-    console.log(data, error); // Log para depuração
+    
   }
 
-  // Função para listar a agenda
+  
   async function readSchedule() {
     const { data: sessionData } = await supabase.auth.getSession(); // Pega sessão
     const uid = sessionData?.session?.user?.id; // ID do usuário logado
@@ -67,7 +62,7 @@ function Schedule() { // Componente principal
     setSchedule(dataSchedule || []); // Atualiza estado
   }
 
-  // Função para deletar horário
+  
   async function delSchedule(id) {
     const { error } = await supabase
       .from('schedule')
@@ -76,8 +71,8 @@ function Schedule() { // Componente principal
   }
 
   const [inserirAgenda, setInserirAgenda] = useState(false); // Estado para controlar formulário
-  const userType = localStorage.getItem('tipoUsuario'); // Pega tipo de usuário
-  console.log(userType); // Log para depuração
+  const tipoUsuario = localStorage.getItem('tipoUsuario'); // Pega tipo de usuário que foi colocado no arquivo user
+
 
   return ( // JSX do componente
     <main>
@@ -86,7 +81,7 @@ function Schedule() { // Componente principal
           <p className="semConsulta">Nenhuma consulta encontrada.</p> // Exibe mensagem
         ) : ( // Se houver horários
           <>
-            {userType === "doctor" && ( // Se o usuário for médico
+            {tipoUsuario === "doctor" && ( // Se o usuário for médico
               <div className="addScheduleContainer">
                 <button className="addScheduleBtn" onClick={() => setInserirAgenda(!inserirAgenda)}>
                   {inserirAgenda ? "Fechar formulário" : "Adicionar Novo Horário"} {/* Texto do botão muda */}
@@ -95,7 +90,7 @@ function Schedule() { // Componente principal
                 {inserirAgenda && ( // Formulário de adicionar horário
                   <form className="addScheduleForm" onSubmit={(e) => e.preventDefault()}>
                     <input
-                      type="date" // Input para data
+                      type="datetime-local" // Input para data
                       value={schedule.date} // Valor do estado
                       onChange={(e) => setSchedule([{ ...schedule, date: e.target.value }])} // Atualiza estado
                       required
@@ -131,7 +126,7 @@ function Schedule() { // Componente principal
                       <td>{agenda.patient_id}</td>
                       <td>{agenda.payment_id}</td>
                       <td>
-                        {userType === "patient" && agenda.status === "agendada" && ( // Botão só aparece para pacientes
+                        {tipoUsuario === "patient" && agenda.status === "agendada" && ( // Botão só aparece para pacientes
                           <button className="btnCancel" onClick={() => delSchedule(agenda.id)}>
                             Cancelar Consulta
                           </button>

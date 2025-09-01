@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react'; // Importa hooks do React
 import { createClient } from "@supabase/supabase-js"; // Importa client do Supabase
 import { useNavigate } from 'react-router-dom'; // Importa hook para navegação
 import Button from 'react-bootstrap/Button'; // Importa botão do React Bootstrap
+import Schedule from '../Schedule/Index'; // caminho do arquivo do componente Schedule
 
-import './Style.css'; // Importa arquivo de estilos CSS
+import './doctors.css'; // Importa arquivo de estilos CSS
+
 
 // Configuração do Supabase
 const supabaseUrl = "https://mayrahcoiqpxrhqtcnry.supabase.co"; // URL do projeto Supabase
@@ -11,77 +13,149 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const supabase = createClient(supabaseUrl, supabaseKey); // Cria cliente Supabase
 
-function Doctor() { // Componente React Doctor
-  const nav = useNavigate(); // Hook para navegação programática
-  const [doctors, setDoctors] = useState([]); // Estado para armazenar lista de médicos
+function Doctor() {
+  const nav = useNavigate();
+  const [doctors, setDoctors] = useState([]);
 
-  // useEffect para listar médicos ao montar o componente
+
   useEffect(() => {
     listarMedicos(); // Chama função para buscar todos os médicos
   }, []);
 
-  // Função para listar médicos, com opção de filtro por especialidade
+
   async function listarMedicos(filtro = null) {
-    if (filtro) { // Se houver filtro
+    if (filtro) {
       let { data: dataDoctors, error } = await supabase
-        .from('doctors') // Tabela 'doctors'
-        .select('*') // Seleciona todas as colunas
-        .eq('especialidade', filtro); // Filtra pela especialidade
+        .from('doctors')
+        .select('*')
+
+        .eq('especialidade', filtro);
       setDoctors(dataDoctors); // Atualiza estado com resultado filtrado
     } else { // Se não houver filtro, busca todos os médicos
       let { data: dataDoctors, error } = await supabase
         .from('doctors')
         .select('*');
+
       setDoctors(dataDoctors); // Atualiza estado com todos os médicos
     }
   }
 
-  // Função para deletar médico pelo supra_id
+
   async function deletarMedico(id) {
     const { error } = await supabase
-      .from('doctors') // Tabela 'doctors'
-      .delete() // Deleta registro
-      .eq('supra_id', id); // Filtra pelo id
+      .from('doctors')
+      .delete()
+      .eq('supra_id', id);
   }
 
-  return ( // JSX/HTML do componente
+  const [schedule, setSchedule] = useState([]);
+  const [msg, setMsg] = useState(""); // estado para mensagens de feedback (erro, sucesso)
+
+  async function readSchedule(doctor_id) {
+
+    let { data: dataSchedule, error } = await supabase
+      .from('schedule')
+      .select('*') // Seleciona todos os campos
+
+    setSchedule(dataSchedule || []); // Atualiza estado
+
+  }
+
+  useEffect(() => {
+    readSchedule();
+  }, []);
+
+  function formatarData(data) {
+    const date = new Date(data)
+
+    const dataFormatada =
+
+      date.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      });
+
+    const horaFormatada =
+
+      date.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
+    return `${dataFormatada} ${horaFormatada}`;
+
+    //poderia ser também return dataFormatada + ' ' + horaFormatada;
+  }
+
+
+  return (
     <main>
-      <div className="inicio"> {/* Container inicial da página */}
-        <div className="menuBusca"> {/* Menu de busca e filtros */}
-          <div></div> {/* Espaçamento vazio */}
-          <div className="busca"> {/* Campo de busca e botões de filtro */}
-            <input type="text" placeholder="Especialidade ou médico" /> {/* Input de pesquisa */}
-            <button className="btn" onClick={() => listarMedicos("Dermatologista")}>Dermatologista</button> {/* Filtro Dermatologista */}
-            <button className="btn" onClick={() => listarMedicos("Cardiologista")}>Cardiologista</button> {/* Filtro Cardiologista */}
-            <button className="btn" onClick={() => listarMedicos("Endocrinologista")}>Endocrinologista</button> {/* Filtro Endocrinologista */}
-            <button className="btn" onClick={() => listarMedicos()}>Buscar Todos</button> {/* Botão para buscar todos */}
+      <div className="inicio">
+        <div className="menuBusca">
+          <div></div>
+          <div className="busca">
+            <input type="text" placeholder="Especialidade ou médico" />
+            <button className="btn" onClick={() => listarMedicos("Dermatologista")}>Dermatologista</button>
+            <button className="btn" onClick={() => listarMedicos("Cardiologista")}>Cardiologista</button>
+            <button className="btn" onClick={() => listarMedicos("Endocrinologista")}>Endocrinologista</button>
+            <button className="btn" onClick={() => listarMedicos()}>Buscar Todos</button>
           </div>
-          <div></div> {/* Espaçamento vazio */}
+          <div></div>
         </div>
       </div>
 
       {/* Mapeia e exibe cada médico da lista */}
       {doctors.map(medico => (
         <div key={medico.supra_id}> {/* Chave única para cada médico */}
-          <div className="alinhamentoPagina"> {/* Container de alinhamento */}
+          <div className="alinhamentoPagina">
 
-            <div className="cardInfoConsulta"> {/* Card de informações do médico */}
+            <div className="cardInfoConsulta">
 
-              <div>
-                <img src={medico.imagem} /> {/* Imagem do médico */}
-                {medico.nome}<br /> {/* Nome do médico */}
-                {medico.especialidade} {/* Especialidade */}
-                {/* Botão para navegar para a página de detalhes do médico */}
-                <Button variant="primary" onClick={() => nav(`/doctors/${medico.supra_id}`, { replace: true })}>Ver</Button>
+              <div></div>
+
+              <div className="infoConsulta">
+                <img src={medico.imagem} />
+                {medico.nome}<br />
+                {medico.especialidade}
+                <Button className='btnVerMais' variant="primary" onClick={() => nav(`/doctors/${medico.supra_id}`, { replace: true })}>Ver mais</Button>
               </div>
+
+              <div className="calendario">
+
+                <h3>Disponibilidade</h3>
+                <p>Selecione o dia e horário de sua preferência para o atendimento</p>
+
+                <div className="disponibilidade">
+
+                  <div className="dataDisponivel">
+
+                    {schedule.filter(agenda => agenda.doctor_id === medico.supra_id).length === 0 ? (
+                      <p className="semConsulta">Nenhum horário disponível.</p>
+                    ) : (
+                      schedule
+                        .filter(agenda => agenda.doctor_id === medico.supra_id)
+                        .map(agenda => (
+                          <a key={agenda.id} className="btnData">{formatarData(agenda.date)}</a>
+                        ))
+                    )}
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div></div>           
 
             </div>
 
           </div>
         </div>
-      ))}
+      ))
+      }
 
-    </main>
+    </main >
   );
 
 }

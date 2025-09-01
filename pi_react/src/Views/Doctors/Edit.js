@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'; // Importa hooks para
 import { createClient } from "@supabase/supabase-js"; // Importa Supabase client
 import Button from 'react-bootstrap/Button'; // Importa botão do React-Bootstrap
 
-import './Style.css'; // Importa arquivo de estilos CSS
+import './doctors.css'; // Importa arquivo de estilos CSS
 
 // Configuração do Supabase
 const supabaseUrl = "https://mayrahcoiqpxrhqtcnry.supabase.co"; // URL do projeto Supabase
@@ -98,7 +98,7 @@ function Doctor() { // Componente React Doctor
 
   return (
     <main>
-      <div class="card"> {/* Card container */}
+      <div className="card"> {/* Card container */}
         {/* Formulário do médico */}
         <form onSubmit={(e) => e.preventDefault()}>
 

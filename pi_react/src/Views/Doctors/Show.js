@@ -1,98 +1,150 @@
-import { useState, useEffect } from 'react'; // Importa hooks do React
-import { createClient } from "@supabase/supabase-js"; // Importa client do Supabase
-import { useNavigate, useParams } from 'react-router-dom'; // Importa hooks para navegação e parâmetros de URL
-import Button from 'react-bootstrap/Button'; // Importa botão do React Bootstrap
+import { useState, useEffect } from 'react';
+import { createClient } from "@supabase/supabase-js";
+import { useNavigate, useParams } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 
-import { supabase } from '../../User'; // Importa instância do Supabase
+import { supabase } from '../../User';
 
-function Doctor() { // Função componente Doctor (JavaScript/React)
-  const nav = useNavigate(); // Hook para navegação programática
+function Doctor() {
+
+  const nav = useNavigate();
   const [doctor, setDoctor] = useState(null); // Estado para armazenar dados do médico
   const { id } = useParams(); // Pega o ID do médico a partir da URL
+  const [schedule, setSchedule] = useState([]);
+  const [msg, setMsg] = useState("");
 
   // useEffect para listar dados do médico ao carregar o componente ou quando id mudar
   useEffect(() => {
-    listarMedicos(id)
+    listarMedicos(id);
+    readSchedule();
   }, [id])
 
-  // Função para buscar os dados do médico no Supabase
+
+
   async function listarMedicos(id) {
     let { data: dataDoctor, error } = await supabase
-      .from('doctors') // Tabela 'doctors'
-      .select('*') // Seleciona todas as colunas
-      .eq('supra_id', id) // Filtra pelo id do médico
-      .single() // Retorna apenas um registro
+      .from('doctors')
+      .select('*')
+      .eq('supra_id', id)
+      .single()
     setDoctor(dataDoctor); // Atualiza o estado com os dados do médico
   }
 
-  if (!doctor) return <p>Carregando...</p>; // Mostra mensagem enquanto os dados não carregam
+  if (!doctor) return <p>Carregando...</p>;
 
-  return ( // JSX/HTML retornado pelo componente
+  async function readSchedule(doctor_id) {
+
+    let { data: dataSchedule, error } = await supabase
+      .from('schedule')
+      .select('*') // Seleciona todos os campos
+
+    setSchedule(dataSchedule || []); // Atualiza estado
+
+  }
+
+  function formatarData(data) {
+    const date = new Date(data)
+
+    const dataFormatada =
+
+      date.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      });
+
+    const horaFormatada =
+
+      date.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
+    return `${dataFormatada} ${horaFormatada}`;
+
+    //poderia ser também return dataFormatada + ' ' + horaFormatada;
+  }
+
+  const validarSessao = async () => {
+    const { data: sessionData } = await supabase.auth.getSession();
+    const uid = sessionData?.session?.user?.id;
+
+    if (!uid) {
+      // Salva a rota atual para voltar depois do login
+      const redirect = encodeURIComponent(window.location.pathname);
+      nav(`/user?redirect=${redirect}`, { replace: true });
+      return;
+    }
+
+    nav(`/payment/`, { replace: true });
+  };
+
+
+
+
+  return (
     <main>
-      <div className="alinhamentoPagina"> {/* Container principal */}
-        
-        {/* Seção de dados gerais do médico */}
+      <div className="alinhamentoPagina">
+
+
         <div className="dadosGeraisConsulta">
           <div className="apresentacaoMedico">
             <div className="detalhesMedico">
 
-              {/* Descrição e especialidade */}
+
               <div className="descricaoEspecialidade">
-                <h2>{doctor.nome}</h2> {/* Nome do médico */}
-                <p>{doctor.especialidade}</p> {/* Especialidade */}
+                <h2>{doctor.nome}</h2>
+                <p>{doctor.especialidade}</p>
                 <p>jvcnjf vnvkjnfdkjnvf vfjdnvjkfd vfjdnvikjfdib vjdfnvjfdnv
                   jf vnvkjnfdkjnvf vfjdnvjkfd v jf vnvkjnfdkjnvf vfjdnvjkfd vjf vnvkjnfdkjnvf vfjdnvjkfd v jf vnvkjnfdkjnvf vfjdnvjkfd v
-                </p> {/* Texto de exemplo */}
+                </p>
               </div>
 
-              {/* Imagem do médico */}
+
               <div className="imgMedico">
-                <img src={doctor.imagem}/> {/* URL da imagem do médico */}
+                <img src={doctor.imagem} />
               </div>
 
             </div>
           </div>
         </div>
 
-        {/* Seção de resumo profissional */}
+
         <div className="experiencia">
           <h3>Resumo Profissional</h3>
-          <p>{doctor.resumoProfissional}</p> {/* Texto do resumo profissional */}
+          <p>{doctor.resumoProfissional}</p>
         </div>
 
-        {/* Seção de avaliações */}
-        <div className="avaliacoes">
-          <h3>Avaliações</h3>
 
-          <div className="todasAvaliacoes">
 
-            <div className="avaliacao">
-                <p><span id="avaliacaoDescricao"></span><span id="avaliacaoEstrela"></span></p> {/* Descrição e estrelas da avaliação */}
-                <p id="pacienteNome"></p> {/* Nome do paciente */}
-                <p id="dataConsulta"></p> {/* Data da consulta */}
-            </div>
-
-            <a href="#">Ver mais</a> {/* Link para ver mais avaliações */}
-
-          </div>
-        </div>
-
-        {/* Seção de disponibilidade do médico */}
         <div className="calendario">
+
           <h3>Disponibilidade</h3>
           <p>Selecione o dia e horário de sua preferência para o atendimento</p>
 
-          <div className="disponibilidade">
+          <div>
+
             <div className="dataDisponivel">
-              <a className="btn" href=""><span>   </span> às <span>   </span></a> {/* Botão para selecionar horário */}
+
+              {schedule.filter(agenda => agenda.doctor_id === doctor.supra_id).length === 0 ? (
+                <p className="semConsulta">Nenhum horário disponível.</p>
+              ) : (
+                schedule
+                  .filter(agenda => agenda.doctor_id === doctor.supra_id)
+                  .map(agenda => (
+                    <button key={agenda.id} className="btnData" onClick={validarSessao}>{formatarData(agenda.date)} </button>
+                  ))
+              )}
+
             </div>
+
           </div>
+
         </div>
 
       </div>
     </main>
   );
-
 }
 
-export default Doctor; // Exporta o componente para uso em outros arquivos
+export default Doctor; 

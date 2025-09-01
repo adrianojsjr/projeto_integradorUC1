@@ -1,0 +1,74 @@
+.cardInfoConsulta {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 100px;
+}
+
+.infoConsulta {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 0 5px rgba(70, 69, 69, 0.089);
+    line-height: 25px;
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.infoConsulta img {
+    width: 250px;
+    height: 150px;
+}
+
+
+.infoConsulta p, h3 {
+    margin-left: 10px;
+}
+
+.infoConsulta a {
+    text-decoration: none;
+}
+
+.infoConsulta .btnVerMais{
+    background-color: #11b4bac9;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    margin-left: 0px;
+}
+
+.calendario {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 400px;
+}
+
+
+.calendario .dataDisponivel {
+    display: grid;
+    gap: 10px;
+    flex-direction: column;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    max-height: 200px; /* Define uma altura máxima */
+    overflow-y: scroll; /* Adiciona a barra de rolagem vertical */
+}
+
+
+.calendario .btnData {
+    background-color: #33B291;
+    color: #ffffff;
+    border: none;
+    /* Sem borda padrão*/
+    border-radius: 6px;
+    /* Bordas arredondadas */
+    padding: 15px 25px;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+
+
+}
