@@ -48,12 +48,12 @@ function Doctor() { // Componente React Doctor
     try {
       // 1. Pega usuário logado no Auth
       const { data: dU, error: eU } = await supabase.auth.getUser();
-      const uid = dU?.user?.uid; // Pega uid do usuário logado
+      const uid = dU?.user?.id; // Pega uid do usuário logado
 
       if (!uid) nav("/user", { replace: true }); // Redireciona caso não exista uid
 
       // 2. Atualiza dados do médico na tabela 'doctos' (possível erro de digitação, deveria ser 'doctors')
-      const {data: edit, error: editError } = await supabase.from("doctos").update([
+      const { data: edit, error: editError } = await supabase.from("doctors").update([
         {
           supra_id: uid,
           nome: doctor.nome,
@@ -94,6 +94,19 @@ function Doctor() { // Componente React Doctor
       .eq('supra_id', id) // Filtra pelo supra_id
       .single(); // Retorna apenas um registro
     setDoctor(dataDoctors); // Atualiza estado
+  }
+
+
+  // Função para deslogar
+  async function logout() {
+    await supabase.auth.signOut();
+
+    // Limpa qualquer dado local (se usado)
+    localStorage.clear();
+    sessionStorage.clear();
+    
+    nav("/user", { replace: true });
+    window.location.reload(); // Recarrega a página
   }
 
   return (
@@ -151,7 +164,7 @@ function Doctor() { // Componente React Doctor
 
             <p>
               <label className="btnUpload">Anexar diploma acadêmico</label>
-              <input id="diploma" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, diploma: e.target.files})} />
+              <input id="diploma" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, diploma: e.target.files })} />
             </p>
 
             <p>
@@ -167,6 +180,10 @@ function Doctor() { // Componente React Doctor
 
           <button className="buttonSucess" type="button" onClick={update} disabled={loading}>
             {loading ? "Salvando..." : "Salvar"} {/* Botão que mostra loading */}
+          </button>
+
+          <button className="buttonLogout" type="button" onClick={logout}>
+            Sair
           </button>
 
         </form>

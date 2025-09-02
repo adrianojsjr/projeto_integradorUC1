@@ -57,13 +57,12 @@ function App() {
                 <div className='btnNav'>
                   {isPatient ? (
                     <>
-                      <Link to="/patient">Inicio</Link>
+                      <Link to="/doctors">Inicio</Link>
                       <Link to={`/schedule/${uid}`}>Consultas</Link>
-                      <Link to={`/patient/edit/${uid}`}>Meu Perfil</Link>
+                      <Link to={`/patients/${uid}`}>Meu Perfil</Link>
                     </>
                   ) : (
                     <>
-                      <Link to="/doctors">Inicio</Link>
                       <Link to={`/schedule/${uid}`}>Consultas</Link>
                       <Link to={`/doctors/edit/${uid}`}>Meu Perfil</Link>
                     </>
@@ -92,8 +91,8 @@ function App() {
             <Route path='/doctors/edit/:id' element={<DoctorsEdit />} />
             <Route path='/schedule/:id' element={<Schedule />} />
             <Route path='/payment' element={<Payment />} />
-            <Route path='/patients' element={<Patients />} />
-            <Route path='/payment:id' element={<PaymentShow />} />
+            <Route path='/patients/:id' element={<Patients />} />
+            <Route path='/payment/:id' element={<PaymentShow />} />
           </Route>
 
           <Route path='/' element={<Navigate to='/doctors' replace />} />

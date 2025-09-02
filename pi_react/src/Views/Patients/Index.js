@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 
 import { supabase } from '../../User';
 
-function Doctor() {
+function Patient() {
 
   const nav = useNavigate();
   const [patient, setPatient] = useState(null); // Estado para armazenar dados do médico
@@ -26,7 +26,7 @@ function Doctor() {
     let { data: dataPatient, error } = await supabase
       .from('patients')
       .select('*')
-      .eq('patient_id', id)
+      .eq('supra_id', id)
       .single()
     setPatient(dataPatient); // Atualiza o estado com os dados do médico
   }
@@ -80,11 +80,24 @@ function Doctor() {
     nav(`/payment/`, { replace: true });
   };
 
+  // Função para deslogar
+  async function logout() {
+    await supabase.auth.signOut();
 
+    // Limpa qualquer dado local (se usado)
+    localStorage.clear();
+    sessionStorage.clear();
+    
+    nav("/user", { replace: true });
+    window.location.reload(); // Recarrega a página
+  }
 
 
   return (
     <main>
+
+      <div class="card">
+
 
       <form onSubmit={(e) => e.preventDefault()}>
 
@@ -118,11 +131,18 @@ function Doctor() {
           {loading ? "Salvando..." : "Salvar"}
         </button>
 
+         <button className="buttonLogout" type="button" onClick={logout}>
+            Sair
+          </button>
+
       </form>
+
+      </div>
+
 
 
     </main>
   );
 }
 
-export default Doctor; 
+export default Patient; 

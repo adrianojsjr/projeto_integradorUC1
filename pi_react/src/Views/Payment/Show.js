@@ -1,18 +1,24 @@
+// Payment.js
+import Button from 'react-bootstrap/Button';
+
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { replace, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
+
 import { supabase } from '../../User';
 
 function Payment() {
-  const navigate = useNavigate();
-  const {id} = useParams();
+  const nav = useNavigate();
+   const { id: agendaId } = useParams(); // id da agenda
+  const location = useLocation(); //informações da URL atual.
+  const idMedico = new URLSearchParams(location.search); //transforma a query string em objeto fácil de ler.
+  const doctorId = idMedico.get('doctorId'); // id do médico
 
   // Estado para armazenar os dados do pagamento
   const [payment, setPayment] = useState({
     tipo_pagamento: '',
     patient_id: '',
-    doctor_id: '',
-    user_id:''
+    doctor_id: ''
   });
 
   // Estado para armazenar os pagamentos buscados
@@ -25,26 +31,26 @@ function Payment() {
       const uid = dU?.user?.id;
 
       if (!uid) {
-        navigate('/login', { replace: true });
+        nav('/login', { replace: true });
         return;
       }
 
       const novoPagamento = {
         tipo_pagamento: payment.tipo_pagamento,
-        user_id: uid,
+        patient_id: uid
       };
 
       const { data, error } = await supabase
         .from('payment')
         .insert([novoPagamento])
-        .select();
+        .select('*');
 
       if (error) {
         console.error('Erro ao salvar pagamento:', error);
         alert('Erro ao salvar pagamento');
       } else {
         alert('Pagamento salvo com sucesso!');
-        setPayment({ tipo_pagamento: '', patient_id: '' });
+        setPayment({ tipo_pagamento: '', patient_id: '', doctor_id: '' });
       }
     } catch (err) {
       console.error('Erro inesperado:', err);
@@ -53,14 +59,20 @@ function Payment() {
 
   // Função para listar todos os pagamentos
   async function listarPagamento() {
-     
-      const { data: dataPayments, error } = await supabase
+    try {
+      const { data, error } = await supabase
         .from('payment')
-        .select('*')
-        .eq('id', id)
-        
-        setPayments(dataPayments);
- 
+        .select('*');
+
+      if (error) {
+        console.error('Erro ao listar pagamentos:', error);
+        alert('Erro ao buscar pagamentos');
+      } else {
+        setPayments(data || []);
+      }
+    } catch (err) {
+      console.error('Erro inesperado ao listar:', err);
+    }
   }
 
   return (
@@ -70,7 +82,7 @@ function Payment() {
       <form>
         <input
           type="text"
-          placeholder="Digite o Tipo de Pagamento: Cartão ou Pix"
+          placeholder="Cartão/Pix"
           value={payment.tipo_pagamento}
           onChange={(e) => setPayment({ ...payment, tipo_pagamento: e.target.value })}
         />
@@ -79,32 +91,16 @@ function Payment() {
           onClick={(e) => {
             e.preventDefault();
             fazerPagamento();
-          }}
+          }}  
         >
-          Salvar
+          Confirmar pagamento
         </button>
 
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            listarPagamento();
-          }}
-        >
-          Buscar
-        </button>
+        <Button onClick={() => nav(`/doctors/${doctorId}`, { replace: true })} > Escolher outro horário </Button>
+
+
       </form>
 
-      <div>
-        <h3>Pagamentos Cadastrados:</h3>
-        {payments.length === 0 && <p>Nenhum pagamento encontrado.</p>}
-        {payments.map((pagamento) => (
-          <div key={pagamento.id} className="payment-item">
-            <p><strong>Tipo:</strong> {pagamento.tipo_pagamento}</p>
-            <p><strong>ID do Usuário:</strong> {pagamento.patient_id}</p>
-            <p><strong>ID do Médico:</strong> {pagamento.doctor_id}</p>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }

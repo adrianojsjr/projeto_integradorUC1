@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import { useNavigate, useLocation } from 'react-router-dom';
 import {Input} from './Components/input.js';
 import './App.css';
-import './User.css';
+import './user.css';
 
 // informações para conexão com Supabase
 const supabaseUrl = "https://mayrahcoiqpxrhqtcnry.supabase.co"
@@ -192,17 +192,19 @@ function User() { // componente principal User
         nav(redirect, { replace: true });
       } else {
         if (tipoUsuario === 'doctor') {
-          nav("/schedule", { replace: true });
+          nav("/doctors", { replace: true });
         } else {
           nav("/doctors", { replace: true });
         }
       }
 
       setMsg("Login realizado com sucesso!");
+      
     } catch (err) {
       setMsg("Error: " + err.message);
     }
     setLoading(false);
+    window.location.reload(); // Recarrega a página
   }
 
   // esconde telas

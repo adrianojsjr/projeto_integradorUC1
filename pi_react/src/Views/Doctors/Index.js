@@ -89,7 +89,7 @@ function Doctor() {
     //poderia ser também return dataFormatada + ' ' + horaFormatada;
   }
 
-    const validarSessao = async () => {
+    const validarSessao = async (agendaID, doctorID) => {
       const { data: sessionData } = await supabase.auth.getSession();
       const uid = sessionData?.session?.user?.id;
   
@@ -100,7 +100,7 @@ function Doctor() {
         return;
       }
   
-      nav(`/payment/`, { replace: true });
+         nav(`/payment/${agendaID}?doctorId=${doctorID}`);
     };
   
 
@@ -152,7 +152,7 @@ function Doctor() {
                       schedule
                         .filter(agenda => agenda.doctor_id === medico.supra_id)
                         .map(agenda => (
-                          <button key={agenda.id} className="btnData" onClick={validarSessao}>{formatarData(agenda.date)} </button>
+                          <button key={agenda.id} className="btnData"  onClick={() => validarSessao(agenda.id, medico.supra_id)}> {formatarData(agenda.date)} </button>
                         ))
                     )}
 
