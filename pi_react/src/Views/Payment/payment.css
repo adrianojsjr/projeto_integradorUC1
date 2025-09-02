@@ -1,0 +1,19 @@
+/* Paleta de cores:
+Verde-água: #11b5ba
+Cinza azulado: #40566e
+Azul: #1e5acd
+Verde: #33B291
+*/
+
+.cartao {
+  max-width:500px;
+  margin: 0 auto; /*centraliza o formulário*/
+  padding: 20px;
+  background: #fff;
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+}
+

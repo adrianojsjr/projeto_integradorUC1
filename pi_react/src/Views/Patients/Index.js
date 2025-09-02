@@ -7,14 +7,22 @@ import { supabase } from '../../User';
 
 function Patient() {
 
+  // estado para os dados do paciente no cadastro
+  const [patient, setPatient] = useState({
+    email: "",
+    senha: "",
+    telefone: "",
+    nome: "",
+    cpf: "",
+    ativo: ""
+  });
+
   const nav = useNavigate();
-  const [patient, setPatient] = useState(null); // Estado para armazenar dados do médico
-  const { id } = useParams(); // Pega o ID do médico a partir da URL
+  const { id } = useParams(); // Pega o ID do paciente
   const [schedule, setSchedule] = useState([]);
   const [msg, setMsg] = useState("");
-  const [loading, setLoading] = useState(false); // Estado para loading do botão
+  const [loading, setLoading] = useState(false); 
 
-  // useEffect para listar dados do médico ao carregar o componente ou quando id mudar
   useEffect(() => {
     listarPacientes(id);
     readSchedule();
@@ -28,7 +36,7 @@ function Patient() {
       .select('*')
       .eq('supra_id', id)
       .single()
-    setPatient(dataPatient); // Atualiza o estado com os dados do médico
+    setPatient(dataPatient); 
   }
 
   if (!patient) return <p>Carregando...</p>;
@@ -103,28 +111,28 @@ function Patient() {
 
         <p>
           <label>Nome</label>
-          <input id="nome" type="text" placeholder="Nome do titular" onChange={(e) => setPatient({ ...patient, nome: e.target.value })} required />
+          <input id="nome" type="text" placeholder="Nome do titular" value={patient.nome} onChange={(e) => setPatient({ ...patient, nome: e.target.value })} required />
         </p>
 
         <p>
           <label>E-mail</label>
-          <input id="email" type="email" placeholder="exemplo@email.com" onChange={(e) => setPatient({ ...patient, email: e.target.value })} required />
+          <input id="email" type="email" placeholder="exemplo@email.com" value={patient.email} onChange={(e) => setPatient({ ...patient, email: e.target.value })} required />
         </p>
 
         <p>
           <label>CPF</label>
-          <input id="cpf" type="text" placeholder="000.000.000-00" onChange={(e) => setPatient({ ...patient, cpf: e.target.value })} required />
+          <input id="cpf" type="text" placeholder="000.000.000-00" value={patient.cpf} onChange={(e) => setPatient({ ...patient, cpf: e.target.value })} required />
         </p>
 
 
         <p>
           <label>Telefone</label>
-          <input id="telefone" type="text" placeholder="Insira o Telefone" onChange={(e) => setPatient({ ...patient, telefone: e.target.value })} required />
+          <input id="telefone" type="text" placeholder="Insira o Telefone" value={patient.telefone} onChange={(e) => setPatient({ ...patient, telefone: e.target.value })} required />
         </p>
 
         <p>
           <label>Senha</label>
-          <input id="senha" type="password" onChange={(e) => setPatient({ ...patient, senha: e.target.value })} required />
+          <input id="senha" type="password" value={patient.senha} onChange={(e) => setPatient({ ...patient, senha: e.target.value })} required />
         </p>
 
         <button className="buttonSucess" type="button" onClick={listarPacientes} disabled={loading}>

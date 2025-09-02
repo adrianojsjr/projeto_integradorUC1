@@ -75,7 +75,7 @@ function Doctor() {
       nav(`/user?redirect=${redirect}`, { replace: true });
       return;
     }
-
+    
     nav(`/payment/`, { replace: true });
   };
 
