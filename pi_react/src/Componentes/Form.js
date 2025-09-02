@@ -25,8 +25,9 @@ function Form({
             <h3>{title}</h3>
             <form onSubmit={(e)=> e.preventDefault()}>
                 {children}
-
-                <button onClick={() => send()} > Salvar </button>
+                
+               
+                <button onClick={() => send()}> Salvar </button>
             </form>
         </div>
     )
