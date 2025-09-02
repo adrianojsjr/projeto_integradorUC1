@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button'; // Importa botão do React Bootstra
 import Schedule from '../Schedule/Index'; // caminho do arquivo do componente Schedule
 
 import './doctors.css'; // Importa arquivo de estilos CSS
+import {Input} from '../../Components/input'
 
 
 // Configuração do Supabase

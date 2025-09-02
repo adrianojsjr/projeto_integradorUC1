@@ -5,7 +5,7 @@ import DoctorsShow from './Views/Doctors/Show';
 import DoctorsEdit from './Views/Doctors/Edit';
 
 import Patients from './Views/Patients/Index';
-import PatientShow from './Views/Patients/Show';
+
 
 import Payment from './Views/Payment/Index';
 import PaymentShow from './Views/Payment/Show';
@@ -32,6 +32,8 @@ function PrivateSession() {
 function App() {
   const hasSession = !!localStorage.getItem('supaSession'); // Checa se existe sessão
   const [uid, setUid] = useState(null); //variavel = uid; função = setUid: essa função atualiza o valor do uid;
+  const tipoUsuario = localStorage.getItem('tipoUsuario');
+  const isPatient = tipoUsuario === "patient";
 
   useEffect(() => {
     async function pegarUid() {
@@ -40,8 +42,8 @@ function App() {
       setUid(uid); // salva o UID pela função setUid
     }
     pegarUid()
-  }
-  )
+  }, []);
+ 
 
 
   return (
@@ -51,16 +53,26 @@ function App() {
           <nav>
             {hasSession ? ( // Se usuário estiver logado
               <div className='menu'>
-                <img src={logo} />
+                <img src={logo} alt="logo" />
                 <div className='btnNav'>
-                  <Link to="/doctors">Inicio</Link>
-                  <Link to={`/schedule/${uid}`}>Consultas</Link>
-                  <Link to={`/doctors/edit/${uid}`}>Meu Perfil</Link>
+                  {isPatient ? (
+                    <>
+                      <Link to="/patient">Inicio</Link>
+                      <Link to={`/schedule/${uid}`}>Consultas</Link>
+                      <Link to={`/patient/edit/${uid}`}>Meu Perfil</Link>
+                    </>
+                  ) : (
+                    <>
+                      <Link to="/doctors">Inicio</Link>
+                      <Link to={`/schedule/${uid}`}>Consultas</Link>
+                      <Link to={`/doctors/edit/${uid}`}>Meu Perfil</Link>
+                    </>
+                  )}
                 </div>
               </div>
             ) : ( // Se não estiver logado
               <div className='menu'>
-                <img src={logo} to="/doctors" />
+                <img src={logo} alt="logo" />
                 <p>Sua consulta na palma da mão</p>
                 <div className='btnNav'>
                   <Link to="/doctors">Inicio</Link>

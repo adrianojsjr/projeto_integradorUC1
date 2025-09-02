@@ -2,7 +2,7 @@
 import { use, useState } from 'react';
 import { createClient } from "@supabase/supabase-js";
 import { useNavigate, useLocation } from 'react-router-dom';
-
+import {Input} from './Components/input.js';
 import './App.css';
 import './User.css';
 
@@ -221,48 +221,60 @@ function User() { // componente principal User
           <form onSubmit={(e) => e.preventDefault()}>
 
             <p>
-              <label>Nome</label>
-              <input id="nome" type="text" placeholder="Nome do titular" onChange={(e) => setDoctor({ ...doctor, nome: e.target.value })} />
+              <input label="Nome" id="nome" type="text" placeholder="Nome do titular" onChange={setDoctor} objeto={doctor} campo='nome'  required />
             </p>
 
             <p>
-              <label>E-mail</label>
-              <input id="email" type="email" placeholder="exemplo@email.com" onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} required />
+              <input id="email" label="Email" type="email" placeholder="exemplo@email.com" onChange={setDoctor} objeto={doctor} campo='email' required />
             </p>
 
             <p>
-              <label>CPF</label>
-              <input id="cpf" type="text" placeholder="000.000.000-00" onChange={(e) => setDoctor({ ...doctor, cpf: e.target.value })} />
+              <input id="cpf" label="CPF" type="text" placeholder="000.000.000-00" onChange={setDoctor} objeto={doctor} campo='cpf' required />
             </p>
 
             <p>
-              <label>Número do CRM</label>
-              <input id="numerodocrm" type="text" placeholder="CRM" onChange={(e) => setDoctor({ ...doctor, numeroCRM: e.target.value })} />
+              <input id="numerodocrm" label="Número do CRM" type="text" placeholder="CRM" onChange={setDoctor} objeto={doctor} campo='numeroCRM' required />
             </p>
 
             <p>
-              <label>UF do CRM</label>
-              <input id="ufdocrm" type="text" placeholder="Insira o UF do CRM" onChange={(e) => setDoctor({ ...doctor, ufCRM: e.target.value })} />
+              <input id="ufdocrm" type="text"  label="UF do CRM" placeholder="Insira o UF do CRM" onChange={setDoctor} objeto={doctor} campo='ufCRM' required />
             </p>
 
             <p>
-              <label>Data de Emissão</label>
-              <input id="dataEmissao" type="date" onChange={(e) => setDoctor({ ...doctor, dataEmissaoCRM: e.target.value })} />
+              <input id="dataEmissao" type="date"  label="Data de Emissão" onChange={setDoctor} objeto={doctor} campo='dataEmissao' required  />
             </p>
 
             <p>
               <label>Telefone</label>
-              <input id="telefone" type="text" placeholder="Insira o Telefone" onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} />
+              <input id="telefone" type="text" label="Telefone" placeholder="Insira o Telefone" onChange={setDoctor} objeto={doctor} campo='telefone' required />
             </p>
 
             <p>
-              <label for="especialidade">Especialidade</label>
-              <select id="especialidade" onChange={(e) => setDoctor({ ...doctor, especialidade: e.target.value })}>
-                <option value="maca">Maçã</option>
-                <option value="banana">Banana</option>
-                <option value="laranja">Laranja</option>
+              <label className="especialidade">Especialidade</label>
+              <select
+                id="especialidade" onChange={(e) => setDoctor({ ...doctor, especialidade: e.target.value })}>
+                <option value="">Selecione uma especialidade</option>
+                <option value="alergologia">Alergologia</option>
+                <option value="cardiologia">Cardiologia</option>
+                <option value="clínica_medica">Clínica Médica</option>
+                <option value="dermatologia">Dermatologia</option>
+                <option value="endocrinologia">Endocrinologia e Metabologia</option>
+                <option value="gastroenterologia">Gastroenterologia</option>
+                <option value="geriatria">Geriatria</option>
+                <option value="ginecologia">Ginecologia (consultas iniciais e de acompanhamento)</option>
+                <option value="infectologia">Infectologia</option>
+                <option value="medicina_de_familia">Medicina de Família e Comunidade</option>
+                <option value="neurologia">Neurologia</option>
+                <option value="nutrologia">Nutrologia</option>
+                <option value="oftalmologia">Oftalmologia (triagem e acompanhamento)</option>
+                <option value="pediatria">Pediatria</option>
+                <option value="psiquiatria">Psiquiatria</option>
+                <option value="psicologia">Psicologia</option>
+                <option value="reumatologia">Reumatologia</option>
+                <option value="urologia">Urologia (avaliações e retornos)</option>
               </select>
-              
+
+
             </p>
 
             <p>

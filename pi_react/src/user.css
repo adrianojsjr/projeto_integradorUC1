@@ -44,6 +44,11 @@ form input[type="text"],
   padding: 13px;
 }
 
+select#especialidade {
+    width: 99%;
+}
+
+
 /* Uploads */
 .card input[type="file"] {
   display: none; /*junta o label com o input */
