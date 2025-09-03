@@ -2,7 +2,8 @@
 import { use, useState } from 'react';
 import { createClient } from "@supabase/supabase-js";
 import { useNavigate, useLocation } from 'react-router-dom';
-import {Input} from './Components/input.js';
+import { Input } from './Components/input.js';
+import { Form } from "./Components/Form.js";
 import './App.css';
 import './user.css';
 
@@ -199,7 +200,7 @@ function User() { // componente principal User
       }
 
       setMsg("Login realizado com sucesso!");
-      
+
     } catch (err) {
       setMsg("Error: " + err.message);
     }
@@ -220,30 +221,36 @@ function User() { // componente principal User
 
 
         {!telaLogin && souMedico && (
-          <form onSubmit={(e) => e.preventDefault()}>
+          <form func={register} title='Cadastro Médico'>
 
             <p>
-              <input label="Nome" id="nome" type="text" placeholder="Nome do titular" onChange={setDoctor} objeto={doctor} campo='nome'  required />
+              <label>Nome</label>
+              <input label="Nome" id="nome" type="text" placeholder="Nome do titular" onChange={setDoctor} objeto={doctor} campo='nome' required />
             </p>
 
             <p>
+              <label>E-mail</label>
               <input id="email" label="Email" type="email" placeholder="exemplo@email.com" onChange={setDoctor} objeto={doctor} campo='email' required />
             </p>
 
             <p>
+              <label>CPF</label>
               <input id="cpf" label="CPF" type="text" placeholder="000.000.000-00" onChange={setDoctor} objeto={doctor} campo='cpf' required />
             </p>
 
             <p>
+              <label>Número do CRM</label>
               <input id="numerodocrm" label="Número do CRM" type="text" placeholder="CRM" onChange={setDoctor} objeto={doctor} campo='numeroCRM' required />
             </p>
 
             <p>
-              <input id="ufdocrm" type="text"  label="UF do CRM" placeholder="Insira o UF do CRM" onChange={setDoctor} objeto={doctor} campo='ufCRM' required />
+              <label>UF do CRM</label>
+              <input id="ufdocrm" type="text" label="UF do CRM" placeholder="Insira o UF do CRM" onChange={setDoctor} objeto={doctor} campo='ufCRM' required />
             </p>
 
             <p>
-              <input id="dataEmissao" type="date"  label="Data de Emissão" onChange={setDoctor} objeto={doctor} campo='dataEmissao' required  />
+              <label>UF do CRM</label>
+              <input id="dataEmissao" type="date" label="Data de Emissão" onChange={setDoctor} objeto={doctor} campo='dataEmissao' required />
             </p>
 
             <p>
@@ -280,8 +287,13 @@ function User() { // componente principal User
             </p>
 
             <p>
-              <label>Resumo Profissional</label>
-              <textarea id="resumoProfissional" type='text' onChange={(e) => setDoctor({ ...doctor, resumoProfissional: e.target.value })} />
+              <label>Resumo Profissional</label><br/>
+              <textarea
+                id="resumoProfissional"
+                rows="7"
+                placeholder="Escreva um breve resumo sobre sua experiência..."
+                onChange={(e) => setDoctor({ ...doctor, resumoProfissional: e.target.value })}
+              ></textarea>
             </p>
 
             <div>

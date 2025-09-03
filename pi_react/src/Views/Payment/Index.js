@@ -2,7 +2,7 @@
 import Button from 'react-bootstrap/Button';
 
 import { useState } from 'react';
-import { replace, useNavigate } from 'react-router-dom';
+import { replace, useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
 
 import { supabase } from '../../User';
@@ -10,17 +10,16 @@ import { supabase } from '../../User';
 function Payment() {
   const navigate = useNavigate();
 
-  // Estado para armazenar os dados do pagamento
   const [payment, setPayment] = useState({
     tipo_pagamento: '',
     patient_id: '',
     doctor_id: ''
   });
 
-  // Estado para armazenar os pagamentos buscados
+ 
   const [payments, setPayments] = useState([]);
 
-  // Função para salvar o pagamento no Supabase
+ 
   async function fazerPagamento() {
     try {
       const { data: dU, error: eU } = await supabase.auth.getUser();
@@ -53,7 +52,7 @@ function Payment() {
     }
   }
 
-  // Função para listar todos os pagamentos
+  
   async function listarPagamento() {
     try {
       const { data, error } = await supabase
@@ -73,7 +72,8 @@ function Payment() {
 
   return (
     <div className="screen">
-      <h2>Cadastro de Pagamento</h2>
+      <h2>Resumo da Consulta</h2>
+      
 
       <form>
         <input
@@ -107,11 +107,11 @@ function Payment() {
         {payments.length === 0 && <p>Nenhum pagamento encontrado.</p>}
 
         {payments.map((pagamento) => (
-          <div key={pagamento.id} className="payment-item" onClick={()=>(`/payment/${pagamento.id}`,{replace:true})}>
+          <div key={pagamento.id} className="payment-item" onClick={() => (`/payment/${pagamento.id}`, { replace: true })}>
 
             <p><strong>Tipo:</strong> {pagamento.tipo_pagamento}</p>
             <p><strong>ID do Usuário:</strong> {pagamento.user_id}</p>
-             <Button variant="danger">Danger</Button>
+            <Button variant="danger">Danger</Button>
 
           </div>
         ))}

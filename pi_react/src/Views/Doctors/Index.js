@@ -100,7 +100,7 @@ function Doctor() {
         return;
       }
   
-         nav(`/payment/${agendaID}?doctorId=${doctorID}`);
+         nav(`/payment/create/?scheduleId=${agendaID}&doctorId=${doctorID}`);
     };
   
 

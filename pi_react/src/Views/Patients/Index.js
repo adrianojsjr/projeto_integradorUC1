@@ -130,11 +130,6 @@ function Patient() {
           <input id="telefone" type="text" placeholder="Insira o Telefone" value={patient.telefone} onChange={(e) => setPatient({ ...patient, telefone: e.target.value })} required />
         </p>
 
-        <p>
-          <label>Senha</label>
-          <input id="senha" type="password" value={patient.senha} onChange={(e) => setPatient({ ...patient, senha: e.target.value })} required />
-        </p>
-
         <button className="buttonSucess" type="button" onClick={listarPacientes} disabled={loading}>
           {loading ? "Salvando..." : "Salvar"}
         </button>

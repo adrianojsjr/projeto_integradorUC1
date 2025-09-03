@@ -173,11 +173,6 @@ function Doctor() { // Componente React Doctor
             </p>
           </div>
 
-          <p>
-            <label>Senha</label>
-            <input id="password" type="password" value={doctor.senha} onChange={(e) => setDoctor({ ...doctor, senha: e.target.value })} required />
-          </p>
-
           <button className="buttonSucess" type="button" onClick={update} disabled={loading}>
             {loading ? "Salvando..." : "Salvar"} {/* Botão que mostra loading */}
           </button>

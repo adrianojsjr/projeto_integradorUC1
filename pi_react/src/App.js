@@ -9,6 +9,7 @@ import Patients from './Views/Patients/Index';
 
 import Payment from './Views/Payment/Index';
 import PaymentShow from './Views/Payment/Show';
+import PaymentCreate from './Views/Payment/Create';
 
 import Schedule from './Views/Schedule/Index';
 
@@ -92,7 +93,9 @@ function App() {
             <Route path='/schedule/:id' element={<Schedule />} />
             <Route path='/payment' element={<Payment />} />
             <Route path='/patients/:id' element={<Patients />} />
+            <Route path='/payment/create/' element={<PaymentCreate />} />
             <Route path='/payment/:id' element={<PaymentShow />} />
+             
           </Route>
 
           <Route path='/' element={<Navigate to='/doctors' replace />} />

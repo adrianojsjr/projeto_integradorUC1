@@ -49,6 +49,11 @@ select#especialidade {
 }
 
 
+.card textarea {
+  width: 99%;
+}
+
+
 /* Uploads */
 .card input[type="file"] {
   display: none; /*junta o label com o input */
@@ -66,6 +71,8 @@ select#especialidade {
   width:93%;
   padding: 15px;
 }
+
+
 
 .txtCadastrar{
   text-decoration: underline;
