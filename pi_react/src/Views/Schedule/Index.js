@@ -88,27 +88,18 @@ function Schedule() {
               <button onClick={() => setInserirAgenda(!inserirAgenda)}>{inserirAgenda ? "Fechar formulário" : "Adicionar Novo Horário"}
               </button>
 
-              {inserirAgenda && (
-                <div className="formAgenda">
-
-                  <div className='calendario'>
-                    <DatePicker
-                      selected={schedule[0]?.date ? new Date(schedule[0].date) : null}
-                      onChange={(date) => setSchedule([{ ...schedule[0], date: date.toISOString() }])}
-                      showTimeSelect
-                      timeFormat="HH:mm"
-                      timeIntervals={15}
-                      dateFormat="dd/MM/yyyy HH:mm"
-                      className="form-control datepicker-input"
-                      placeholderText="Selecione data e hora"
-                      required
+                {inserirAgenda && ( // Formulário de adicionar horário
+                  <form className="addScheduleForm" onSubmit={(e) => e.preventDefault()}>
+                    <input
+                      type="datetime-local" // Input para data
+                      value={schedule.date} // Valor do estado
+                      onChange={(e) => setSchedule([{ ...schedule, date: e.target.value }])} // Atualiza estado
                     />
                     <button type="button" onClick={creatSchedule}>
                       Adicionar
                     </button>
-
-                  </div>
-                </div>
+                  </form>
+                 
               )}
             </div>
           )}
