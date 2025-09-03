@@ -27,7 +27,7 @@ function Form({
                 {children}
                 
                
-                <button onClick={() => send()}> Salvar </button>
+                <button onClick={() => send()} disabled= {loading}> Salvar </button>
             </form>
         </div>
     )
