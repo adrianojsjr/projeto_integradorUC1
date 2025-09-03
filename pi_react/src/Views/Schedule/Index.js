@@ -1,29 +1,32 @@
-import { useState, useEffect } from 'react'; 
-import { createClient } from "@supabase/supabase-js"; 
-import { useNavigate, useParams } from 'react-router-dom'; 
-import Button from 'react-bootstrap/Button'; 
+import { useState, useEffect } from 'react';
+import { createClient } from "@supabase/supabase-js";
+import { useNavigate, useParams } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 
-import { supabase } from '../../User'; 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-import "./schedule.css"; 
+import { supabase } from '../../User';
+
+import "./schedule.css";
 
 
-function Schedule() { 
-  const nav = useNavigate(); 
-  const { id } = useParams(); 
+function Schedule() {
+  const nav = useNavigate();
+  const { id } = useParams();
 
-  
+
   const [schedule, setSchedule] = useState([{
-    date: "", 
-    doctor_id: "", 
-    status: "", 
-    avaliacao: "", 
-    patient_id: "", 
-    payment_id: "" 
+    date: "",
+    doctor_id: "",
+    status: "",
+    avaliacao: "",
+    patient_id: "",
+    payment_id: ""
   }]);
 
-  useEffect(() => { 
-    readSchedule(); 
+  useEffect(() => {
+    readSchedule();
   }, []);
 
   async function creatSchedule() {
@@ -31,25 +34,25 @@ function Schedule() {
     const uid = sessionData?.session?.user?.id; // Pega ID do usuário logado
 
     if (!uid) return nav("/user", { replace: true }); // Redireciona se não houver UID
-  
+
     // Insere novo horário no Supabase
     const { data, error } = await supabase
       .from('schedule')
       .insert([
         {
-          date: schedule[0].date, 
-          doctor_id: uid, 
-          status: "Disponível" 
+          date: schedule[0].date,
+          doctor_id: uid,
+          status: "Disponível"
         },
       ])
       .select(); // Retorna os dados inseridos
 
     setSchedule(prev => [...prev, ...[data]]); // Atualiza estado adicionando novo horário
     setInserirAgenda(false); // Fecha formulário
-    
+
   }
 
-  
+
   async function readSchedule() {
     const { data: sessionData } = await supabase.auth.getSession(); // Pega sessão
     const uid = sessionData?.session?.user?.id; // ID do usuário logado
@@ -62,7 +65,7 @@ function Schedule() {
     setSchedule(dataSchedule || []); // Atualiza estado
   }
 
-  
+
   async function delSchedule(id) {
     const { error } = await supabase
       .from('schedule')
@@ -77,32 +80,38 @@ function Schedule() {
   return ( // JSX do componente
     <main>
       <div className="alinhamentoPagina">
-        {schedule.length === 0 ? ( // Se não houver horários
+        {tipoUsuario === 'patient' && schedule.length === 0 ? ( // Se não houver horários
           <p className="semConsulta">Nenhuma consulta encontrada.</p> // Exibe mensagem
         ) : ( // Se houver horários
-          <>
-            {tipoUsuario === "doctor" && ( // Se o usuário for médico
-              <div className="addScheduleContainer">
-                <button className="addScheduleBtn" onClick={() => setInserirAgenda(!inserirAgenda)}>
-                  {inserirAgenda ? "Fechar formulário" : "Adicionar Novo Horário"} {/* Texto do botão muda */}
-                </button>
+          <>{tipoUsuario === "doctor" && (
+            <div className="agenda">
+              <button onClick={() => setInserirAgenda(!inserirAgenda)}>{inserirAgenda ? "Fechar formulário" : "Adicionar Novo Horário"}
+              </button>
 
-                {inserirAgenda && ( // Formulário de adicionar horário
-                  <form className="addScheduleForm" onSubmit={(e) => e.preventDefault()}>
-                    <input
-                      type="datetime-local" // Input para data
-                      value={schedule.date} // Valor do estado
-                      onChange={(e) => setSchedule([{ ...schedule, date: e.target.value }])} // Atualiza estado
+              {inserirAgenda && (
+                <div className="formAgenda">
+
+                  <div className='calendario'>
+                    <DatePicker
+                      selected={schedule[0]?.date ? new Date(schedule[0].date) : null}
+                      onChange={(date) => setSchedule([{ ...schedule[0], date: date.toISOString() }])}
+                      showTimeSelect
+                      timeFormat="HH:mm"
+                      timeIntervals={15}
+                      dateFormat="dd/MM/yyyy HH:mm"
+                      className="form-control datepicker-input"
+                      placeholderText="Selecione data e hora"
                       required
                     />
-                    <button type="button" onClick={creatSchedule}> {/* Chama função de criação */}
+                    <button type="button" onClick={creatSchedule}>
                       Adicionar
                     </button>
-                  </form>
-                )}
-              </div>
-            )}
 
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
             <div className="agendaContainer"> {/* Container da tabela */}
               <table className="tabelaAgenda">
                 <thead>

@@ -34,21 +34,29 @@ body {
 
 .inicio .menu {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   /* Espaçamento entre logo, texto e botão */
   align-items: center;
   background-color: white;
   font-family: Arial, sans-serif;
 }
 
+.inicio .menu span{
+  width: 414px;
+}
+
+
 .inicio .menu img {
   width: 150px;
   /* Tamanho do logo */
 }
 
+
 .inicio .menu .btnNav{
   display: flex;
   gap: 10px;
+  justify-content: right;
+  width: 414px;
 }
 
 .inicio .menu p {
@@ -56,6 +64,7 @@ body {
   /* Cor cinza azulado para texto */
   font-size: 30px;
   /* Tamanho da fonte para destaque */
+  width: 414px;
 }
 
 /* Botão "CADASTRE-SE" */

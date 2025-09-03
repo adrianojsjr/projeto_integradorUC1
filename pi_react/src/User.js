@@ -2,8 +2,7 @@
 import { use, useState } from 'react';
 import { createClient } from "@supabase/supabase-js";
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Input } from './Components/input.js';
-import { Form } from "./Components/Form.js";
+
 import './App.css';
 import './user.css';
 
@@ -193,14 +192,13 @@ function User() { // componente principal User
         nav(redirect, { replace: true });
       } else {
         if (tipoUsuario === 'doctor') {
-          nav("/doctors", { replace: true });
+          nav("/schedule", { replace: true });
         } else {
           nav("/doctors", { replace: true });
         }
       }
 
       setMsg("Login realizado com sucesso!");
-
     } catch (err) {
       setMsg("Error: " + err.message);
     }
@@ -217,51 +215,55 @@ function User() { // componente principal User
     <main className="App">
 
 
-      <div class="card">
+      <div className="card">
 
 
         {!telaLogin && souMedico && (
-          <form func={register} title='Cadastro Médico'>
+          <form onSubmit={(e) => e.preventDefault()}>
 
             <p>
               <label>Nome</label>
-              <input label="Nome" id="nome" type="text" placeholder="Nome do titular" onChange={setDoctor} objeto={doctor} campo='nome' required />
+              <input id="nome" type="text" placeholder="Nome do titular" onChange={(e) => setDoctor({ ...doctor, nome: e.target.value })} />
             </p>
 
             <p>
               <label>E-mail</label>
-              <input id="email" label="Email" type="email" placeholder="exemplo@email.com" onChange={setDoctor} objeto={doctor} campo='email' required />
+              <input id="email" type="email" placeholder="exemplo@email.com" onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} required />
             </p>
 
             <p>
               <label>CPF</label>
-              <input id="cpf" label="CPF" type="text" placeholder="000.000.000-00" onChange={setDoctor} objeto={doctor} campo='cpf' required />
+              <input id="cpf" type="text" placeholder="000.000.000-00" onChange={(e) => setDoctor({ ...doctor, cpf: e.target.value })} />
             </p>
 
             <p>
               <label>Número do CRM</label>
-              <input id="numerodocrm" label="Número do CRM" type="text" placeholder="CRM" onChange={setDoctor} objeto={doctor} campo='numeroCRM' required />
+              <input id="numerodocrm" type="text" placeholder="CRM" onChange={(e) => setDoctor({ ...doctor, numeroCRM: e.target.value })} />
             </p>
 
             <p>
               <label>UF do CRM</label>
-              <input id="ufdocrm" type="text" label="UF do CRM" placeholder="Insira o UF do CRM" onChange={setDoctor} objeto={doctor} campo='ufCRM' required />
+              <input id="ufdocrm" type="text" placeholder="Insira o UF do CRM" onChange={(e) => setDoctor({ ...doctor, ufCRM: e.target.value })} />
             </p>
 
             <p>
-              <label>UF do CRM</label>
-              <input id="dataEmissao" type="date" label="Data de Emissão" onChange={setDoctor} objeto={doctor} campo='dataEmissao' required />
+              <label>Data de Emissão</label>
+              <input id="dataEmissao" type="date" onChange={(e) => setDoctor({ ...doctor, dataEmissaoCRM: e.target.value })} />
             </p>
 
             <p>
               <label>Telefone</label>
-              <input id="telefone" type="text" label="Telefone" placeholder="Insira o Telefone" onChange={setDoctor} objeto={doctor} campo='telefone' required />
+              <input id="telefone" type="text" placeholder="Insira o Telefone" onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} />
             </p>
 
             <p>
-              <label className="especialidade">Especialidade</label>
+              <label className="especialidade">Especialidade*</label>
               <select
-                id="especialidade" onChange={(e) => setDoctor({ ...doctor, especialidade: e.target.value })}>
+                id="especialidade"
+                value={doctor.especialidade}
+                onChange={(e) => setDoctor({ ...doctor, especialidade: e.target.value })}
+                required
+              >
                 <option value="">Selecione uma especialidade</option>
                 <option value="alergologia">Alergologia</option>
                 <option value="cardiologia">Cardiologia</option>
@@ -282,36 +284,12 @@ function User() { // componente principal User
                 <option value="reumatologia">Reumatologia</option>
                 <option value="urologia">Urologia (avaliações e retornos)</option>
               </select>
-
-
             </p>
 
             <p>
-              <label>Resumo Profissional</label><br/>
-              <textarea
-                id="resumoProfissional"
-                rows="7"
-                placeholder="Escreva um breve resumo sobre sua experiência..."
-                onChange={(e) => setDoctor({ ...doctor, resumoProfissional: e.target.value })}
-              ></textarea>
+              <label>Resumo Profissional</label>
+              <textarea rows="7" id="resumoProfissional" type='text' onChange={(e) => setDoctor({ ...doctor, resumoProfissional: e.target.value })} />
             </p>
-
-            <div>
-              <p>
-                <label className="btnUpload">Anexar residência médica</label>
-                <input id="residencia" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, residencia: e.target.type })} />
-              </p>
-
-              <p>
-                <label className="btnUpload">Anexar diploma acadêmico</label>
-                <input id="diploma" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, diploma: e.target.file })} />
-              </p>
-
-              <p>
-                <label className="btnUpload">Comprovante de situação regular</label>
-                <input id="comprovante" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, situacaoRegular: e.target.value })} />
-              </p>
-            </div>
 
             <p>
               <label>Senha</label>

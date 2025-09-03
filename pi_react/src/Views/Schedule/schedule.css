@@ -1,83 +1,112 @@
-/* Container do botão do médico */
-.addScheduleContainer {
-  display: flex; /* Usa flexbox para organizar itens em linha */
-  justify-content: right; /* Alinha o botão à direita */
-  margin-bottom: 15px; /* Espaço abaixo do container */
+/* Container da página */
+.alinhamentoPagina {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-/* Botão do médico */
-.addScheduleBtn {
-  background-color: #33B291; /* Verde secundário */
-  color: white; /* Cor do texto */
-  padding: 15px 16px; /* Espaçamento interno do botão */
-  border: none; /* Sem borda */
-  border-radius: 6px; /* Cantos arredondados */
-  cursor: pointer; /* Cursor muda para mão ao passar por cima */
-  font-weight: bold; /* Texto em negrito */
-  width: 280px; /* Largura fixa do botão */
-  text-align: center; /* Centraliza o texto */
+/* Botão de adicionar novo horário */
+.agenda button {
+  background-color: #33B291;
+  /* Verde secundário */
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 15px;
 }
 
 /* Formulário de adição de horário */
-.addScheduleForm {
-  margin-top: 10px; /* Espaço acima do formulário */
-  display: flex; /* Flexbox para organizar inputs e botão */
-  gap: 10px; /* Espaçamento entre elementos do formulário */
+.formAgenda {
+  display: flex;
+  justify-content: center; /* centraliza horizontalmente */
+  align-items: center;     /* centraliza verticalmente */
+  
 }
 
-/* Input do formulário */
-.addScheduleForm input {
-  padding: 6px; /* Espaçamento interno do input */
-  border-radius: 6px; /* Cantos arredondados */
-  border: 1px solid #40566e; /* Borda cinza-azulada */
+/* Container do calendário */
+.formAgenda .calendario {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 5px rgba(70, 69, 69, 0.089);
+  line-height: 25px;
+  border-radius: 12px;
+  padding: 15px;
+  height: 150px;
 }
 
-/* Botão dentro do formulário */
-.addScheduleForm button {
-  background-color: #11b5ba; /* Verde-água */
-  color: white; /* Cor do texto */
-  padding: 6px 12px; /* Espaçamento interno */
-  border: none; /* Sem borda */
-  border-radius: 6px; /* Cantos arredondados */
-  cursor: pointer; /* Cursor muda para mão */
+.formAgenda input[type="datetime-local"] {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #40566e;
+  font-size: 14px;
+
+}
+
+/* Botão de adicionar horário no formulário */
+.formAgenda button {
+  background-color: #11b5ba;
+  /* Verde-água */
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Container da tabela */
+.agendaContainer {
+  overflow-x: auto;
+  /* Permite rolagem horizontal se necessário */
 }
 
 /* Tabela da agenda */
 .tabelaAgenda {
-  width: 100%; /* Ocupa toda a largura disponível */
-  border-collapse: collapse; /* Junta bordas da tabela */
-  text-align: center; /* Centraliza conteúdo das células */
-  margin-top: 20px; /* Espaço acima da tabela */
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  margin-top: 20px;
 }
 
 /* Cabeçalho da tabela */
 .tabelaAgenda th {
-  background-color: #1e5acd; /* Azul primário */
-  color: white; /* Cor do texto */
-  padding: 12px; /* Espaçamento interno */
-  border: 1px solid #40566e; /* Borda cinza-azulada */
+  background-color: #1e5acd;
+  color: white;
+  padding: 12px;
+  border: 1px solid #40566e;
 }
 
 /* Células da tabela */
 .tabelaAgenda td {
-  border: 1px solid #ddd; /* Borda cinza clara */
-  padding: 12px; /* Espaçamento interno */
+  border: 1px solid #ddd;
+  padding: 12px;
+}
+
+/* Linha da tabela com hover */
+.tabelaAgenda tr.agendaCard:hover {
+  background-color: #f2f2f2;
 }
 
 /* Botão de cancelar dentro da tabela */
 .btnCancel {
-  background-color: #e74c3c; /* Vermelho */
-  color: white; /* Cor do texto */
-  padding: 6px 12px; /* Espaçamento interno */
-  border: none; /* Sem borda */
-  border-radius: 6px; /* Cantos arredondados */
-  cursor: pointer; /* Cursor muda para mão */
+  background-color: #e74c3c;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 /* Mensagem quando não há consulta */
 .semConsulta {
-  text-align: center; /* Centraliza o texto */
-  margin-top: 30px; /* Espaço acima da mensagem */
-  color: #40566e; /* Cinza-azulado */
-  font-weight: bold; /* Texto em negrito */
+  text-align: center;
+  margin-top: 30px;
+  color: #40566e;
+  font-weight: bold;
 }

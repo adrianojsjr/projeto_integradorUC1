@@ -54,7 +54,7 @@ function App() {
           <nav>
             {hasSession ? ( // Se usuário estiver logado
               <div className='menu'>
-                <img src={logo} alt="logo" />
+                <span><img src={logo} alt="logo" /></span>
                 <div className='btnNav'>
                   {isPatient ? (
                     <>
@@ -64,7 +64,7 @@ function App() {
                     </>
                   ) : (
                     <>
-                      <Link to={`/schedule/${uid}`}>Consultas</Link>
+                      <Link to={`/schedule/${uid}`}>Agenda</Link>
                       <Link to={`/doctors/edit/${uid}`}>Meu Perfil</Link>
                     </>
                   )}
@@ -72,7 +72,7 @@ function App() {
               </div>
             ) : ( // Se não estiver logado
               <div className='menu'>
-                <img src={logo} alt="logo" />
+                <span> <img src={logo} alt="logo" /> </span>
                 <p>Sua consulta na palma da mão</p>
                 <div className='btnNav'>
                   <Link to="/doctors">Inicio</Link>

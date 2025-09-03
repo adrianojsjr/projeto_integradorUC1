@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'; // Importa hooks do React para gerenciar estado e efeitos
 import { useNavigate, useParams } from 'react-router-dom'; // Importa hooks para navegação e para pegar parâmetros da URL
 import { createClient } from "@supabase/supabase-js"; // Importa Supabase client
-import Button from 'react-bootstrap/Button'; // Importa botão do React-Bootstrap
 
 import './doctors.css'; // Importa arquivo de estilos CSS
 
@@ -30,7 +29,8 @@ function Doctor() { // Componente React Doctor
     imagem: "",
     diploma: "",
     situacaoRegular: "",
-    disponibilidade: []
+    disponibilidade: [],
+    fotoPerfil: ""
   });
 
   const [loading, setLoading] = useState(false); // Estado para loading do botão
@@ -68,6 +68,7 @@ function Doctor() { // Componente React Doctor
           diploma: doctor.diploma,
           situacaoRegular: doctor.situacaoRegular,
           ativo: true,
+          fotoPerfil: doctor.fotoPerfil
         },
       ]).eq('supra_id', id); // Atualiza apenas o médico com o supra_id igual ao id da URL
 
@@ -96,6 +97,41 @@ function Doctor() { // Componente React Doctor
     setDoctor(dataDoctors); // Atualiza estado
   }
 
+  // Função para enviar arquivo para Supabase e retornar a URL pública
+  async function enviarArquivoSupabase(file, path) {
+    const { data, error } = await supabase.storage
+      .from("Arquivos")
+      .upload(path, file, { upsert: true });
+
+    if (error) {
+      console.error("Erro ao fazer upload:", error);
+      return null;
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from("Arquivos")
+      .getPublicUrl(path);
+
+    return publicUrlData.publicUrl;
+  }
+
+  // Função genérica de upload de arquivos que atualiza o estado
+  async function handleFileUpload(e, campoEstado, state, setState, pasta) {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+
+    const arquivosUpload = await Promise.all(
+      files.map(async (file) => {
+        const url = await enviarArquivoSupabase(file, `${pasta}/${file.name}`);
+        return { nome: file.name, url };
+      })
+    );
+
+    setState({
+      ...state,
+      [campoEstado]: [...(state[campoEstado] || []), ...arquivosUpload],
+    });
+  }
 
   // Função para deslogar
   async function logout() {
@@ -104,10 +140,12 @@ function Doctor() { // Componente React Doctor
     // Limpa qualquer dado local (se usado)
     localStorage.clear();
     sessionStorage.clear();
-    
+
     nav("/user", { replace: true });
     window.location.reload(); // Recarrega a página
   }
+
+
 
   return (
     <main>
@@ -155,22 +193,28 @@ function Doctor() { // Componente React Doctor
             <input id="dataEmissao" type="date" value={doctor.dataEmissaoCRM} onChange={(e) => setDoctor({ ...doctor, dataEmissaoCRM: e.target.value })} />
           </p>
 
+
           <div>
             <p>
-              <label className="btnUpload">Anexar residência médica</label>
-              <input id="residencia" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, residencia: e.target.files })} />
-              <Button variant="danger">Deletar</Button>
+              <label className="btnUpload">Anexar residência médica*</label>
+              <input id="residencia" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, residencia: e.target.value })} required/>
             </p>
 
             <p>
-              <label className="btnUpload">Anexar diploma acadêmico</label>
-              <input id="diploma" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, diploma: e.target.files })} />
+              <label className="btnUpload">Anexar diploma acadêmico*</label>
+              <input id="diploma" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, diploma: e.target.value })} required/>
             </p>
 
             <p>
-              <label className="btnUpload">Comprovante de situação regular</label>
-              <input id="comprovante" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, situacaoRegular: e.target.files })} />
+              <label className="btnUpload">Comprovante de situação regular*</label>
+              <input id="comprovante" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, situacaoRegular: e.target.value })} required />
             </p>
+
+            <p>
+              <label className="btnUpload">Foto de Perfil*</label>
+              <input id="foto" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, fotoPerfil: e.target.value })} required />
+            </p>
+
           </div>
 
           <button className="buttonSucess" type="button" onClick={update} disabled={loading}>

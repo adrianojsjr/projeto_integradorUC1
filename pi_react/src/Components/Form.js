@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Spinner } from 'react';
+import { Spinner } from 'react-bootstrap';
 
 function Form({
     onSubmit,
@@ -20,6 +20,7 @@ function Form({
         return any
     }
 
+
     return (
         <div className="formulario">
             <h3>{titulo}</h3>
@@ -27,15 +28,15 @@ function Form({
 
                 {children}
 
-                <button className={className} onClick={() => send()} disabled={loading}>
+                <button type="submit" className={className} onClick={() => send()} disabled={loading}>
                     {loading? (
                         <Spinner animation='border' role="status">
-                            <spa className="visually-hidden">
-                                Loading...
-                            </spa>
+                            <span className="visually-hidden">
+                                Cadastrando...
+                            </span>
                         </Spinner>
                     ):(
-                    <>Salvar</>
+                    <>Cadastrar</>
             )}
                 </button>
             </form>
