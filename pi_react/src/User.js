@@ -272,17 +272,17 @@ function User() { // componente principal User
                 <option value="endocrinologia">Endocrinologia e Metabologia</option>
                 <option value="gastroenterologia">Gastroenterologia</option>
                 <option value="geriatria">Geriatria</option>
-                <option value="ginecologia">Ginecologia (consultas iniciais e de acompanhamento)</option>
+                <option value="ginecologia">Ginecologia</option>
                 <option value="infectologia">Infectologia</option>
                 <option value="medicina_de_familia">Medicina de Família e Comunidade</option>
                 <option value="neurologia">Neurologia</option>
                 <option value="nutrologia">Nutrologia</option>
-                <option value="oftalmologia">Oftalmologia (triagem e acompanhamento)</option>
+                <option value="oftalmologia">Oftalmologia</option>
                 <option value="pediatria">Pediatria</option>
                 <option value="psiquiatria">Psiquiatria</option>
                 <option value="psicologia">Psicologia</option>
                 <option value="reumatologia">Reumatologia</option>
-                <option value="urologia">Urologia (avaliações e retornos)</option>
+                <option value="urologia">Urologia</option>
               </select>
             </p>
 

@@ -40,14 +40,6 @@
   height: 150px;
 }
 
-.formAgenda input[type="datetime-local"] {
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid #40566e;
-  font-size: 14px;
-
-}
-
 /* Botão de adicionar horário no formulário */
 .formAgenda button {
   background-color: #11b5ba;
