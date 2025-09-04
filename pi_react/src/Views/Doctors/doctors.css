@@ -71,3 +71,28 @@
 
 
 }
+
+.especialidade {
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  font-size: 15px;
+  color: #333;
+  appearance: none; /* tira a setinha padrão */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+.especialidade:hover {
+  border-color: #3b82f6; /* azul */
+}
+
+.especialidade:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.5);
+}

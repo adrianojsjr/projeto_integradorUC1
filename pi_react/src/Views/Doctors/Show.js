@@ -65,7 +65,7 @@ function Doctor() {
     //poderia ser também return dataFormatada + ' ' + horaFormatada;
   }
 
-  const validarSessao = async () => {
+  const validarSessao = async (agendaID, doctorID) => {
     const { data: sessionData } = await supabase.auth.getSession();
     const uid = sessionData?.session?.user?.id;
 
@@ -75,10 +75,9 @@ function Doctor() {
       nav(`/user?redirect=${redirect}`, { replace: true });
       return;
     }
-    
-    nav(`/payment/`, { replace: true });
-  };
 
+    nav(`/payment/create/?scheduleId=${agendaID}&doctorId=${doctorID}`);
+  };
 
 
 

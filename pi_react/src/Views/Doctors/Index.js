@@ -111,8 +111,7 @@ function Doctor() {
         <div className="menuBusca">
           <div></div>
           <div className="busca">
-            <label className="especialidade">Especialidade*</label>
-            <select id="especialidade" onChange={(e) => listarMedicos(e.target.value)} required>
+            <select className="especialidade" onChange={(e) => listarMedicos(e.target.value)} required>
               <option value="">Selecione uma especialidade</option>
               <option value="Alergologia">Alergologia</option>
               <option value="Cardiologia">Cardiologia</option>
