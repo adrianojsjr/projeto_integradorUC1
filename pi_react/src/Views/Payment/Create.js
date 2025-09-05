@@ -115,6 +115,34 @@ function PaymentCreate() {
     //poderia ser também return dataFormatada + ' ' + horaFormatada;
   }
 
+
+  async function updateSchedule(id) {
+    const { data: dU, error: eU } = await supabase.auth.getUser();
+    const uid = dU?.user?.id;
+    const { data, error } = await supabase
+      .from('schedule')
+      .update({ status: 'Indisponível', patient_id: uid, payment_id: id })
+      .eq('id', id);
+
+    if (error) {
+      console.error('Erro ao atualizar agendamento:', error);
+    } else {
+      setAgenda(data || []); // Atualiza estado
+    }
+  }
+
+  async function finalizarAgendamento() {
+    await fazerPagamento();
+
+    if (agenda?.supra_id) { //se a agenda existe, vai para update
+      await updateSchedule(agenda.id);
+    }
+    else {
+      console.log(agenda.id)
+    }
+
+  }
+
   return (
     <div className="screen">
       <div>
@@ -178,7 +206,7 @@ function PaymentCreate() {
             <button
               onClick={(e) => {
                 e.preventDefault();
-                fazerPagamento();
+                finalizarAgendamento();
               }}
             >
               Confirmar pagamento

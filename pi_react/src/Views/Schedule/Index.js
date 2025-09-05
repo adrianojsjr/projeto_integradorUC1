@@ -73,6 +73,8 @@ function Schedule() {
       .eq('supra_id', id); // Remove registro pelo ID
   }
 
+
+
   const [inserirAgenda, setInserirAgenda] = useState(false); // Estado para controlar formulário
   const tipoUsuario = localStorage.getItem('tipoUsuario'); // Pega tipo de usuário que foi colocado no arquivo user
 
@@ -88,18 +90,18 @@ function Schedule() {
               <button onClick={() => setInserirAgenda(!inserirAgenda)}>{inserirAgenda ? "Fechar formulário" : "Adicionar Novo Horário"}
               </button>
 
-                {inserirAgenda && ( // Formulário de adicionar horário
-                  <form className="addScheduleForm" onSubmit={(e) => e.preventDefault()}>
-                    <input
-                      type="datetime-local" // Input para data
-                      value={schedule.date} // Valor do estado
-                      onChange={(e) => setSchedule([{ ...schedule, date: e.target.value }])} // Atualiza estado
-                    />
-                    <button type="button" onClick={creatSchedule}>
-                      Adicionar
-                    </button>
-                  </form>
-                 
+              {inserirAgenda && ( // Formulário de adicionar horário
+                <form className="addScheduleForm" onSubmit={(e) => e.preventDefault()}>
+                  <input
+                    type="datetime-local" // Input para data
+                    value={schedule.date} // Valor do estado
+                    onChange={(e) => setSchedule([{ ...schedule, date: e.target.value }])} // Atualiza estado
+                  />
+                  <button type="button" onClick={creatSchedule}>
+                    Adicionar
+                  </button>
+                </form>
+
               )}
             </div>
           )}
