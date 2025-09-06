@@ -17,11 +17,23 @@ const supabase = createClient(supabaseUrl, supabaseKey); // Cria cliente Supabas
 function Doctor() {
   const nav = useNavigate();
   const [doctors, setDoctors] = useState([]);
+  const [especialidade, setEspecialidade] = useState([]);
 
 
   useEffect(() => {
     listarMedicos(); // Chama função para buscar todos os médicos
+    listarEspecialidades();
   }, []);
+
+  async function listarEspecialidades() {
+    let { data: dataEspecialidade, error } = await supabase
+      .from('especialidade')
+      .select('*');
+    console.log(dataEspecialidade)
+    setEspecialidade(dataEspecialidade); // Atualiza estado com resultado filtrado
+
+  }
+
 
 
   async function listarMedicos(filtro = null) {
@@ -111,26 +123,17 @@ function Doctor() {
         <div className="menuBusca">
           <div></div>
           <div className="busca">
-            <select className="especialidade" onChange={(e) => listarMedicos(e.target.value)} required>
-              <option value="">Selecione uma especialidade</option>
-              <option value="Alergologia">Alergologia</option>
-              <option value="Cardiologia">Cardiologia</option>
-              <option value="Clínica Médica">Clínica Médica</option>
-              <option value="Dermatologista">Dermatologia</option>
-              <option value="Endocrinologia">Endocrinologia e Metabologia</option>
-              <option value="Gastroenterologia">Gastroenterologia</option>
-              <option value="Geriatria">Geriatria</option>
-              <option value="Ginecologista">Ginecologia</option>
-              <option value="Infectologia">Infectologia</option>
-              <option value="Medicina de Família">Medicina de Família e Comunidade</option>
-              <option value="Neurologia">Neurologia</option>
-              <option value="Nutrologia">Nutrologia</option>
-              <option value="Oftalmologista">Oftalmologia</option>
-              <option value="Pediatria">Pediatria</option>
-              <option value="Psiquiatria">Psiquiatria</option>
-              <option value="Psicologia">Psicologia</option>
-              <option value="Reumatologia">Reumatologia</option>
-              <option value="Urologista">Urologia</option>
+            <select className="especialidade" value={doctors.especialidade_id} onChange={(e) => setDoctors({ ...doctors, especialidade_id: e.target.value })} required>
+              {/* Opção inicial como placeholder */}
+              <option value="" disabled>
+                Selecione uma especialidade
+              </option>
+              {especialidade.map(
+                e => (
+                  <option value={e.id}>{e.nome}</option>
+                )
+              )
+              }
             </select>
           </div>
           <div></div>
@@ -145,53 +148,53 @@ function Doctor() {
           <p className="semConsulta">Nenhum médico disponível.</p>
         </div>
       ) : (doctors.map(medico => (
-            <div key={medico.supra_id}> {/* Chave única para cada médico */}
-              <div className="alinhamentoPagina">
+        <div key={medico.supra_id}> {/* Chave única para cada médico */}
+          <div className="alinhamentoPagina">
 
-                <div className="cardInfoConsulta">
+            <div className="cardInfoConsulta">
 
-                  <div></div>
+              <div></div>
 
-                  <div className="infoConsulta">
-                    <img src={medico.imagem} />
-                    {medico.nome}<br />
-                    {medico.especialidade}
-                    <Button className='btnVerMais' variant="primary" onClick={() => nav(`/doctors/${medico.supra_id}`, { replace: true })}>Ver mais</Button>
-                  </div>
+              <div className="infoConsulta">
+                <img src={medico.imagem} />
+                {medico.nome}<br />
+                {medico.especialidade}
+                <Button className='btnVerMais' variant="primary" onClick={() => nav(`/doctors/${medico.supra_id}`, { replace: true })}>Ver mais</Button>
+              </div>
 
-                  <div className="calendario">
+              <div className="calendario">
 
-                    <h3>Disponibilidade</h3>
-                    <p>Selecione o dia e horário de sua preferência para o atendimento</p>
+                <h3>Disponibilidade</h3>
+                <p>Selecione o dia e horário de sua preferência para o atendimento</p>
 
-                    <div className="disponibilidade">
+                <div className="disponibilidade">
 
-                      <div className="dataDisponivel">
+                  <div className="dataDisponivel">
 
-                        {schedule.filter(agenda => agenda.doctor_id === medico.supra_id).length === 0 ? (
-                          <p className="semConsulta">Nenhum horário disponível.</p>
-                        ) : (
-                          schedule
-                            .filter(agenda => agenda.doctor_id === medico.supra_id)
-                            .map(agenda => (
-                              <button key={agenda.id} className="btnData" onClick={() => validarSessao(agenda.id, medico.supra_id)}> {formatarData(agenda.date)} </button>
-                            ))
-                        )}
-
-                      </div>
-
-                    </div>
+                    {schedule.filter(agenda => agenda.doctor_id === medico.supra_id).length === 0 ? (
+                      <p className="semConsulta">Nenhum horário disponível.</p>
+                    ) : (
+                      schedule
+                        .filter(agenda => agenda.doctor_id === medico.supra_id)
+                        .map(agenda => (
+                          <button key={agenda.id} className="btnData" onClick={() => validarSessao(agenda.id, medico.supra_id)}> {formatarData(agenda.date)} </button>
+                        ))
+                    )}
 
                   </div>
-
-                  <div></div>
 
                 </div>
 
               </div>
+
+              <div></div>
+
             </div>
-          ))
-        )}
+
+          </div>
+        </div>
+      ))
+      )}
 
     </main >
   );

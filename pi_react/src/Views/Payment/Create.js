@@ -10,10 +10,10 @@ import { supabase } from '../../User';
 
 function PaymentCreate() {
   const nav = useNavigate();
-  const location = useLocation(); //informações da URL atual.
-  const idMedico = new URLSearchParams(location.search);
-  const doctorId = idMedico.get('doctorId'); // id do médico
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const [scheduleId, setScheduleId] = useState()
+  const [doctorId, setDoctorId] = useState()
 
   // Estado para armazenar os dados do pagamento
   const [payment, setPayment] = useState({
@@ -30,8 +30,9 @@ function PaymentCreate() {
   const [payments, setPayments] = useState([]);
 
   useEffect(() => {
-    console.log(searchParams.get('doctorId'))
+    setDoctorId(searchParams.get('doctorId'))
     lerDoctor(searchParams.get('doctorId'))
+    setScheduleId(searchParams.get('scheduleId'))
     lerAgenda(searchParams.get('scheduleId'))
   }, [])
 
@@ -78,7 +79,8 @@ function PaymentCreate() {
       const { data, error } = await supabase
         .from('payment')
         .insert([novoPagamento])
-        .select('*');
+        .select('*')
+        .single();
 
       if (error) {
         console.error('Erro ao salvar pagamento:', error);
@@ -86,6 +88,8 @@ function PaymentCreate() {
       } else {
         alert('Pagamento salvo com sucesso!');
         setPayment({ tipo_pagamento: '', patient_id: '', doctor_id: '' });
+        console.log(data)
+        return data.id
       }
     } catch (err) {
       console.error('Erro inesperado:', err);
@@ -116,29 +120,41 @@ function PaymentCreate() {
   }
 
 
-  async function updateSchedule(id) {
+  async function updateSchedule(idPagamento) {
+
     const { data: dU, error: eU } = await supabase.auth.getUser();
     const uid = dU?.user?.id;
+
+    console.log("idPagamento: "+idPagamento);
+    console.log("scheduleId: "+scheduleId);
+
     const { data, error } = await supabase
       .from('schedule')
-      .update({ status: 'Indisponível', patient_id: uid, payment_id: id })
-      .eq('id', id);
+      .update({ status: 'Indisponível', patient_id: uid, payment_id:  idPagamento})
+      .eq('id', scheduleId)
+      .select()
+      .single(); // <-- garante que traga o registro atualizado
+
 
     if (error) {
       console.error('Erro ao atualizar agendamento:', error);
     } else {
-      setAgenda(data || []); // Atualiza estado
+     // setAgenda(data); // Atualiza estado
+      console.log("Agenda atualizada:", data);
+
     }
   }
 
   async function finalizarAgendamento() {
-    await fazerPagamento();
+    const idPagamento = await fazerPagamento();
+    console.log("idPagamento: "+idPagamento)
 
-    if (agenda?.supra_id) { //se a agenda existe, vai para update
-      await updateSchedule(agenda.id);
+    if (scheduleId) { //se a agenda existe, vai para update
+      await updateSchedule(idPagamento);
+      console.log("certo")
     }
     else {
-      console.log(agenda.id)
+      console.log('Erro no agendamento')
     }
 
   }
@@ -232,7 +248,10 @@ function PaymentCreate() {
             Clique no botão abaixo para gerar o boleto. Após o pagamento, pode levar até
             <strong> 3 dias úteis </strong> para a confirmação.
           </p>
-          <button type="button" onClick={() => alert("Boleto gerado com sucesso!")}>
+          <button type="button" onClick={(e) => {
+            e.preventDefault();
+            finalizarAgendamento();
+          }}>
             Gerar Boleto
           </button>
         </div>

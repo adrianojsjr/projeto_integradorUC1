@@ -1,5 +1,5 @@
 
-import { use, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createClient } from "@supabase/supabase-js";
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -28,7 +28,7 @@ function User() { // componente principal User
     numeroCRM: "",
     ufCRM: "",
     dataEmissaoCRM: "",
-    especialidade: "",
+    especialidade_id: "",
     residencia: [],
     ativo: "",
     imagem: defaultAvatar,
@@ -49,8 +49,23 @@ function User() { // componente principal User
     ativo: ""
   });
 
+  const[especialidade, setEspecialidades] = useState([]);
+
+
+  useEffect(() => {
+    listarEspecialidades();
+  }, []);
 
   const [loading, setLoading] = useState(false); // estado para indicar carregamento
+
+  async function listarEspecialidades() {
+    let { data: dataEspecialidade, error } = await supabase
+      .from('especialidade')
+      .select('*')
+    setEspecialidades(dataEspecialidade); // Atualiza estado com resultado filtrado
+
+  }
+
 
   // função de cadastro de médico
   async function register() {
@@ -80,7 +95,7 @@ function User() { // componente principal User
             numeroCRM: doctor.numeroCRM,
             ufCRM: doctor.ufCRM,
             dataEmissaoCRM: doctor.dataEmissaoCRM,
-            especialidade: doctor.especialidade,
+            especialidade_id: doctor.especialidade_id,
             residencia: doctor.residencia,
             diploma: doctor.diploma,
             situacaoRegular: doctor.situacaoRegular,
@@ -258,31 +273,13 @@ function User() { // componente principal User
 
             <p>
               <label className="especialidade">Especialidade*</label>
-              <select
-                id="especialidade"
-                value={doctor.especialidade}
-                onChange={(e) => setDoctor({ ...doctor, especialidade: e.target.value })}
-                required
-              >
-                <option value="">Selecione uma especialidade</option>
-                <option value="alergologia">Alergologia</option>
-                <option value="cardiologia">Cardiologia</option>
-                <option value="clínica_medica">Clínica Médica</option>
-                <option value="dermatologia">Dermatologia</option>
-                <option value="endocrinologia">Endocrinologia e Metabologia</option>
-                <option value="gastroenterologia">Gastroenterologia</option>
-                <option value="geriatria">Geriatria</option>
-                <option value="ginecologia">Ginecologia</option>
-                <option value="infectologia">Infectologia</option>
-                <option value="medicina_de_familia">Medicina de Família e Comunidade</option>
-                <option value="neurologia">Neurologia</option>
-                <option value="nutrologia">Nutrologia</option>
-                <option value="oftalmologia">Oftalmologia</option>
-                <option value="pediatria">Pediatria</option>
-                <option value="psiquiatria">Psiquiatria</option>
-                <option value="psicologia">Psicologia</option>
-                <option value="reumatologia">Reumatologia</option>
-                <option value="urologia">Urologia</option>
+              <select className="especialidade" value={doctor.especialidade_id} onChange={(e) => setDoctor({ ...doctor, especialidade_id: e.target.value })} required>
+                {especialidade.map(
+                  e => (
+                    <option value={e.id}>{e.nome}</option>
+                  )
+                )
+                }
               </select>
             </p>
 
