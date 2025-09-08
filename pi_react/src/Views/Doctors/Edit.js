@@ -54,7 +54,8 @@ function Doctor() { // Componente React Doctor
           residencia: doctor.residencia,
           diploma: doctor.diploma,
           situacaoRegular: doctor.situacaoRegular,
-          fotoPerfil: doctor.fotoPerfil
+          fotoPerfil: doctor.fotoPerfil,
+          especialidade_id: doctor.especialidade_id
         },
       ]).eq('supra_id', id); // Atualiza apenas o médico com o supra_id igual ao id da URL
 

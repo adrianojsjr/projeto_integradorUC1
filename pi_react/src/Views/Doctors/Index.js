@@ -34,25 +34,34 @@ function Doctor() {
 
   }
 
+async function listarMedicos(filtro = null) {
+  let dataDoctors = [];
+  let error = null;
 
+  if (filtro) {
+    const result = await supabase
+      .from('doctors')
+      .select('*, especialidade(nome)')
+      .eq('especialidade_id', filtro);
+    dataDoctors = result.data;
+    error = result.error;
 
-  async function listarMedicos(filtro = null) {
-    if (filtro) {
-      let { data: dataDoctors, error } = await supabase
-        .from('doctors')
-        .select('*')
-
-        .eq('especialidade', filtro);
-      setDoctors(dataDoctors); // Atualiza estado com resultado filtrado
-    } else { // Se não houver filtro, busca todos os médicos
-      let { data: dataDoctors, error } = await supabase
-        .from('doctors')
-        .select('*');
-
-      setDoctors(dataDoctors); // Atualiza estado com todos os médicos
-    }
+    // Se não houver filtro, busca todos os médicos
+  } else {
+    const result = await supabase
+      .from('doctors')
+      .select('*, especialidade(nome)');
+    dataDoctors = result.data; // Armazena os dados retornados
+    error = result.error; // Armazena os erros retornados
   }
 
+  if (error) {
+    console.error(error);
+    setDoctors([]);
+  } else {
+    setDoctors(dataDoctors || []);
+  }
+}
 
   async function deletarMedico(id) {
     const { error } = await supabase
@@ -123,17 +132,15 @@ function Doctor() {
         <div className="menuBusca">
           <div></div>
           <div className="busca">
-            <select className="especialidade" value={doctors.especialidade_id} onChange={(e) => setDoctors({ ...doctors, especialidade_id: e.target.value })} required>
-              {/* Opção inicial como placeholder */}
-              <option value="" disabled>
-                Selecione uma especialidade
-              </option>
-              {especialidade.map(
-                e => (
-                  <option value={e.id}>{e.nome}</option>
-                )
-              )
-              }
+            <select
+              className="especialidade"
+              value=""
+              onChange={(e) => listarMedicos(e.target.value)}
+            >
+              <option value="">Selecione uma especialidade</option>
+              {especialidade.map(e => (
+                <option key={e.id} value={e.id}>{e.nome}</option>
+              ))}
             </select>
           </div>
           <div></div>
@@ -148,7 +155,7 @@ function Doctor() {
           <p className="semConsulta">Nenhum médico disponível.</p>
         </div>
       ) : (doctors.map(medico => (
-        <div key={medico.supra_id}> {/* Chave única para cada médico */}
+        <div key={medico.id}> {/* Chave única para cada médico */}
           <div className="alinhamentoPagina">
 
             <div className="cardInfoConsulta">
@@ -156,9 +163,11 @@ function Doctor() {
               <div></div>
 
               <div className="infoConsulta">
-                <img src={encodeURI(medico.fotoPerfil)} />
+                <img src={medico.fotoPerfil} />
                 {medico.nome}<br />
-                {medico.especialidade}
+                {especialidade.find(e => e.id === medico.especialidade_id)?.nome || 'Sem especialidade'}
+
+
                 <Button className='btnVerMais' variant="primary" onClick={() => nav(`/doctors/${medico.supra_id}`, { replace: true })}>Ver mais</Button>
               </div>
 
