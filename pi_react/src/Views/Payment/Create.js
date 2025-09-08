@@ -10,10 +10,10 @@ import { supabase } from '../../User';
 
 function PaymentCreate() {
   const nav = useNavigate();
-  const location = useLocation(); //informações da URL atual.
-  const idMedico = new URLSearchParams(location.search);
-  const doctorId = idMedico.get('doctorId'); // id do médico
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const [scheduleId, setScheduleId] = useState()
+  const [doctorId, setDoctorId] = useState()
 
   // Estado para armazenar os dados do pagamento
   const [payment, setPayment] = useState({
@@ -30,8 +30,9 @@ function PaymentCreate() {
   const [payments, setPayments] = useState([]);
 
   useEffect(() => {
-    console.log(searchParams.get('doctorId'))
+    setDoctorId(searchParams.get('doctorId'))
     lerDoctor(searchParams.get('doctorId'))
+    setScheduleId(searchParams.get('scheduleId'))
     lerAgenda(searchParams.get('scheduleId'))
   }, [])
 
@@ -78,7 +79,8 @@ function PaymentCreate() {
       const { data, error } = await supabase
         .from('payment')
         .insert([novoPagamento])
-        .select('*');
+        .select('*')
+        .single();
 
       if (error) {
         console.error('Erro ao salvar pagamento:', error);
@@ -86,6 +88,8 @@ function PaymentCreate() {
       } else {
         alert('Pagamento salvo com sucesso!');
         setPayment({ tipo_pagamento: '', patient_id: '', doctor_id: '' });
+        console.log(data)
+        return data.id
       }
     } catch (err) {
       console.error('Erro inesperado:', err);
@@ -115,102 +119,159 @@ function PaymentCreate() {
     //poderia ser também return dataFormatada + ' ' + horaFormatada;
   }
 
+
+  async function updateSchedule(idPagamento) {
+
+    const { data: dU, error: eU } = await supabase.auth.getUser();
+    const uid = dU?.user?.id;
+
+    console.log("idPagamento: " + idPagamento);
+    console.log("scheduleId: " + scheduleId);
+
+    const { data, error } = await supabase
+      .from('schedule')
+      .update({ status: 'Indisponível', patient_id: uid, payment_id: idPagamento })
+      .eq('id', scheduleId)
+      .select()
+      .single(); // <-- garante que traga o registro atualizado
+
+
+    if (error) {
+      console.error('Erro ao atualizar agendamento:', error);
+    } else {
+      // setAgenda(data); // Atualiza estado
+      console.log("Agenda atualizada:", data);
+
+    }
+  }
+
+  async function finalizarAgendamento() {
+    const idPagamento = await fazerPagamento();
+    console.log("idPagamento: " + idPagamento)
+
+    if (scheduleId) { //se a agenda existe, vai para update
+      await updateSchedule(idPagamento);
+      console.log("certo")
+    }
+    else {
+      console.log('Erro no agendamento')
+    }
+
+  }
+
   return (
-    <div className="screen">
-      <div>
+    <div className="alinhamentoPagina">
+      <div className='cardInfoConsulta'>
 
-        <h2>Resumo da Consulta</h2>
+        <div className='infoConsulta'>
 
-        {doctor ? doctor.nome : ''} <br /><br />
+          <p>Resumo da Consulta</p>
+          <img src={doctor ? doctor.imagem : ''} />
 
-        {agenda ? formatarData(agenda.date) : ''}
+          {doctor ? doctor.nome : ''} <br /><br />
+
+          {agenda ? formatarData(agenda.date) : ''}
+
+          <button className='btnGeral' onClick={() => nav(`/doctors/${doctorId}`, { replace: true })}>
+            Escolher outro horário
+          </button>
+
+        </div>
 
       </div>
 
+      <div className="pagamento">
 
-
-
-      <Button onClick={() => nav(`/doctors/${doctorId}`, { replace: true })}>
-        Escolher outro horário
-      </Button>
-
-      <form>
-        <label>Escolha a forma de pagamento:</label>
-        <select
-          value={payment.tipo_pagamento}
-          onChange={(e) => setPayment({ ...payment, tipo_pagamento: e.target.value })}
-          required
-        >
-          <option value="">Selecione...</option>
-          <option value="cartao">Cartão de Crédito</option>
-          <option value="pix">Pix</option>
-          <option value="boleto">Boleto</option>
-        </select>
-      </form>
-
-      {payment.tipo_pagamento === 'cartao' && (
-        <div className="cartao">
-          <h3>Pagamento com Cartão</h3>
-          <form>
-            <div className="dadosComprador">
-              <label>Nome completo</label>
-              <input type="text" id="nome" placeholder="Nome do titular" required />
-
-              <label>CPF</label>
-              <input type="text" id="cpf" placeholder="000.000.000-00" required />
-
-              <label>Número do Cartão</label>
-              <input type="text" id="numero" placeholder="XXXX XXXX XXXX XXXX" required />
-
-              <div className="validadeCVV">
-                <div className="cartaoValidade">
-                  <label>Validade</label>
-                  <input type="text" id="validade" placeholder="MM/AA" required />
-                </div>
-
-                <div className="cartaoCVV">
-                  <label>CVV</label>
-                  <input type="text" id="cvv" placeholder="123" required />
-                </div>
-              </div>
-            </div>
-
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                fazerPagamento();
-              }}
+        <form className='formaPagamento'>
+            <label >Escolha a forma de pagamento:</label>
+            <select
+              value={payment.tipo_pagamento}
+              onChange={(e) => setPayment({ ...payment, tipo_pagamento: e.target.value })}
+              required
             >
-              Confirmar pagamento
-            </button>
+              <option value="">Selecione...</option>
+              <option value="cartao">Cartão de Crédito</option>
+              <option value="pix">Pix</option>
+              <option value="boleto">Boleto</option>
+            </select>
           </form>
-        </div>
-      )}
-      {payment.tipo_pagamento === 'pix' && (
-        <div className="pix">
-          <h3>Pagamento por Pix</h3>
-          <p>Escaneie o QR Code abaixo para realizar o pagamento:</p>
-          <img
-            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=pagamento-fake"
-            alt="QR Code Pix"
-          />
-          <p>Ou copie a chave Pix: <strong>pagamento@consulta.com</strong></p>
-        </div>
-      )}
-      {payment.tipo_pagamento === 'boleto' && (
-        <div className="boleto">
-          <h3>Pagamento via Boleto Bancário</h3>
-          <p>
-            Clique no botão abaixo para gerar o boleto. Após o pagamento, pode levar até
-            <strong> 3 dias úteis </strong> para a confirmação.
-          </p>
-          <button type="button" onClick={() => alert("Boleto gerado com sucesso!")}>
-            Gerar Boleto
-          </button>
-        </div>
-      )}
+
+        {payment.tipo_pagamento === 'cartao' && (
+          <div className="cartaoPixBoleto">
+            <h3>Pagamento com Cartão</h3>
+            <form>
+                <label>Nome completo</label>
+                <input type="text" id="nome" placeholder="Nome do titular" required />
+
+                <label>CPF</label>
+                <input type="text" id="cpf" placeholder="000.000.000-00" required />
+
+                <label>Número do Cartão</label>
+                <input type="text" id="numero" placeholder="XXXX XXXX XXXX XXXX" required />
+
+                <div className="validadeCVV">
+                  <div className="cartaoValidade">
+                    <label>Validade</label>
+                    <input type="text" id="validade" placeholder="MM/AA" required />
+                  </div>
+
+                  <div className="cartaoCVV">
+                    <label>CVV</label>
+                    <input type="text" id="cvv" placeholder="123" required />
+                  </div>
+                </div>
+
+              <button className='btnGeral'
+                onClick={(e) => {
+                  e.preventDefault();
+                  finalizarAgendamento();
+                }}
+              >
+                Confirmar pagamento
+              </button>
+            </form>
+          </div>
+        )}
+        {payment.tipo_pagamento === 'pix' && (
+          <div className="cartaoPixBoleto">
+            <h3>Pagamento por Pix</h3>
+
+            <p>Escaneie o QR Code abaixo para realizar o pagamento:</p>
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=pagamento-fake"
+              alt="QR Code Pix"
+            />
+            <p>Ou copie a chave Pix: <strong>pagamento@consulta.com</strong></p>
+
+            <button className='btnGeral' type="button" onClick={(e) => {
+              e.preventDefault();
+              finalizarAgendamento();
+            }}>
+              Concluir
+            </button>
+
+          </div>
+        )}
+        {payment.tipo_pagamento === 'boleto' && (
+          <div className="cartaoPixBoleto">
+            <h3>Pagamento via Boleto Bancário</h3>
+            <p>
+              Clique no botão abaixo para gerar o boleto. Após o pagamento, pode levar até
+              <strong> 3 dias úteis </strong> para a confirmação.
+            </p>
+            <button className='btnGeral' type="button" onClick={(e) => {
+              e.preventDefault();
+              finalizarAgendamento();
+            }}>
+              Gerar Boleto
+            </button>
+          </div>
+        )}
+      </div>
+
     </div>
   );
+
 }
 
 export default PaymentCreate;

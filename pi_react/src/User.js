@@ -1,5 +1,5 @@
 
-import { use, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createClient } from "@supabase/supabase-js";
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -28,10 +28,10 @@ function User() { // componente principal User
     numeroCRM: "",
     ufCRM: "",
     dataEmissaoCRM: "",
-    especialidade: "",
+    especialidade_id: "",
     residencia: [],
     ativo: "",
-    imagem: defaultAvatar,
+    fotoPerfil: defaultAvatar,
     diploma: "",
     situacaoRegular: "",
     resumoProfissional: ""
@@ -49,8 +49,23 @@ function User() { // componente principal User
     ativo: ""
   });
 
+  const [especialidade, setEspecialidades] = useState([]);
+
+
+  useEffect(() => {
+    listarEspecialidades();
+  }, []);
 
   const [loading, setLoading] = useState(false); // estado para indicar carregamento
+
+  async function listarEspecialidades() {
+    let { data: dataEspecialidade, error } = await supabase
+      .from('especialidade')
+      .select('*')
+    setEspecialidades(dataEspecialidade); // Atualiza estado com resultado filtrado
+
+  }
+
 
   // função de cadastro de médico
   async function register() {
@@ -80,7 +95,7 @@ function User() { // componente principal User
             numeroCRM: doctor.numeroCRM,
             ufCRM: doctor.ufCRM,
             dataEmissaoCRM: doctor.dataEmissaoCRM,
-            especialidade: doctor.especialidade,
+            especialidade_id: doctor.especialidade_id,
             residencia: doctor.residencia,
             diploma: doctor.diploma,
             situacaoRegular: doctor.situacaoRegular,
@@ -145,9 +160,9 @@ function User() { // componente principal User
 
 
   async function logar() {
-    setLoading(true) // ativa indicador de carregamento
+    setLoading(true)
     try {
-      // tenta logar usando Supabase Auth
+      // tenta logar
       let { data, error } = await supabase.auth.signInWithPassword({
         email: doctor.email,
         password: doctor.senha
@@ -166,6 +181,8 @@ function User() { // componente principal User
       if (dataDoctor) {
         tipoUsuario = 'doctor';
 
+
+
       } else {
 
         let { data: dataPatient } = await supabase
@@ -176,9 +193,6 @@ function User() { // componente principal User
 
         if (dataPatient) tipoUsuario = 'patient';
       }
-      if (!tipoUsuario) throw new Error("Usuário não encontrado em nenhuma tabela");
-
-
       if (!tipoUsuario) throw new Error("Usuário não encontrado em nenhuma tabela");
 
       localStorage.setItem('tipoUsuario', tipoUsuario);
@@ -192,7 +206,7 @@ function User() { // componente principal User
         nav(redirect, { replace: true });
       } else {
         if (tipoUsuario === 'doctor') {
-          nav("/schedule", { replace: true });
+          nav(`/doctors/edit/${uid}`, { replace: true });
         } else {
           nav("/doctors", { replace: true });
         }
@@ -205,6 +219,51 @@ function User() { // componente principal User
     setLoading(false);
     window.location.reload(); // Recarrega a página
   }
+
+  const enviarArquivo = async (e, campo, pasta) => {
+
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setLoading(true);
+      setMsg("");
+
+      // Pega o usuário logado
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      if (userError || !userData?.user?.id) {
+        setMsg("Usuário não logado!");
+        return;
+      }
+
+      const uid = userData.user.id;
+
+      // Define caminho único no bucket
+      const filePath = `${pasta}/${uid}-${Date.now()}-${file.name}`;
+
+      // Faz upload para o bucket "arquivos_medicos"
+      const { error: uploadError } = await supabase.storage
+        .from("arquivos_medicos")
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      // Pega a URL pública do arquivo
+      const { data: publicData } = supabase.storage
+        .from("arquivos_medicos")
+        .getPublicUrl(filePath);
+
+      // Atualiza o estado do doctor com a URL do arquivo
+      setDoctor(prev => ({ ...prev, [campo]: publicData.publicUrl }));
+      setMsg("Upload realizado com sucesso!");
+
+    } catch (err) {
+      console.error("Erro ao fazer upload:", err.message);
+      setMsg(`Erro: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // esconde telas
   const [telaLogin, setTelaLogin] = useState(true);
@@ -220,6 +279,19 @@ function User() { // componente principal User
 
         {!telaLogin && souMedico && (
           <form onSubmit={(e) => e.preventDefault()}>
+            <div className="beneficiosMedico">
+              <h2>Seja bem-vindo à nossa plataforma!</h2>
+              <p>Ao se cadastrar como médico, você terá acesso a uma série de vantagens:</p>
+              <ul>
+                <li>Divulgue sua agenda de forma simples e prática: basta cadastrar seus horários disponíveis.</li>
+                <li>Receba pacientes diretamente pela plataforma, com agendamentos automáticos na sua agenda.</li>
+                <li>Cada consulta tem duração padrão de 20 minutos, garantindo organização e produtividade.</li>
+                <li>O valor da consulta é de R$ 60,00, com recebimento líquido de R$ 42,00 por atendimento (70%).</li>
+                <li>Em apenas 1 hora você pode atender até 3 pacientes e faturar R$ 126,00 líquidos.</li>
+              </ul>
+              <p>Cadastre-se agora e comece a atender online de forma rápida, prática e sem burocracia.</p>
+            </div>
+            <h3>Cadastro Médico</h3>
 
             <p>
               <label>Nome</label>
@@ -257,32 +329,14 @@ function User() { // componente principal User
             </p>
 
             <p>
-              <label className="especialidade">Especialidade*</label>
-              <select
-                id="especialidade"
-                value={doctor.especialidade}
-                onChange={(e) => setDoctor({ ...doctor, especialidade: e.target.value })}
-                required
-              >
-                <option value="">Selecione uma especialidade</option>
-                <option value="alergologia">Alergologia</option>
-                <option value="cardiologia">Cardiologia</option>
-                <option value="clínica_medica">Clínica Médica</option>
-                <option value="dermatologia">Dermatologia</option>
-                <option value="endocrinologia">Endocrinologia e Metabologia</option>
-                <option value="gastroenterologia">Gastroenterologia</option>
-                <option value="geriatria">Geriatria</option>
-                <option value="ginecologia">Ginecologia</option>
-                <option value="infectologia">Infectologia</option>
-                <option value="medicina_de_familia">Medicina de Família e Comunidade</option>
-                <option value="neurologia">Neurologia</option>
-                <option value="nutrologia">Nutrologia</option>
-                <option value="oftalmologia">Oftalmologia</option>
-                <option value="pediatria">Pediatria</option>
-                <option value="psiquiatria">Psiquiatria</option>
-                <option value="psicologia">Psicologia</option>
-                <option value="reumatologia">Reumatologia</option>
-                <option value="urologia">Urologia</option>
+              <label>Especialidade*</label>
+              <select value={doctor.especialidade_id} onChange={(e) => setDoctor({ ...doctor, especialidade_id: e.target.value })} required>
+                {especialidade.map(
+                  e => (
+                    <option key={e.id} value={e.id}>{e.nome}</option>
+                  )
+                )
+                }
               </select>
             </p>
 
@@ -290,6 +344,30 @@ function User() { // componente principal User
               <label>Resumo Profissional</label>
               <textarea rows="7" id="resumoProfissional" type='text' onChange={(e) => setDoctor({ ...doctor, resumoProfissional: e.target.value })} />
             </p>
+
+            <div className='upload'>
+              <p>
+                <input type="file" id="uploadResidencia" onChange={(e) => enviarArquivo(e, "residencia", "residencias")} />
+                <label htmlFor="uploadResidencia" className="btnUpload">Enviar comprovante de residência</label>
+
+              </p>
+
+              <p>
+                <input type="file" id="uploadDiploma" onChange={(e) => enviarArquivo(e, "diploma", "diplomas")} />
+                <label htmlFor="uploadDiploma" className="btnUpload">Anexar diploma acadêmico*</label>
+              </p>
+
+              <p>
+                <input type="file" id="uploadComprovante" onChange={(e) => enviarArquivo(e, "situacaoRegular", "situacaoRegular")} />
+                <label htmlFor="uploadComprovante" className="btnUpload">Comprovante de situação regular*</label>
+              </p>
+
+              <p>
+                <input type="file" id="uploadFoto" onChange={(e) => enviarArquivo(e, "fotoPerfil", "fotoPerfil")} />
+                <label htmlFor="uploadFoto" className="btnUpload">Foto de Perfil*</label>
+              </p>
+
+            </div>
 
             <p>
               <label>Senha</label>
@@ -305,8 +383,8 @@ function User() { // componente principal User
 
 
         {!telaLogin && !souMedico && (
-          <form onSubmit={(e) => e.preventDefault()}>
-
+          <form onSubmit={(e) => e.preventDefault()} title='Cadastro Paciente'>
+            <h3>Cadastro Paciente</h3>
             <p>
               <label>Nome</label>
               <input id="nome" type="text" placeholder="Nome do titular" onChange={(e) => setPatient({ ...patient, nome: e.target.value })} required />
@@ -356,12 +434,12 @@ function User() { // componente principal User
           </form>
         )}
 
-        <div className="btnCadLogin">
+        <div >
 
           {telaLogin && (
             <>
               <p className='txtCadastrar'>Cadastre-se</p>
-              <div>
+              <div className="btnMedicoPaciente">
                 <button onClick={() => { setTelaLogin(false); setSouMedico(true) }}>Sou médico</button>
                 <button onClick={() => { setTelaLogin(false); setSouMedico(false) }} >Sou paciente</button>
               </div>

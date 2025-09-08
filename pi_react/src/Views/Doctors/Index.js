@@ -17,28 +17,63 @@ const supabase = createClient(supabaseUrl, supabaseKey); // Cria cliente Supabas
 function Doctor() {
   const nav = useNavigate();
   const [doctors, setDoctors] = useState([]);
+  const [especialidade, setEspecialidade] = useState([]);
+  const [schedule, setSchedule] = useState([]);
+  const [msg, setMsg] = useState(""); // estado para mensagens de feedback (erro, sucesso)
+  const [loading, setLoading] = useState(false); // estado para indicar carregamento
+  const [filtroAplicado, setFiltroAplicado] = useState(null);
 
 
   useEffect(() => {
     listarMedicos(); // Chama função para buscar todos os médicos
+    listarEspecialidades();
   }, []);
 
+  async function listarEspecialidades() {
+    let { data: dataEspecialidade, error } = await supabase
+      .from('especialidade')
+      .select('*');
+    setEspecialidade(dataEspecialidade); // Atualiza estado com resultado filtrado
+
+  }
 
   async function listarMedicos(filtro = null) {
+    setLoading(true);
+    setFiltroAplicado(filtro); // salva o filtro aplicado
+    setMsg("");
+
+    let dataDoctors = [];
+    let error = null;
+
     if (filtro) {
-      let { data: dataDoctors, error } = await supabase
+      const result = await supabase
         .from('doctors')
         .select('*')
-
-        .eq('especialidade', filtro);
-      setDoctors(dataDoctors); // Atualiza estado com resultado filtrado
-    } else { // Se não houver filtro, busca todos os médicos
-      let { data: dataDoctors, error } = await supabase
+        .eq('especialidade_id', filtro);
+      dataDoctors = result.data;
+      error = result.error;
+    } else {
+      const result = await supabase
         .from('doctors')
         .select('*');
-
-      setDoctors(dataDoctors); // Atualiza estado com todos os médicos
+      dataDoctors = result.data;
+      error = result.error;
     }
+
+    if (error) {
+      console.error(error);
+      setDoctors([]);
+      setMsg("Ocorreu um erro ao buscar os médicos.");
+    } else {
+      setDoctors(dataDoctors || []);
+      if (filtro && dataDoctors.length === 0) {
+        setMsg("Não há médicos cadastrados para esta especialidade.");
+      } else {
+        setMsg("");
+      }
+    }
+
+    setLoading(false);
   }
 
 
@@ -49,15 +84,14 @@ function Doctor() {
       .eq('supra_id', id);
   }
 
-  const [schedule, setSchedule] = useState([]);
-  const [msg, setMsg] = useState(""); // estado para mensagens de feedback (erro, sucesso)
+
 
   async function readSchedule(doctor_id) {
 
     let { data: dataSchedule, error } = await supabase
       .from('schedule')
       .select('*') // Seleciona todos os campos
-
+      .order('date', { ascending: true }); // ordena do menor para o maior;
     setSchedule(dataSchedule || []); // Atualiza estado
 
   }
@@ -107,30 +141,22 @@ function Doctor() {
 
   return (
     <main>
+
+
+
       <div className="inicio">
         <div className="menuBusca">
           <div></div>
           <div className="busca">
-            <select className="especialidade" onChange={(e) => listarMedicos(e.target.value)} required>
+            <select
+              className="especialidade"
+              value=""
+              onChange={(e) => listarMedicos(e.target.value)}
+            >
               <option value="">Selecione uma especialidade</option>
-              <option value="Alergologia">Alergologia</option>
-              <option value="Cardiologia">Cardiologia</option>
-              <option value="Clínica Médica">Clínica Médica</option>
-              <option value="Dermatologista">Dermatologia</option>
-              <option value="Endocrinologia">Endocrinologia e Metabologia</option>
-              <option value="Gastroenterologia">Gastroenterologia</option>
-              <option value="Geriatria">Geriatria</option>
-              <option value="Ginecologista">Ginecologia</option>
-              <option value="Infectologia">Infectologia</option>
-              <option value="Medicina de Família">Medicina de Família e Comunidade</option>
-              <option value="Neurologia">Neurologia</option>
-              <option value="Nutrologia">Nutrologia</option>
-              <option value="Oftalmologista">Oftalmologia</option>
-              <option value="Pediatria">Pediatria</option>
-              <option value="Psiquiatria">Psiquiatria</option>
-              <option value="Psicologia">Psicologia</option>
-              <option value="Reumatologia">Reumatologia</option>
-              <option value="Urologista">Urologia</option>
+              {especialidade.map(e => (
+                <option key={e.id} value={e.id}>{e.nome}</option>
+              ))}
             </select>
           </div>
           <div></div>
@@ -139,62 +165,67 @@ function Doctor() {
 
       {/* Mapeia e exibe cada médico da lista */}
 
+      <div className='alinhamentoPagina'>
+        {loading ? (
+          <p className="semConsulta">Carregando...</p>
+        ) : doctors.length === 0 ? (
+          <p className="semConsulta" > Nenhum médico disponível.</p>
 
-      {doctors.length === 0 ? (
-        <div className="alinhamentoPagina">
-          <p className="semConsulta">Nenhum médico disponível.</p>
-        </div>
-      ) : (doctors.map(medico => (
-            <div key={medico.supra_id}> {/* Chave única para cada médico */}
-              <div className="alinhamentoPagina">
+        ) : (doctors.map(medico => (
+          <div key={medico.id}> {/* Chave única para cada médico */}
+            <div className="alinhamentoPagina">
 
-                <div className="cardInfoConsulta">
+              <div className="cardInfoConsulta">
 
-                  <div></div>
+                <div></div>
 
-                  <div className="infoConsulta">
-                    <img src={medico.imagem} />
-                    {medico.nome}<br />
-                    {medico.especialidade}
-                    <Button className='btnVerMais' variant="primary" onClick={() => nav(`/doctors/${medico.supra_id}`, { replace: true })}>Ver mais</Button>
-                  </div>
+                <div className="infoConsulta">
+                  <img src={medico.fotoPerfil} />
+                  {medico.nome}<br />
+                  {especialidade.find(e => e.id === medico.especialidade_id)?.nome || 'Sem especialidade'}
 
-                  <div className="calendario">
 
-                    <h3>Disponibilidade</h3>
-                    <p>Selecione o dia e horário de sua preferência para o atendimento</p>
+                  <Button className='btnVerMais' variant="primary" onClick={() => nav(`/doctors/${medico.supra_id}`, { replace: true })}>Ver mais</Button>
+                </div>
 
-                    <div className="disponibilidade">
+                <div className="calendario">
 
-                      <div className="dataDisponivel">
+                  <h3>Disponibilidade</h3>
+                  <p>Selecione o dia e horário de sua preferência para o atendimento</p>
 
-                        {schedule.filter(agenda => agenda.doctor_id === medico.supra_id).length === 0 ? (
-                          <p className="semConsulta">Nenhum horário disponível.</p>
-                        ) : (
-                          schedule
-                            .filter(agenda => agenda.doctor_id === medico.supra_id)
-                            .map(agenda => (
-                              <button key={agenda.id} className="btnData" onClick={() => validarSessao(agenda.id, medico.supra_id)}> {formatarData(agenda.date)} </button>
-                            ))
-                        )}
+                  <div className="disponibilidade">
 
-                      </div>
+                    <div className="dataDisponivel">
+
+                      {schedule.filter(agenda => agenda.doctor_id === medico.supra_id).length === 0 ? (
+                        <p className="semConsulta">Nenhum horário disponível.</p>
+                      ) : (
+                        schedule
+                          .filter(agenda => agenda.doctor_id === medico.supra_id)
+                          .map(agenda => (
+                            <button key={agenda.id} className="btnData" onClick={() => validarSessao(agenda.id, medico.supra_id)}> {formatarData(agenda.date)} </button>
+                          ))
+                      )}
 
                     </div>
 
                   </div>
 
-                  <div></div>
-
                 </div>
 
+                <div></div>
+
               </div>
+
             </div>
-          ))
+          </div>
+        ))
         )}
 
-    </main >
+      </div >
+    </main>
   );
+
 
 }
 

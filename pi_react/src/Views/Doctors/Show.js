@@ -24,7 +24,7 @@ function Doctor() {
   async function listarMedicos(id) {
     let { data: dataDoctor, error } = await supabase
       .from('doctors')
-      .select('*')
+      .select(` *, especialidade(nome, descricao)`)
       .eq('supra_id', id)
       .single()
     setDoctor(dataDoctor); // Atualiza o estado com os dados do médico
@@ -37,10 +37,11 @@ function Doctor() {
     let { data: dataSchedule, error } = await supabase
       .from('schedule')
       .select('*') // Seleciona todos os campos
-
+      .order('date', { ascending: true }); // ordena do menor para o maior;
     setSchedule(dataSchedule || []); // Atualiza estado
 
   }
+
 
   function formatarData(data) {
     const date = new Date(data)
@@ -82,58 +83,50 @@ function Doctor() {
 
 
   return (
-    <main>
       <div className="alinhamentoPagina">
 
 
         <div className="dadosGeraisConsulta">
-          <div className="apresentacaoMedico">
-            <div className="detalhesMedico">
 
+            <div className="detalhesMedico">
 
               <div className="descricaoEspecialidade">
                 <h2>{doctor.nome}</h2>
-                <p>{doctor.especialidade}</p>
-                <p>jvcnjf vnvkjnfdkjnvf vfjdnvjkfd vfjdnvikjfdib vjdfnvjfdnv
-                  jf vnvkjnfdkjnvf vfjdnvjkfd v jf vnvkjnfdkjnvf vfjdnvjkfd vjf vnvkjnfdkjnvf vfjdnvjkfd v jf vnvkjnfdkjnvf vfjdnvjkfd v
-                </p>
+                <p>{doctor.especialidade?.nome}</p>
+                <p>{doctor.especialidade?.descricao}</p>
               </div>
 
-
-              <div className="imgMedico">
-                <img src={doctor.imagem} />
+              <div>
+                <img src={doctor.fotoPerfil} />
               </div>
 
             </div>
+
+          <div className="experiencia">
+            <h3>Resumo Profissional</h3>
+            <p>{doctor.resumoProfissional}</p>
           </div>
-        </div>
 
+          <div className="calendario">
 
-        <div className="experiencia">
-          <h3>Resumo Profissional</h3>
-          <p>{doctor.resumoProfissional}</p>
-        </div>
+            <h3>Disponibilidade</h3>
+            <p>Selecione o dia e horário de sua preferência para o atendimento</p>
 
+            <div>
 
+              <div className="dataDisponivel">
 
-        <div className="calendario">
+                {schedule.filter(agenda => agenda.doctor_id === doctor.supra_id).length === 0 ? (
+                  <p className="semConsulta">Nenhum horário disponível.</p>
+                ) : (
+                  schedule
+                    .filter(agenda => agenda.doctor_id === doctor.supra_id)
+                    .map(agenda => (
+                      <button key={agenda.id} className="btnData" onClick={validarSessao}>{formatarData(agenda.date)} </button>
+                    ))
+                )}
 
-          <h3>Disponibilidade</h3>
-          <p>Selecione o dia e horário de sua preferência para o atendimento</p>
-
-          <div>
-
-            <div className="dataDisponivel">
-
-              {schedule.filter(agenda => agenda.doctor_id === doctor.supra_id).length === 0 ? (
-                <p className="semConsulta">Nenhum horário disponível.</p>
-              ) : (
-                schedule
-                  .filter(agenda => agenda.doctor_id === doctor.supra_id)
-                  .map(agenda => (
-                    <button key={agenda.id} className="btnData" onClick={validarSessao}>{formatarData(agenda.date)} </button>
-                  ))
-              )}
+              </div>
 
             </div>
 
@@ -142,7 +135,7 @@ function Doctor() {
         </div>
 
       </div>
-    </main>
+
   );
 }
 

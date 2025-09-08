@@ -4,8 +4,46 @@ Cinza azulado: #40566e
 Azul: #1e5acd
 Verde: #33B291
 */
+.cardInfoConsulta {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 100px;
+}
 
-.cartao {
+.infoConsulta {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 0 5px rgba(70, 69, 69, 0.089);
+    line-height: 25px;
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.infoConsulta img {
+    width: 250px;
+    height: 150px;
+}
+
+.infoConsulta button {
+    padding: 12px;
+    background-color: #33B291;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+
+.pagamento .formaPagamento{
+    background: white;
+    padding: 40px;
+    text-align: center;
+}
+
+
+.cartaoPixBoleto{
   max-width:500px;
   margin: 0 auto; /*centraliza o formulário*/
   padding: 20px;
@@ -14,6 +52,9 @@ Verde: #33B291
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  margin-top: 50px;
+}
+
+.cartaoPixBoleto form input{
+  margin-bottom: 15px;
 }
 
