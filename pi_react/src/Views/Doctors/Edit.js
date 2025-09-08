@@ -14,31 +14,25 @@ function Doctor() { // Componente React Doctor
   const { id } = useParams(); // Pega o parâmetro 'id' da URL
 
   // Estado do médico, já inicializado com todas as propriedades
-  const [doctor, setDoctor] = useState({
-    email: "",
-    senha: "",
-    telefone: "",
-    nome: "",
-    cpf: "",
-    numeroCRM: "",
-    ufCRM: "",
-    dataEmissaoCRM: "",
-    especialidade: "",
-    residencia: [],
-    ativo: "",
-    imagem: "",
-    diploma: "",
-    situacaoRegular: "",
-    disponibilidade: [],
-    fotoPerfil: ""
-  });
+  const [doctor, setDoctor] = useState({ nome: "" });
 
   const [loading, setLoading] = useState(false); // Estado para loading do botão
   const [msg, setMsg] = useState(""); // Estado para mensagens de sucesso ou erro
 
+  const [especialidade, setEspecialidades] = useState([]);
+
+  async function listarEspecialidades() {
+    let { data: dataEspecialidade, error } = await supabase
+      .from('especialidade')
+      .select('*')
+    setEspecialidades(dataEspecialidade); // Atualiza estado com resultado filtrado
+
+  }
+
   // useEffect que chama a função listarMedicos ao montar o componente
   useEffect(() => {
-    listarMedicos()
+    listarMedicos();
+    listarEspecialidades();
   }, [])
 
   // Função para atualizar dados do médico
@@ -55,19 +49,11 @@ function Doctor() { // Componente React Doctor
       // 2. Atualiza dados do médico na tabela 'doctos' (possível erro de digitação, deveria ser 'doctors')
       const { data: edit, error: editError } = await supabase.from("doctors").update([
         {
-          supra_id: uid,
-          nome: doctor.nome,
           email: doctor.email,
           telefone: doctor.telefone,
-          cpf: doctor.cpf,
-          numeroCRM: doctor.numeroCRM,
-          ufCRM: doctor.ufCRM,
-          dataEmissaoCRM: doctor.dataEmissaoCRM,
-          especialidade: doctor.especialidade,
           residencia: doctor.residencia,
           diploma: doctor.diploma,
           situacaoRegular: doctor.situacaoRegular,
-          ativo: true,
           fotoPerfil: doctor.fotoPerfil
         },
       ]).eq('supra_id', id); // Atualiza apenas o médico com o supra_id igual ao id da URL
@@ -78,6 +64,9 @@ function Doctor() { // Componente React Doctor
 
       setMsg("Cadastro realizado com sucesso!"); // Mensagem de sucesso
 
+      nav(`/schedule/${uid}`, { replace: true });
+
+
     } catch (e) {
       setMsg(`Error: ${e.message}`); // Mensagem de erro
     }
@@ -86,6 +75,8 @@ function Doctor() { // Componente React Doctor
 
     setTimeout(() => setMsg(""), 5000); // Limpa mensagem após 5 segundos
   }
+
+  
 
   // Função para buscar dados do médico
   async function listarMedicos() {
@@ -97,42 +88,49 @@ function Doctor() { // Componente React Doctor
     setDoctor(dataDoctors); // Atualiza estado
   }
 
-  // Função para enviar arquivo para Supabase e retornar a URL pública
-  async function enviarArquivoSupabase(file, path) {
-    const { data, error } = await supabase.storage
-      .from("Arquivos")
-      .upload(path, file, { upsert: true });
+  const enviarArquivo = async (e, campo, pasta) => {
+  const file = e.target.files[0];
+  if (!file) return;
 
-    if (error) {
-      console.error("Erro ao fazer upload:", error);
-      return null;
+  try {
+    setLoading(true);
+    setMsg("");
+
+    // Pega o usuário logado
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError || !userData?.user?.id) {
+      setMsg("Usuário não logado!");
+      return;
     }
 
-    const { data: publicUrlData } = supabase.storage
-      .from("Arquivos")
-      .getPublicUrl(path);
+    const uid = userData.user.id;
 
-    return publicUrlData.publicUrl;
+    // Define caminho único no bucket
+    const filePath = `${pasta}/${uid}-${Date.now()}-${file.name}`;
+
+    // Faz upload para o bucket "arquivos_medicos"
+    const { error: uploadError } = await supabase.storage
+      .from("arquivos_medicos")
+      .upload(filePath, file, { upsert: true });
+
+    if (uploadError) throw uploadError;
+
+    // Pega a URL pública do arquivo
+    const { data: publicData } = supabase.storage
+      .from("arquivos_medicos")
+      .getPublicUrl(filePath);
+
+    // Atualiza o estado do doctor com a URL do arquivo
+    setDoctor(prev => ({ ...prev, [campo]: publicData.publicUrl }));
+    setMsg("Upload realizado com sucesso!");
+
+  } catch (err) {
+    console.error("Erro ao fazer upload:", err.message);
+    setMsg(`Erro: ${err.message}`);
+  } finally {
+    setLoading(false);
   }
-
-  // Função genérica de upload de arquivos que atualiza o estado
-  async function handleFileUpload(e, campoEstado, state, setState, pasta) {
-    const files = Array.from(e.target.files);
-    if (!files.length) return;
-
-    const arquivosUpload = await Promise.all(
-      files.map(async (file) => {
-        const url = await enviarArquivoSupabase(file, `${pasta}/${file.name}`);
-        return { nome: file.name, url };
-      })
-    );
-
-    setState({
-      ...state,
-      [campoEstado]: [...(state[campoEstado] || []), ...arquivosUpload],
-    });
-  }
-
+};
   // Função para deslogar
   async function logout() {
     await supabase.auth.signOut();
@@ -155,64 +153,101 @@ function Doctor() { // Componente React Doctor
 
           <p>
             <label>Nome</label>
-            <input id="nome" type="text" value={doctor.nome} placeholder="Nome do titular" onChange={(e) => setDoctor({ ...doctor, nome: e.target.value })} />
+            <input id="nome" type="text" value={doctor?.nome || ''} placeholder="Nome do titular" onChange={(e) => setDoctor({ ...doctor, nome: e.target.value })} />
           </p>
 
           <p>
             <label>E-mail</label>
-            <input id="email" type="email" value={doctor.email} placeholder="exemplo@email.com" onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} required />
+            <input id="email" type="email" value={doctor?.email || ''} placeholder="exemplo@email.com" onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} required />
           </p>
 
           <p>
             <label>CPF</label>
-            <input id="cpf" type="text" value={doctor.cpf} placeholder="000.000.000-00" onChange={(e) => setDoctor({ ...doctor, cpf: e.target.value })} />
+            <input id="cpf" type="text" value={doctor?.cpf || ''} placeholder="000.000.000-00" onChange={(e) => setDoctor({ ...doctor, cpf: e.target.value })} />
           </p>
 
           <p>
             <label>Número do CRM</label>
-            <input id="numerodocrm" type="text" value={doctor.numeroCRM} placeholder="CRM" onChange={(e) => setDoctor({ ...doctor, numeroCRM: e.target.value })} />
+            <input id="numerodocrm" type="text" value={doctor?.numeroCRM || ''} placeholder="CRM" onChange={(e) => setDoctor({ ...doctor, numeroCRM: e.target.value })} />
           </p>
 
           <p>
             <label>UF do CRM</label>
-            <input id="ufdocrm" type="text" value={doctor.ufCRM} placeholder="Insira o UF do CRM" onChange={(e) => setDoctor({ ...doctor, ufCRM: e.target.value })} />
+            <input id="ufdocrm" type="text" value={doctor?.ufCRM || ''} placeholder="Insira o UF do CRM" onChange={(e) => setDoctor({ ...doctor, ufCRM: e.target.value })} />
           </p>
 
           <p>
             <label>Telefone</label>
-            <input id="telefone" type="text" value={doctor.telefone} placeholder="Insira o Telefone" onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} />
+            <input id="telefone" type="text" value={doctor?.telefone || ''} placeholder="Insira o Telefone" onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} />
           </p>
 
           <p>
-            <label>Especialidade</label>
-            <input id="especialidade" type="text" value={doctor.especialidade} placeholder="Digite a especialidade" onChange={(e) => setDoctor({ ...doctor, especialidade: e.target.value })} />
+            <label>Especialidade*</label>
+            <select value={doctor?.especialidade_id || ''} onChange={(e) => setDoctor({ ...doctor, especialidade_id: e.target.value })} required>
+              {especialidade.map(
+                e => (
+                  <option key={e.id} value={e.id}>{e.nome}</option>
+                )
+              )
+              }
+            </select>
           </p>
 
           <p>
             <label>Data de Emissão</label>
-            <input id="dataEmissao" type="date" value={doctor.dataEmissaoCRM} onChange={(e) => setDoctor({ ...doctor, dataEmissaoCRM: e.target.value })} />
+            <input id="dataEmissao" type="date" value={doctor?.dataEmissaoCRM || ''} onChange={(e) => setDoctor({ ...doctor, dataEmissaoCRM: e.target.value })} />
           </p>
 
+          <p>
+            <label>Resumo Profissional</label>
+            <textarea rows="7" id="resumoProfissional" value={doctor?.resumoProfissional || ''} type='text' onChange={(e) => setDoctor({ ...doctor, resumoProfissional: e.target.value })} />
+          </p>
 
-          <div>
+          <div className='upload'>
             <p>
-              <label className="btnUpload">Anexar residência médica*</label>
-              <input id="residencia" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, residencia: e.target.value })} required/>
+              <input
+                type="file"
+                id="uploadResidencia"
+                onChange={(e) => enviarArquivo(e, "residencia", "residencias")}
+              />
+
+              <label htmlFor="uploadResidencia" className="btnUpload">
+                Enviar comprovante de residência
+              </label>
+
             </p>
 
             <p>
-              <label className="btnUpload">Anexar diploma acadêmico*</label>
-              <input id="diploma" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, diploma: e.target.value })} required/>
+              <input
+                type="file"
+                id="uploadDiploma"
+                onChange={(e) => enviarArquivo(e, "diploma", "diplomas")}
+              />
+              <label htmlFor="uploadDiploma" className="btnUpload">
+                Anexar diploma acadêmico*
+              </label>
             </p>
 
             <p>
-              <label className="btnUpload">Comprovante de situação regular*</label>
-              <input id="comprovante" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, situacaoRegular: e.target.value })} required />
+              <input
+                type="file"
+                id="uploadComprovante"
+                onChange={(e) => enviarArquivo(e, "situacaoRegular", "situacaoRegular")}
+              />
+              <label htmlFor="uploadComprovante" className="btnUpload">
+                Comprovante de situação regular*
+              </label>
             </p>
 
             <p>
-              <label className="btnUpload">Foto de Perfil*</label>
-              <input id="foto" type="file" name="arquivo" onChange={(e) => setDoctor({ ...doctor, fotoPerfil: e.target.value })} required />
+              <input
+                type="file"
+                id="uploadFoto"
+                onChange={(e) => enviarArquivo(e, "fotoPerfil", "fotoPerfil")}
+              />
+              <label htmlFor="uploadFoto" className="btnUpload">
+                Foto de Perfil*
+              </label>
             </p>
 
           </div>

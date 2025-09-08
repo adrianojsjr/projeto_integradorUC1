@@ -31,7 +31,7 @@ function User() { // componente principal User
     especialidade_id: "",
     residencia: [],
     ativo: "",
-    imagem: defaultAvatar,
+    fotoPerfil: defaultAvatar,
     diploma: "",
     situacaoRegular: "",
     resumoProfissional: ""
@@ -160,9 +160,9 @@ function User() { // componente principal User
 
 
   async function logar() {
-    setLoading(true) // ativa indicador de carregamento
+    setLoading(true) 
     try {
-      // tenta logar usando Supabase Auth
+      // tenta logar
       let { data, error } = await supabase.auth.signInWithPassword({
         email: doctor.email,
         password: doctor.senha
@@ -207,7 +207,7 @@ function User() { // componente principal User
         nav(redirect, { replace: true });
       } else {
         if (tipoUsuario === 'doctor') {
-          nav("/schedule", { replace: true });
+          nav(`/doctors/edit/${uid}`, { replace: true });
         } else {
           nav("/doctors", { replace: true });
         }
@@ -235,6 +235,7 @@ function User() { // componente principal User
 
         {!telaLogin && souMedico && (
           <form onSubmit={(e) => e.preventDefault()}>
+            <h3>Cadastro Médico</h3>
 
             <p>
               <label>Nome</label>
@@ -272,11 +273,11 @@ function User() { // componente principal User
             </p>
 
             <p>
-              <label className="especialidade">Especialidade*</label>
-              <select className="especialidade" value={doctor.especialidade_id} onChange={(e) => setDoctor({ ...doctor, especialidade_id: e.target.value })} required>
+              <label>Especialidade*</label>
+              <select value={doctor.especialidade_id} onChange={(e) => setDoctor({ ...doctor, especialidade_id: e.target.value })} required>
                 {especialidade.map(
                   e => (
-                    <option value={e.id}>{e.nome}</option>
+                    <option key={e.id} value={e.id}>{e.nome}</option>
                   )
                 )
                 }
@@ -302,8 +303,8 @@ function User() { // componente principal User
 
 
         {!telaLogin && !souMedico && (
-          <form onSubmit={(e) => e.preventDefault()}>
-
+          <form onSubmit={(e) => e.preventDefault()} title='Cadastro Paciente'>
+            <h3>Cadastro Paciente</h3>
             <p>
               <label>Nome</label>
               <input id="nome" type="text" placeholder="Nome do titular" onChange={(e) => setPatient({ ...patient, nome: e.target.value })} required />
@@ -353,12 +354,12 @@ function User() { // componente principal User
           </form>
         )}
 
-        <div className="btnCadLogin">
+        <div >
 
           {telaLogin && (
             <>
               <p className='txtCadastrar'>Cadastre-se</p>
-              <div>
+              <div className="btnMedicoPaciente">
                 <button onClick={() => { setTelaLogin(false); setSouMedico(true) }}>Sou médico</button>
                 <button onClick={() => { setTelaLogin(false); setSouMedico(false) }} >Sou paciente</button>
               </div>

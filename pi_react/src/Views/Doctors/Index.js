@@ -156,7 +156,7 @@ function Doctor() {
               <div></div>
 
               <div className="infoConsulta">
-                <img src={medico.imagem} />
+                <img src={encodeURI(medico.fotoPerfil)} />
                 {medico.nome}<br />
                 {medico.especialidade}
                 <Button className='btnVerMais' variant="primary" onClick={() => nav(`/doctors/${medico.supra_id}`, { replace: true })}>Ver mais</Button>

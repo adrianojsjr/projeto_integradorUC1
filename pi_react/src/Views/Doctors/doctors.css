@@ -1,3 +1,35 @@
+:root {
+  --azul: #1e5acd;
+  --cinza-azulado: #40566e;
+  --verde-agua: #11b5ba;
+  --verde: #33B291;
+  --borda: #dce3ec;
+}
+
+
+/* Uploads */
+.upload{
+    color: white;
+}
+
+input[type="file"] {
+    display: none;
+    /*junta o label com o input */
+}
+
+.btnUpload {
+    display: flex;
+    text-align: center;
+    background: var(--verde-agua);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: .95rem;
+    width: 93%;
+    padding: 15px;
+}
+
+
 .cardInfoConsulta {
     display: flex;
     justify-content: space-around;
@@ -21,7 +53,8 @@
 }
 
 
-.infoConsulta p, h3 {
+.infoConsulta p,
+h3 {
     margin-left: 10px;
 }
 
@@ -29,7 +62,7 @@
     text-decoration: none;
 }
 
-.infoConsulta .btnVerMais{
+.infoConsulta .btnVerMais {
     background-color: #11b4bac9;
     color: #ffffff;
     border: none;
@@ -53,8 +86,10 @@
     gap: 5px;
     flex-direction: column;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    max-height: 200px; /* Define uma altura máxima */
-    overflow-y: scroll; /* Adiciona a barra de rolagem vertical */
+    max-height: 200px;
+    /* Define uma altura máxima */
+    overflow-y: scroll;
+    /* Adiciona a barra de rolagem vertical */
 }
 
 
@@ -73,26 +108,28 @@
 }
 
 .especialidade {
-  padding: 10px 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #fff;
-  font-size: 15px;
-  color: #333;
-  appearance: none; /* tira a setinha padrão */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  outline: none;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  transition: all 0.2s ease-in-out;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    font-size: 15px;
+    color: #333;
+    appearance: none;
+    /* tira a setinha padrão */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
 }
 
 .especialidade:hover {
-  border-color: #3b82f6; /* azul */
+    border-color: #3b82f6;
+    /* azul */
 }
 
 .especialidade:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 6px rgba(37, 99, 235, 0.5);
+    border-color: #2563eb;
+    box-shadow: 0 0 6px rgba(37, 99, 235, 0.5);
 }
