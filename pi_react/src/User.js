@@ -49,7 +49,7 @@ function User() { // componente principal User
     ativo: ""
   });
 
-  const[especialidade, setEspecialidades] = useState([]);
+  const [especialidade, setEspecialidades] = useState([]);
 
 
   useEffect(() => {
@@ -160,7 +160,7 @@ function User() { // componente principal User
 
 
   async function logar() {
-    setLoading(true) 
+    setLoading(true)
     try {
       // tenta logar
       let { data, error } = await supabase.auth.signInWithPassword({
@@ -181,6 +181,8 @@ function User() { // componente principal User
       if (dataDoctor) {
         tipoUsuario = 'doctor';
 
+
+
       } else {
 
         let { data: dataPatient } = await supabase
@@ -191,9 +193,6 @@ function User() { // componente principal User
 
         if (dataPatient) tipoUsuario = 'patient';
       }
-      if (!tipoUsuario) throw new Error("Usuário não encontrado em nenhuma tabela");
-
-
       if (!tipoUsuario) throw new Error("Usuário não encontrado em nenhuma tabela");
 
       localStorage.setItem('tipoUsuario', tipoUsuario);
@@ -221,6 +220,51 @@ function User() { // componente principal User
     window.location.reload(); // Recarrega a página
   }
 
+  const enviarArquivo = async (e, campo, pasta) => {
+
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setLoading(true);
+      setMsg("");
+
+      // Pega o usuário logado
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      if (userError || !userData?.user?.id) {
+        setMsg("Usuário não logado!");
+        return;
+      }
+
+      const uid = userData.user.id;
+
+      // Define caminho único no bucket
+      const filePath = `${pasta}/${uid}-${Date.now()}-${file.name}`;
+
+      // Faz upload para o bucket "arquivos_medicos"
+      const { error: uploadError } = await supabase.storage
+        .from("arquivos_medicos")
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      // Pega a URL pública do arquivo
+      const { data: publicData } = supabase.storage
+        .from("arquivos_medicos")
+        .getPublicUrl(filePath);
+
+      // Atualiza o estado do doctor com a URL do arquivo
+      setDoctor(prev => ({ ...prev, [campo]: publicData.publicUrl }));
+      setMsg("Upload realizado com sucesso!");
+
+    } catch (err) {
+      console.error("Erro ao fazer upload:", err.message);
+      setMsg(`Erro: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // esconde telas
   const [telaLogin, setTelaLogin] = useState(true);
   const [souMedico, setSouMedico] = useState(false);
@@ -235,6 +279,18 @@ function User() { // componente principal User
 
         {!telaLogin && souMedico && (
           <form onSubmit={(e) => e.preventDefault()}>
+            <div className="beneficiosMedico">
+              <h2>Seja bem-vindo à nossa plataforma!</h2>
+              <p>Ao se cadastrar como médico, você terá acesso a uma série de vantagens:</p>
+              <ul>
+                <li>Divulgue sua agenda de forma simples e prática: basta cadastrar seus horários disponíveis.</li>
+                <li>Receba pacientes diretamente pela plataforma, com agendamentos automáticos na sua agenda.</li>
+                <li>Cada consulta tem duração padrão de 20 minutos, garantindo organização e produtividade.</li>
+                <li>O valor da consulta é de R$ 60,00, com recebimento líquido de R$ 42,00 por atendimento (70%).</li>
+                <li>Em apenas 1 hora você pode atender até 3 pacientes e faturar R$ 126,00 líquidos.</li>
+              </ul>
+              <p>Cadastre-se agora e comece a atender online de forma rápida, prática e sem burocracia.</p>
+            </div>
             <h3>Cadastro Médico</h3>
 
             <p>
@@ -288,6 +344,30 @@ function User() { // componente principal User
               <label>Resumo Profissional</label>
               <textarea rows="7" id="resumoProfissional" type='text' onChange={(e) => setDoctor({ ...doctor, resumoProfissional: e.target.value })} />
             </p>
+
+            <div className='upload'>
+              <p>
+                <input type="file" id="uploadResidencia" onChange={(e) => enviarArquivo(e, "residencia", "residencias")} />
+                <label htmlFor="uploadResidencia" className="btnUpload">Enviar comprovante de residência</label>
+
+              </p>
+
+              <p>
+                <input type="file" id="uploadDiploma" onChange={(e) => enviarArquivo(e, "diploma", "diplomas")} />
+                <label htmlFor="uploadDiploma" className="btnUpload">Anexar diploma acadêmico*</label>
+              </p>
+
+              <p>
+                <input type="file" id="uploadComprovante" onChange={(e) => enviarArquivo(e, "situacaoRegular", "situacaoRegular")} />
+                <label htmlFor="uploadComprovante" className="btnUpload">Comprovante de situação regular*</label>
+              </p>
+
+              <p>
+                <input type="file" id="uploadFoto" onChange={(e) => enviarArquivo(e, "fotoPerfil", "fotoPerfil")} />
+                <label htmlFor="uploadFoto" className="btnUpload">Foto de Perfil*</label>
+              </p>
+
+            </div>
 
             <p>
               <label>Senha</label>

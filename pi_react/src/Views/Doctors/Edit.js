@@ -77,7 +77,7 @@ function Doctor() { // Componente React Doctor
     setTimeout(() => setMsg(""), 5000); // Limpa mensagem após 5 segundos
   }
 
-  
+
 
   // Função para buscar dados do médico
   async function listarMedicos() {
@@ -90,48 +90,49 @@ function Doctor() { // Componente React Doctor
   }
 
   const enviarArquivo = async (e, campo, pasta) => {
-  const file = e.target.files[0];
-  if (!file) return;
 
-  try {
-    setLoading(true);
-    setMsg("");
+    const file = e.target.files[0];
+    if (!file) return;
 
-    // Pega o usuário logado
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-    if (userError || !userData?.user?.id) {
-      setMsg("Usuário não logado!");
-      return;
+    try {
+      setLoading(true);
+      setMsg("");
+
+      // Pega o usuário logado
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      if (userError || !userData?.user?.id) {
+        setMsg("Usuário não logado!");
+        return;
+      }
+
+      const uid = userData.user.id;
+
+      // Define caminho único no bucket
+      const filePath = `${pasta}/${uid}-${Date.now()}-${file.name}`;
+
+      // Faz upload para o bucket "arquivos_medicos"
+      const { error: uploadError } = await supabase.storage
+        .from("arquivos_medicos")
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      // Pega a URL pública do arquivo
+      const { data: publicData } = supabase.storage
+        .from("arquivos_medicos")
+        .getPublicUrl(filePath);
+
+      // Atualiza o estado do doctor com a URL do arquivo
+      setDoctor(prev => ({ ...prev, [campo]: publicData.publicUrl }));
+      setMsg("Upload realizado com sucesso!");
+
+    } catch (err) {
+      console.error("Erro ao fazer upload:", err.message);
+      setMsg(`Erro: ${err.message}`);
+    } finally {
+      setLoading(false);
     }
-
-    const uid = userData.user.id;
-
-    // Define caminho único no bucket
-    const filePath = `${pasta}/${uid}-${Date.now()}-${file.name}`;
-
-    // Faz upload para o bucket "arquivos_medicos"
-    const { error: uploadError } = await supabase.storage
-      .from("arquivos_medicos")
-      .upload(filePath, file, { upsert: true });
-
-    if (uploadError) throw uploadError;
-
-    // Pega a URL pública do arquivo
-    const { data: publicData } = supabase.storage
-      .from("arquivos_medicos")
-      .getPublicUrl(filePath);
-
-    // Atualiza o estado do doctor com a URL do arquivo
-    setDoctor(prev => ({ ...prev, [campo]: publicData.publicUrl }));
-    setMsg("Upload realizado com sucesso!");
-
-  } catch (err) {
-    console.error("Erro ao fazer upload:", err.message);
-    setMsg(`Erro: ${err.message}`);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
   // Função para deslogar
   async function logout() {
     await supabase.auth.signOut();
@@ -206,49 +207,24 @@ function Doctor() { // Componente React Doctor
 
           <div className='upload'>
             <p>
-              <input
-                type="file"
-                id="uploadResidencia"
-                onChange={(e) => enviarArquivo(e, "residencia", "residencias")}
-              />
-
-              <label htmlFor="uploadResidencia" className="btnUpload">
-                Enviar comprovante de residência
-              </label>
+              <input type="file" id="uploadResidencia" onChange={(e) => enviarArquivo(e, "residencia", "residencias")} />
+              <label htmlFor="uploadResidencia" className="btnUpload">Enviar comprovante de residência</label>
 
             </p>
 
             <p>
-              <input
-                type="file"
-                id="uploadDiploma"
-                onChange={(e) => enviarArquivo(e, "diploma", "diplomas")}
-              />
-              <label htmlFor="uploadDiploma" className="btnUpload">
-                Anexar diploma acadêmico*
-              </label>
+              <input type="file" id="uploadDiploma" onChange={(e) => enviarArquivo(e, "diploma", "diplomas")} />
+              <label htmlFor="uploadDiploma" className="btnUpload">Anexar diploma acadêmico*</label>
             </p>
 
             <p>
-              <input
-                type="file"
-                id="uploadComprovante"
-                onChange={(e) => enviarArquivo(e, "situacaoRegular", "situacaoRegular")}
-              />
-              <label htmlFor="uploadComprovante" className="btnUpload">
-                Comprovante de situação regular*
-              </label>
+              <input type="file" id="uploadComprovante" onChange={(e) => enviarArquivo(e, "situacaoRegular", "situacaoRegular")} />
+              <label htmlFor="uploadComprovante" className="btnUpload">Comprovante de situação regular*</label>
             </p>
 
             <p>
-              <input
-                type="file"
-                id="uploadFoto"
-                onChange={(e) => enviarArquivo(e, "fotoPerfil", "fotoPerfil")}
-              />
-              <label htmlFor="uploadFoto" className="btnUpload">
-                Foto de Perfil*
-              </label>
+              <input type="file" id="uploadFoto" onChange={(e) => enviarArquivo(e, "fotoPerfil", "fotoPerfil")} />
+              <label htmlFor="uploadFoto" className="btnUpload">Foto de Perfil*</label>
             </p>
 
           </div>
