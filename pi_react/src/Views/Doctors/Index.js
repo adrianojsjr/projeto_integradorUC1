@@ -58,6 +58,8 @@ function Doctor() {
         .select('*');
       dataDoctors = result.data;
       error = result.error;
+      console.log(result.data)
+
     }
 
     if (error) {
@@ -180,7 +182,10 @@ function Doctor() {
                 <div></div>
 
                 <div className="infoConsulta">
-                  <img src={medico.fotoPerfil} />
+                  <img
+                    src={medico.fotoPerfil?.[0]?.url}
+                    alt={medico.nome}
+                  />
                   {medico.nome}<br />
                   {especialidade.find(e => e.id === medico.especialidade_id)?.nome || 'Sem especialidade'}
 

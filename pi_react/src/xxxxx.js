@@ -29,11 +29,11 @@ function User() { // componente principal User
     ufCRM: "",
     dataEmissaoCRM: "",
     especialidade_id: "",
-    residencia: [],
+    residencia: '',
     ativo: "",
-    fotoPerfil: [],
-    diploma: [],
-    situacaoRegular: [],
+    fotoPerfil: 'https://previews.123rf.com/images/yupiramos/yupiramos1607/yupiramos160705616/59613224-doctor-avatar-profile-isolated-icon-vector-illustration-graphic.jpg',
+    diploma: '',
+    situacaoRegular: '',
     resumoProfissional: ""
   });
 
@@ -83,8 +83,7 @@ function User() { // componente principal User
       !doctor.resumoProfissional ||
       !doctor.residencia ||
       !doctor.diploma ||
-      !doctor.situacaoRegular ||
-      !doctor.fotoPerfil
+      !doctor.situacaoRegular
     ) {
       setMsg("⚠️ Há campos obrigatórios que precisam ser preenchidos!");
       setTimeout(() => setMsg(""), 5000);
@@ -99,8 +98,10 @@ function User() { // componente principal User
         email: doctor.email,
         password: doctor.senha
       });
+
+
       if (error) {
-        // tratamento específico para email já cadastrado
+     
         if (error.message.includes("already registered")) {
           setMsg("❌ Este e-mail já está cadastrado!");
           setTimeout(() => setMsg(""), 5000);
@@ -110,10 +111,10 @@ function User() { // componente principal User
           throw error;
         }
       }
+
       const uid = data?.user?.id;
 
       //remove campos que não existem na tabela
-
       delete doctor.senha
 
       // insere dados do médico na tabela, incluindo URLs de arquivos
@@ -256,42 +257,7 @@ function User() { // componente principal User
     window.location.reload(); // Recarrega a página
 
   }
-  const enviarArquivo = async (e, campo, pasta) => {
-    const file = e.target.files[0];
-    if (!file) return;
 
-    try {
-      setLoading(true);
-      setMsg("");
-
-      const filePath = `${pasta}/${Date.now()}-${file.name}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("arquivos_medicos")
-        .upload(filePath, file, { upsert: true });
-
-      if (uploadError) throw uploadError;
-
-      const { data: publicData } = supabase.storage
-        .from("arquivos_medicos")
-        .getPublicUrl(filePath);
-
-      setDoctor(prev => {
-        const prevFiles = Array.isArray(prev[campo]) ? prev[campo] : [];
-        return {
-          ...prev,
-          [campo]: [...prevFiles, { name: file.name, url: publicData.publicUrl }]
-        };
-      });
-
-      setMsg("Upload realizado com sucesso!");
-    } catch (err) {
-      console.error("Erro ao fazer upload:", err.message);
-      setMsg(`Erro: ${err.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
   // esconde telas
   const [telaLogin, setTelaLogin] = useState(true);
   const [souMedico, setSouMedico] = useState(false);
@@ -410,84 +376,27 @@ function User() { // componente principal User
               <label>Resumo Profissional*</label>
               <textarea rows="7" id="resumoProfissional" type='text' onChange={(e) => setDoctor({ ...doctor, resumoProfissional: e.target.value })} required />
             </p>
-            <div className='upload'>
 
-              {/* Comprovante de residência */}
+            <div>
               <p>
-                <input type="file" id="uploadResidencia" onChange={(e) => enviarArquivo(e, "residencia", "residencias")} />
-                <label htmlFor="uploadResidencia" className="btnUpload">Enviar comprovante de residência*</label>
+                <label className="btnUpload">Insira a url da residência médica*</label>
+                <input id="residencia" type="text" name="arquivo" onChange={(e) => setDoctor({ ...doctor, residencia: e.target.value })} />
               </p>
-              <div className="uploadedFiles">
-                {doctor.residencia?.map((file, index) => (
-                  <div key={index} className="fileItem">
-                    <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
-                      setDoctor(prev => ({
-                        ...prev,
-                        residencia: prev.residencia.filter((_, i) => i !== index)
-                      }));
-                    }}>Remover</button>
-                  </div>
-                ))}
-              </div>
 
-              {/* Diploma acadêmico */}
               <p>
-                <input type="file" id="uploadDiploma" onChange={(e) => enviarArquivo(e, "diploma", "diplomas")} />
-                <label htmlFor="uploadDiploma" className="btnUpload">Anexar diploma acadêmico*</label>
+                <label className="btnUpload">Insira a url do diploma acadêmico*</label>
+                <input id="diploma" type="text" name="arquivo" onChange={(e) => setDoctor({ ...doctor, diploma: e.target.value })} />
               </p>
-              <div className="uploadedFiles">
-                {doctor.diploma?.map((file, index) => (
-                  <div key={index} className="fileItem">
-                    <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
-                      setDoctor(prev => ({
-                        ...prev,
-                        diploma: prev.diploma.filter((_, i) => i !== index)
-                      }));
-                    }}>Remover</button>
-                  </div>
-                ))}
-              </div>
 
-              {/* Comprovante de situação regular */}
               <p>
-                <input type="file" id="uploadComprovante" onChange={(e) => enviarArquivo(e, "situacaoRegular", "situacaoRegular")} />
-                <label htmlFor="uploadComprovante" className="btnUpload">Comprovante de situação regular*</label>
+                <label className="btnUpload">Insira a url do Comprovante de situação regular*</label>
+                <input id="comprovante" type="text" name="arquivo" onChange={(e) => setDoctor({ ...doctor, situacaoRegular: e.target.value })} />
               </p>
-              <div className="uploadedFiles">
-                {doctor.situacaoRegular?.map((file, index) => (
-                  <div key={index} className="fileItem">
-                    <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
-                      setDoctor(prev => ({
-                        ...prev,
-                        situacaoRegular: prev.situacaoRegular.filter((_, i) => i !== index)
-                      }));
-                    }}>Remover</button>
-                  </div>
-                ))}
-              </div>
 
-              {/* Foto de perfil */}
               <p>
-                <input type="file" id="uploadFoto" onChange={(e) => enviarArquivo(e, "fotoPerfil", "fotoPerfil")} />
-                <label htmlFor="uploadFoto" className="btnUpload">Foto de Perfil*</label>
+                <label className="btnUpload">Insira a url da Foto de Perfil*</label>
+                <input id="comprovante" type="text" name="arquivo" onChange={(e) => setDoctor({ ...doctor, fotoPerfil: e.target.value })} />
               </p>
-              <div className="uploadedFiles">
-                {doctor.fotoPerfil?.map((file, index) => (
-                  <div key={index} className="fileItem">
-                    <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
-                      setDoctor(prev => ({
-                        ...prev,
-                        fotoPerfil: prev.fotoPerfil.filter((_, i) => i !== index)
-                      }));
-                    }}>Remover</button>
-                  </div>
-                ))}
-              </div>
-
             </div>
 
             <p>

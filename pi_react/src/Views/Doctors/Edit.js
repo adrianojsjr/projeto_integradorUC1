@@ -89,50 +89,6 @@ function Doctor() { // Componente React Doctor
     setDoctor(dataDoctors); // Atualiza estado
   }
 
-  const enviarArquivo = async (e, campo, pasta) => {
-
-    const file = e.target.files[0];
-    if (!file) return;
-
-    try {
-      setLoading(true);
-      setMsg("");
-
-      // Pega o usuário logado
-      const { data: userData, error: userError } = await supabase.auth.getUser();
-      if (userError || !userData?.user?.id) {
-        setMsg("Usuário não logado!");
-        return;
-      }
-
-      const uid = userData.user.id;
-
-      // Define caminho único no bucket
-      const filePath = `${pasta}/${uid}-${Date.now()}-${file.name}`;
-
-      // Faz upload para o bucket "arquivos_medicos"
-      const { error: uploadError } = await supabase.storage
-        .from("arquivos_medicos")
-        .upload(filePath, file, { upsert: true });
-
-      if (uploadError) throw uploadError;
-
-      // Pega a URL pública do arquivo
-      const { data: publicData } = supabase.storage
-        .from("arquivos_medicos")
-        .getPublicUrl(filePath);
-
-      // Atualiza o estado do doctor com a URL do arquivo
-      setDoctor(prev => ({ ...prev, [campo]: publicData.publicUrl }));
-      setMsg("Upload realizado com sucesso!");
-
-    } catch (err) {
-      console.error("Erro ao fazer upload:", err.message);
-      setMsg(`Erro: ${err.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
   // Função para deslogar
   async function logout() {
     await supabase.auth.signOut();
@@ -186,6 +142,7 @@ function Doctor() { // Componente React Doctor
           <p>
             <label>Especialidade*</label>
             <select value={doctor?.especialidade_id || ''} onChange={(e) => setDoctor({ ...doctor, especialidade_id: e.target.value })} required>
+              <option value="">Selecione uma especialidade</option>
               {especialidade.map(
                 e => (
                   <option key={e.id} value={e.id}>{e.nome}</option>
@@ -205,29 +162,29 @@ function Doctor() { // Componente React Doctor
             <textarea rows="7" id="resumoProfissional" value={doctor?.resumoProfissional || ''} type='text' onChange={(e) => setDoctor({ ...doctor, resumoProfissional: e.target.value })} />
           </p>
 
-          <div className='upload'>
-            <p>
-              <input type="file" id="uploadResidencia" onChange={(e) => enviarArquivo(e, "residencia", "residencias")} />
-              <label htmlFor="uploadResidencia" className="btnUpload">Enviar comprovante de residência</label>
 
+          <div>
+            <p>
+              <label className="btnUpload">Insira a url da residência médica*</label>
+              <input id="residencia" type="text" name="arquivo" onChange={(e) => setDoctor({ ...doctor, residencia: e.target.value })} />
             </p>
 
             <p>
-              <input type="file" id="uploadDiploma" onChange={(e) => enviarArquivo(e, "diploma", "diplomas")} />
-              <label htmlFor="uploadDiploma" className="btnUpload">Anexar diploma acadêmico*</label>
+              <label className="btnUpload">Insira a url do diploma acadêmico*</label>
+              <input id="diploma" type="text" name="arquivo" onChange={(e) => setDoctor({ ...doctor, diploma: e.target.value })} />
             </p>
 
             <p>
-              <input type="file" id="uploadComprovante" onChange={(e) => enviarArquivo(e, "situacaoRegular", "situacaoRegular")} />
-              <label htmlFor="uploadComprovante" className="btnUpload">Comprovante de situação regular*</label>
+              <label className="btnUpload">Insira a url do Comprovante de situação regular*</label>
+              <input id="comprovante" type="text" name="arquivo" onChange={(e) => setDoctor({ ...doctor, situacaoRegular: e.target.value })} />
             </p>
 
             <p>
-              <input type="file" id="uploadFoto" onChange={(e) => enviarArquivo(e, "fotoPerfil", "fotoPerfil")} />
-              <label htmlFor="uploadFoto" className="btnUpload">Foto de Perfil*</label>
+              <label className="btnUpload">Insira a url da Foto de Perfil*</label>
+              <input id="comprovante" type="text" name="arquivo" onChange={(e) => setDoctor({ ...doctor, fotoPerfil: e.target.value })} />
             </p>
-
           </div>
+
 
           <button className="buttonSucess" type="button" onClick={update} disabled={loading}>
             {loading ? "Salvando..." : "Salvar"} {/* Botão que mostra loading */}

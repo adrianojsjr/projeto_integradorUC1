@@ -95,3 +95,30 @@ button{
   margin-top: 15px;
   margin-bottom: 15px;
 }
+
+.alert {
+  position: fixed;       /* fixa na tela */
+  top: 20px;             /* distância do topo */
+  left: 50%;             /* centraliza horizontalmente */
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 9999;         /* garante que fique acima de tudo */
+  animation: fadeIn 0.3s ease-in-out;
+  min-width: 250px;
+  text-align: center;
+}
+
+.alert.success {
+  background-color: #e6f9f0;
+  color: #0f5132;
+  border: 1px solid #badbcc;
+}
+
+.alert.error {
+  background-color: #fdecea;
+  color: #842029;
+  border: 1px solid #f5c2c7;
+}

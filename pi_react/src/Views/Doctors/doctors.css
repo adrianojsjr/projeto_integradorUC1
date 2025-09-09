@@ -6,30 +6,6 @@
   --borda: #dce3ec;
 }
 
-
-/* Uploads */
-.upload{
-    color: white;
-}
-
-input[type="file"] {
-    display: none;
-    /*junta o label com o input */
-}
-
-.btnUpload {
-    display: flex;
-    text-align: center;
-    background: var(--verde-agua);
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 700;
-    font-size: .95rem;
-    width: 93%;
-    padding: 15px;
-}
-
-
 .cardInfoConsulta {
     display: flex;
     justify-content: space-around;
@@ -39,7 +15,6 @@ input[type="file"] {
     border-radius: 15px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     padding: 20px;
-    width: 100%;
     transition: transform 0.3s ease;
 }
 
@@ -51,12 +26,19 @@ input[type="file"] {
     box-shadow: 0 0 5px rgba(70, 69, 69, 0.089);
     line-height: 25px;
     border-radius: 12px;
-    padding: 15px;
+    padding: 30px;
 }
 
-.infoConsulta img {
-    width: 250px;
+.cardInfoConsulta .infoConsulta img{
+   
+    width: 150px;
     height: 150px;
+}
+
+
+.detalhesMedico img {
+    width: 250px;
+    height: 250px;
 }
 
 
