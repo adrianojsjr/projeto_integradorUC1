@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createClient } from "@supabase/supabase-js";
 import { useNavigate, useParams } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
 
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { supabase } from '../../User';
@@ -62,7 +60,7 @@ function Schedule() {
       .select(` *, doctors!inner(nome)`) // Seleciona todos os campos + nome do médico
       .eq('doctor_id', uid); // Filtra pelo ID do médico
 
-    setSchedule(dataSchedule || []); // Atualiza estado
+    setSchedule(dataSchedule || []); // Atualiza a schedule
   }
 
 
@@ -70,7 +68,7 @@ function Schedule() {
     const { error } = await supabase
       .from('schedule')
       .delete()
-      .eq('supra_id', id); // Remove registro pelo ID
+      .eq('supra_id', id); 
   }
 
 

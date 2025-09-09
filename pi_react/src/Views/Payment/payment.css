@@ -5,7 +5,15 @@ Azul: #1e5acd
 Verde: #33B291
 */
 
-.cartao {
+
+.pagamento .formaPagamento{
+    background: white;
+    padding: 40px;
+    text-align: center;
+}
+
+
+.cartaoPixBoleto{
   max-width:500px;
   margin: 0 auto; /*centraliza o formulário*/
   padding: 20px;
@@ -14,6 +22,9 @@ Verde: #33B291
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  margin-top: 50px;
+}
+
+.cartaoPixBoleto form input{
+  margin-bottom: 15px;
 }
 
