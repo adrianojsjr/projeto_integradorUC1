@@ -196,67 +196,69 @@ function User() { // componente principal User
     setTimeout(() => setMsg(""), 5000);
   }
 
-  async function logar() {
-    setLoading(true)
-    try {
-      // tenta logar
-      let { data, error } = await supabase.auth.signInWithPassword({
-        email: doctor.email,
-        password: doctor.senha
-      });
+async function logar() {
+  setLoading(true);
+  try {
+    // Verifica se o email existe em doctors
+    let { data: doctorExists } = await supabase
+      .from('doctors')
+      .select('supra_id')
+      .eq('email', doctor.email)
+      .single();
 
-      const uid = data.user.id;
+    // Verifica se o email existe em patients
+    let { data: patientExists } = await supabase
+      .from('patients')
+      .select('supra_id')
+      .eq('email', doctor.email)
+      .single();
 
-      let { data: dataDoctor } = await supabase
-        .from('doctors')
-        .select('*')
-        .eq('supra_id', uid)
-        .single();
-
-      let tipoUsuario;
-
-      if (dataDoctor) {
-        tipoUsuario = 'doctor';
-
-
-
-      } else {
-
-        let { data: dataPatient } = await supabase
-          .from('patients')
-          .select('*')
-          .eq('supra_id', uid)
-          .single();
-
-        if (dataPatient) tipoUsuario = 'patient';
-      }
-      if (!tipoUsuario) throw new Error("Usuário não encontrado em nenhuma tabela");
-
-      localStorage.setItem('tipoUsuario', tipoUsuario);
-      localStorage.setItem('supaSession', data.session);
-
-      // redirecionamento de volta pra tela que escolheu o horário
-      const params = new URLSearchParams(location.search);
-      const redirect = params.get("redirect");
-
-      if (redirect) {
-        nav(redirect, { replace: true });
-      } else {
-        if (tipoUsuario === 'doctor') {
-          nav(`/doctors/edit/${uid}`, { replace: true });
-        } else {
-          nav("/doctors", { replace: true });
-        }
-      }
-
-      setMsg("Login realizado com sucesso!");
-    } catch (err) {
-      setMsg("Error: " + err.message);
+    // Se não existir em nenhum, redireciona para cadastro
+    if (!doctorExists && !patientExists) {
+      setMsg("❌ Email não cadastrado. Redirecionando para cadastro...");
+      setLoading(false);
+      nav('/cadastro'); // Ajuste essa rota para sua página de cadastro
+      return;
     }
-    setLoading(false);
-    window.location.reload(); // Recarrega a página
 
+    // Caso exista, segue o fluxo normal de login
+    let { data, error } = await supabase.auth.signInWithPassword({
+      email: doctor.email,
+      password: doctor.senha
+    });
+
+    if (error) throw error;
+
+    const uid = data.user.id;
+
+    let tipoUsuario = doctorExists ? 'doctor' : 'patient';
+
+    localStorage.setItem('tipoUsuario', tipoUsuario);
+    localStorage.setItem('supaSession', data.session);
+
+    // Redireciona para a tela original, se existir parâmetro redirect
+    const params = new URLSearchParams(location.search);
+    const redirect = params.get("redirect");
+
+    if (redirect) {
+      nav(redirect, { replace: true });
+    } else {
+      if (tipoUsuario === 'doctor') {
+        nav(`/doctors/edit/${uid}`, { replace: true });
+      } else {
+        nav("/doctors", { replace: true });
+      }
+    }
+
+    setMsg("Login realizado com sucesso!");
+  } catch (err) {
+    setMsg("Error: " + err.message);
   }
+  setLoading(false);
+  window.location.reload();
+}
+
+
   const enviarArquivo = async (e, campo, pasta) => {
     const file = e.target.files[0];
     if (!file) return;
