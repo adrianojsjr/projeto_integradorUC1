@@ -6,6 +6,38 @@
   --borda: #dce3ec;
 }
 
+/*Texto de apresentação da plataforma*/
+
+.apresentacaoPlataforma {
+  text-align: center;
+  padding: 30px 20px;
+  margin: 20px auto;
+  background-color: #f5faff;
+  border-radius: 12px;
+  max-width: 800px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.apresentacaoPlataforma h2 {
+  color: #007BFF;
+  font-size: 26px;
+  margin-bottom: 10px;
+}
+
+.apresentacaoPlataforma p {
+  color: #333;
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 10px 0;
+}
+
+.apresentacaoPlataforma strong {
+  color: #00856F; /* verde suave para destaque */
+}
+
+/*Card com as infos da consulta*/
+
 .cardInfoConsulta {
     display: flex;
     justify-content: space-around;
@@ -14,16 +46,13 @@
     background-color: white;
     border-radius: 15px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    padding: 20px;
-    transition: transform 0.3s ease;
 }
 
-
+/*img, nome, especialidade e btn ver mais*/
 .infoConsulta {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    box-shadow: 0 0 5px rgba(70, 69, 69, 0.089);
     line-height: 25px;
     border-radius: 12px;
     padding: 30px;
@@ -55,7 +84,10 @@
     font-size: 16px;
     font-weight: 500;
     margin-left: 0px;
+    margin-top: 20px;
 }
+
+/*Calendário*/
 
 .calendario {
     display: flex;

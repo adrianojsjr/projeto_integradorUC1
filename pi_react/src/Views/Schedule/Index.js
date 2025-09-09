@@ -47,6 +47,7 @@ function Schedule() {
 
     setSchedule(prev => [...prev, ...[data]]); // Atualiza estado adicionando novo horário
     setInserirAgenda(false); // Fecha formulário
+    window.location.reload(); // Recarrega a página
 
   }
 

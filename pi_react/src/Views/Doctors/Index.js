@@ -22,6 +22,7 @@ function Doctor() {
   const [msg, setMsg] = useState(""); // estado para mensagens de feedback (erro, sucesso)
   const [loading, setLoading] = useState(false); // estado para indicar carregamento
   const [filtroAplicado, setFiltroAplicado] = useState(null);
+  const [filtro, setFiltro] = useState("");
 
 
   useEffect(() => {
@@ -58,12 +59,9 @@ function Doctor() {
         .select('*');
       dataDoctors = result.data;
       error = result.error;
-      console.log(result.data)
-
     }
 
     if (error) {
-      console.error(error);
       setDoctors([]);
       setMsg("Ocorreu um erro ao buscar os médicos.");
     } else {
@@ -152,16 +150,40 @@ function Doctor() {
           <div className="busca">
             <select
               className="especialidade"
-              value=""
-              onChange={(e) => listarMedicos(e.target.value)}
+              value={filtro}
+              onChange={(e) => {
+                const value = e.target.value;
+                setFiltro(value);
+                listarMedicos(value);
+              }}
             >
               <option value="">Selecione uma especialidade</option>
               {especialidade.map(e => (
                 <option key={e.id} value={e.id}>{e.nome}</option>
               ))}
             </select>
+
+            {filtro && (
+              <button
+                className="btn"
+                onClick={() => {
+                  setFiltro("");
+                  listarMedicos(); // lista todos
+                }}
+              >
+                Limpar filtro
+              </button>
+            )}
           </div>
           <div></div>
+        </div>
+        <div className='apresentacaoPlataforma'>
+          <h2>🩺 Bem-vindo ao ConectMed!</h2>
+          <p>
+            Agende suas consultas médicas por apenas <strong>R$30,00</strong>, com rapidez, praticidade e 100% online.<br />
+            Escolha a especialidade, veja os horários disponíveis e marque sua consulta em poucos cliques.
+          </p>
+          <p><strong>🕐 Sem filas. Sem complicações. Só saúde acessível.</strong></p>
         </div>
       </div>
 

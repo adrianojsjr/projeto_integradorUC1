@@ -41,10 +41,10 @@ function PaymentCreate() {
     console.log(id)
     let { data: dataDoctor, error } = await supabase
       .from('doctors')
-      .select('*')
+      .select('*, especialidade(nome)')
       .eq('supra_id', id)
       .single()
-    console.log(dataDoctor)
+
     setDoctor(dataDoctor); // Atualiza o estado com os dados do médico
   }
 
@@ -165,12 +165,15 @@ function PaymentCreate() {
 
         <div className='infoConsulta'>
 
-          <p>Resumo da Consulta</p>
-          <img src={doctor ? doctor.imagem : ''} />
-
-          {doctor ? doctor.nome : ''} <br /><br />
-
-          {agenda ? formatarData(agenda.date) : ''}
+          <h3>Resumo da Consulta</h3>
+          <img
+            src={doctor?.fotoPerfil?.[0]?.url || '/imagens/avatar-generico.png'}
+            alt="Foto do médico"
+          />
+          <p>{doctor ? doctor.nome : ''} <br/></p>
+          {doctor?.especialidade?.nome} <br/>
+          <p>R$ 30,00</p>
+          {agenda ? formatarData(agenda.date) : ''}<br/><br/>
 
           <button className='btnGeral' onClick={() => nav(`/doctors/${doctorId}`, { replace: true })}>
             Escolher outro horário
@@ -183,43 +186,43 @@ function PaymentCreate() {
       <div className="pagamento">
 
         <form className='formaPagamento'>
-            <label >Escolha a forma de pagamento:</label>
-            <select
-              value={payment.tipo_pagamento}
-              onChange={(e) => setPayment({ ...payment, tipo_pagamento: e.target.value })}
-              required
-            >
-              <option value="">Selecione...</option>
-              <option value="cartao">Cartão de Crédito</option>
-              <option value="pix">Pix</option>
-              <option value="boleto">Boleto</option>
-            </select>
-          </form>
+          <label >Escolha a forma de pagamento:</label>
+          <select
+            value={payment.tipo_pagamento}
+            onChange={(e) => setPayment({ ...payment, tipo_pagamento: e.target.value })}
+            required
+          >
+            <option value="">Selecione...</option>
+            <option value="cartao">Cartão de Crédito</option>
+            <option value="pix">Pix</option>
+            <option value="boleto">Boleto</option>
+          </select>
+        </form>
 
         {payment.tipo_pagamento === 'cartao' && (
           <div className="cartaoPixBoleto">
             <h3>Pagamento com Cartão</h3>
             <form>
-                <label>Nome completo</label>
-                <input type="text" id="nome" placeholder="Nome do titular" required />
+              <label>Nome completo</label>
+              <input type="text" id="nome" placeholder="Nome do titular" required />
 
-                <label>CPF</label>
-                <input type="text" id="cpf" placeholder="000.000.000-00" required />
+              <label>CPF</label>
+              <input type="text" id="cpf" placeholder="000.000.000-00" required />
 
-                <label>Número do Cartão</label>
-                <input type="text" id="numero" placeholder="XXXX XXXX XXXX XXXX" required />
+              <label>Número do Cartão</label>
+              <input type="text" id="numero" placeholder="XXXX XXXX XXXX XXXX" required />
 
-                <div className="validadeCVV">
-                  <div className="cartaoValidade">
-                    <label>Validade</label>
-                    <input type="text" id="validade" placeholder="MM/AA" required />
-                  </div>
-
-                  <div className="cartaoCVV">
-                    <label>CVV</label>
-                    <input type="text" id="cvv" placeholder="123" required />
-                  </div>
+              <div className="validadeCVV">
+                <div className="cartaoValidade">
+                  <label>Validade</label>
+                  <input type="text" id="validade" placeholder="MM/AA" required />
                 </div>
+
+                <div className="cartaoCVV">
+                  <label>CVV</label>
+                  <input type="text" id="cvv" placeholder="123" required />
+                </div>
+              </div>
 
               <button className='btnGeral'
                 onClick={(e) => {

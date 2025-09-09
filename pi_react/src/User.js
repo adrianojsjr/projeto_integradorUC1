@@ -116,6 +116,7 @@ function User() { // componente principal User
 
       delete doctor.senha
 
+
       // insere dados do médico na tabela, incluindo URLs de arquivos
       let { error: eD } = await supabase
         .from("doctors")
@@ -175,7 +176,7 @@ function User() { // componente principal User
             nome: patient.nome,
             cpf: patient.cpf,
             ativo: true,
-            senha: patient.senha
+            
           }
         ]);
 

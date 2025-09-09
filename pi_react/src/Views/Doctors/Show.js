@@ -97,7 +97,10 @@ function Doctor() {
               </div>
 
               <div>
-                <img src={doctor.fotoPerfil} />
+                <img
+                    src={doctor.fotoPerfil?.[0]?.url}
+                    alt={doctor.nome}
+                  />
               </div>
 
             </div>
