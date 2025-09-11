@@ -51,17 +51,28 @@ function Schedule() {
 
   }
 
-
   async function readSchedule() {
-    const { data: sessionData } = await supabase.auth.getSession(); // Pega sessão
-    const uid = sessionData?.session?.user?.id; // ID do usuário logado
+    const { data: sessionData } = await supabase.auth.getSession();
+    const uid = sessionData?.session?.user?.id;
+    const tipoUsuario = localStorage.getItem('tipoUsuario');
 
-    let { data: dataSchedule, error } = await supabase
+    let query = supabase
       .from('schedule')
-      .select(` *, doctors!inner(nome)`) // Seleciona todos os campos + nome do médico
-      .eq('doctor_id', uid); // Filtra pelo ID do médico
+      .select(`*, doctors!inner(nome)`);
 
-    setSchedule(dataSchedule || []); // Atualiza a schedule
+    if (tipoUsuario === 'doctor') {
+      query = query.eq('doctor_id', uid);
+    } else if (tipoUsuario === 'patient') {
+      query = query.eq('patient_id', uid);
+    }
+
+    let { data: dataSchedule, error } = await query;
+
+    if (error) {
+      console.log("Erro ao buscar agenda:", error);
+    } else {
+      setSchedule(dataSchedule || []);
+    }
   }
 
 
@@ -69,7 +80,7 @@ function Schedule() {
     const { error } = await supabase
       .from('schedule')
       .delete()
-      .eq('supra_id', id); 
+      .eq('supra_id', id);
   }
 
 
@@ -110,7 +121,7 @@ function Schedule() {
                   <tr>
                     <th>Data</th>
                     <th>Médico</th>
-                    <th>Status</th>
+                    {tipoUsuario !== 'patient' && <th>Status</th>}  {/* Oculta para paciente */}
                     <th>Avaliação</th>
                     <th>Paciente</th>
                     <th>Pagamento</th>
@@ -118,20 +129,16 @@ function Schedule() {
                   </tr>
                 </thead>
                 <tbody>
-                  {schedule.map((agenda) => ( // Mapeia cada horário
+                  {schedule.map((agenda) => (
                     <tr key={agenda.id} className="agendaCard">
                       <td>{agenda.date}</td>
                       <td>{agenda.doctors?.nome}</td>
-                      <td>{agenda.status}</td>
+                      {tipoUsuario !== 'patient' && <td>{agenda.status}</td>} {/* Oculta para paciente */}
                       <td>{agenda.avaliacao}</td>
                       <td>{agenda.patient_id}</td>
                       <td>{agenda.payment_id}</td>
                       <td>
-                        {tipoUsuario === "patient" && agenda.status === "agendada" && ( // Botão só aparece para pacientes
-                          <button className="btnCancel" onClick={() => delSchedule(agenda.id)}>
-                            Cancelar Consulta
-                          </button>
-                        )}
+                        {/* botões etc */}
                       </td>
                     </tr>
                   ))}

@@ -151,7 +151,7 @@ function PaymentCreate() {
 
     if (scheduleId) { //se a agenda existe, vai para update
       await updateSchedule(idPagamento);
-      console.log("certo")
+      nav('/doctors');
     }
     else {
       console.log('Erro no agendamento')
