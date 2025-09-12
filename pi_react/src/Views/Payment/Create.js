@@ -16,12 +16,7 @@ function PaymentCreate() {
   const [doctorId, setDoctorId] = useState()
 
   // Estado para armazenar os dados do pagamento
-  const [payment, setPayment] = useState({
-    tipo_pagamento: '',
-    patient_id: '',
-    doctor_id: '',
-    user_id: ''
-  });
+  const [payment, setPayment] = useState([]);
 
   const [doctor, setDoctor] = useState(null);
   const [agenda, setAgenda] = useState(null);
@@ -119,38 +114,56 @@ function PaymentCreate() {
     //poderia ser também return dataFormatada + ' ' + horaFormatada;
   }
 
+async function updateSchedule(idPagamento) {
+  const { data: dU } = await supabase.auth.getUser();
+  const uid = dU?.user?.id;
 
-  async function updateSchedule(idPagamento) {
+  // Atualiza no banco como indisponível
+  const { data, error } = await supabase
+    .from('schedule')
+    .update({ status: 'Indisponível', statusPatient:"Agendada", patient_id: uid, payment_id: idPagamento })
+    .eq('id', scheduleId)
+    .select()
+    .single();
 
-    const { data: dU, error: eU } = await supabase.auth.getUser();
-    const uid = dU?.user?.id;
-
-    console.log("idPagamento: " + idPagamento);
-    console.log("scheduleId: " + scheduleId);
-
-    const { data, error } = await supabase
-      .from('schedule')
-      .update({ status: 'Indisponível', patient_id: uid, payment_id: idPagamento })
-      .eq('id', scheduleId)
-      .select()
-      .single(); // <-- garante que traga o registro atualizado
-
-
-    if (error) {
-      console.error('Erro ao atualizar agendamento:', error);
-    } else {
-      // setAgenda(data); // Atualiza estado
-      console.log("Agenda atualizada:", data);
-
-    }
+  if (error) {
+    console.error('Erro ao atualizar agendamento:', error);
+    return;
   }
+
+  // Atualiza estado local para mostrar "Agendado" ao paciente
+  setAgenda(prev => ({ ...prev, displayStatus: 'Agendado', patient_id: uid, payment_id: idPagamento }));
+
+  console.log('Agenda atualizada no banco e exibida como agendada para paciente:', data);
+}
+
+async function updatePayment(idPagamento) {
+  const { dataP, errorP } = await supabase
+    .from('payment')
+    .update({ status: 'Pago' })
+    .eq('id', idPagamento)
+    .select()
+    .single();
+
+  if (errorP) {
+    console.error('Erro ao atualizar pagamento', errorP);
+  } else {
+    console.log("Pagamento atualizado:", dataP);
+
+    // Atualiza estado local do agendamento também
+    const { data: dU } = await supabase.auth.getUser();
+    const uid = dU?.user?.id;
+    setAgenda(prev => ({ ...prev, displayStatus: 'Agendado', patient_id: uid, payment_id: idPagamento }));
+  }
+}
 
   async function finalizarAgendamento() {
     const idPagamento = await fazerPagamento();
-    console.log("idPagamento: " + idPagamento)
+
 
     if (scheduleId) { //se a agenda existe, vai para update
       await updateSchedule(idPagamento);
+      await updatePayment(idPagamento)
       nav('/doctors');
     }
     else {
@@ -170,10 +183,10 @@ function PaymentCreate() {
             src={doctor?.fotoPerfil?.[0]?.url || '/imagens/avatar-generico.png'}
             alt="Foto do médico"
           />
-          <p>{doctor ? doctor.nome : ''} <br/></p>
-          {doctor?.especialidade?.nome} <br/>
+          <p>{doctor ? doctor.nome : ''} <br /></p>
+          {doctor?.especialidade?.nome} <br />
           <p>R$ 30,00</p>
-          {agenda ? formatarData(agenda.date) : ''}<br/><br/>
+          {agenda ? formatarData(agenda.date) : ''}<br /><br />
 
           <button className='btnGeral' onClick={() => nav(`/doctors/${doctorId}`, { replace: true })}>
             Escolher outro horário

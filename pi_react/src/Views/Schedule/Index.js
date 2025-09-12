@@ -14,14 +14,13 @@ function Schedule() {
   const { id } = useParams();
 
 
-  const [schedule, setSchedule] = useState([{
+  const [schedule, setSchedule] = useState([]);
+
+  const [novaSchedule, setNovaSchedule] = useState({
     date: "",
-    doctor_id: "",
-    status: "",
-    avaliacao: "",
-    patient_id: "",
-    payment_id: ""
-  }]);
+    status: "Disponível"
+
+  });
 
   useEffect(() => {
     readSchedule();
@@ -33,22 +32,37 @@ function Schedule() {
 
     if (!uid) return nav("/user", { replace: true }); // Redireciona se não houver UID
 
+    // Cria objeto Date local
+    const [datePart, timePart] = novaSchedule.date.split('T');
+    const [year, month, day] = datePart.split('-').map(Number);
+    const [hour, minute] = timePart.split(':').map(Number);
+    const localDate = new Date(year, month - 1, day, hour, minute);
+
+    // Converte para ISO local sem o "Z" que indica UTC
+    const isoLocal = localDate.toISOString().slice(0, 19);
+
     // Insere novo horário no Supabase
     const { data, error } = await supabase
       .from('schedule')
       .insert([
         {
-          date: schedule[0].date,
+          date: isoLocal,   // envia data no fuso local
           doctor_id: uid,
           status: "Disponível"
         },
       ])
       .select(); // Retorna os dados inseridos
 
-    setSchedule(prev => [...prev, ...[data]]); // Atualiza estado adicionando novo horário
-    setInserirAgenda(false); // Fecha formulário
-    window.location.reload(); // Recarrega a página
+    if (error) {
+      console.log("Erro ao criar agenda:", error.message);
+    } else {
 
+      setSchedule(prev => [...prev, ...data]); // Atualiza estado adicionando novo horário
+      setNovaSchedule({ date: "", status: "Disponível" });
+      setInserirAgenda(false); // Fecha formulário
+      window.location.reload(); // Recarrega a página
+
+    }
   }
 
   async function readSchedule() {
@@ -58,15 +72,16 @@ function Schedule() {
 
     let query = supabase
       .from('schedule')
-      .select(`*, doctors!inner(nome)`);
+      .select(`*, doctors!inner(nome), patient:patient_id(nome), payment(status)`);
 
     if (tipoUsuario === 'doctor') {
       query = query.eq('doctor_id', uid);
     } else if (tipoUsuario === 'patient') {
-      query = query.eq('patient_id', uid);
+      // Trazer consultas ativas e canceladas do paciente
+      query = query.or(`patient_id.eq.${uid},statusPatient.eq.Cancelada`);
     }
 
-    let { data: dataSchedule, error } = await query;
+    const { data: dataSchedule, error } = await query;
 
     if (error) {
       console.log("Erro ao buscar agenda:", error);
@@ -74,16 +89,113 @@ function Schedule() {
       setSchedule(dataSchedule || []);
     }
   }
+  async function updatePayment(idPagamento) {
+    if (!idPagamento) return;
 
+    const { data: dU } = await supabase.auth.getUser();
+    const uid = dU?.user?.id;
 
-  async function delSchedule(id) {
-    const { error } = await supabase
+    const { data: dataP, error: errorP } = await supabase
+      .from('payment')
+      .update({ status: 'Cancelado' })
+      .eq('id', idPagamento)
+      .select()
+      .single();
+
+    if (errorP) {
+      console.error('Erro ao atualizar pagamento', errorP);
+    } else {
+      console.log("Pagamento atualizado:", dataP);
+
+      // Atualiza apenas o item correspondente dentro do array
+      setSchedule(prev =>
+        prev.map(ag =>
+          ag.payment_id === idPagamento
+            ? { ...ag, payment: { ...ag.payment, status: 'Cancelado' } }
+            : ag
+        )
+      );
+    }
+  }
+
+  async function updateSchedule(scheduleId) {
+    if (!scheduleId) return;
+
+    const { data, error } = await supabase
       .from('schedule')
-      .delete()
-      .eq('supra_id', id);
+      .update({
+        status: 'Disponível',       // Horário fica livre para outro paciente
+        statusPatient: 'Cancelada', // Histórico para o paciente
+        payment_id: null            // Libera referência do pagamento
+        // Não mexer em patient_id, mantém histórico visível
+      })
+      .eq('id', scheduleId)
+      .select()
+      .single();
+
+    if (!error) {
+      setSchedule(prev =>
+        prev.map(ag =>
+          ag.id === scheduleId
+            ? {
+              ...ag,
+              status: 'Disponível',
+              statusPatient: 'Cancelada',
+              payment_id: ag.payment_id, // mantém referência para mostrar histórico
+              payment: { ...(ag.payment || {}), status: 'Reembolsado' }
+            }
+            : ag
+        )
+      );
+    }
+  }
+
+  async function cancelarConsulta(scheduleId, idPagamento) {
+
+
+    await updatePayment(idPagamento);
+    await updateSchedule(scheduleId);
   }
 
 
+
+  function formatarData(data) {
+    const date = new Date(data)
+
+    const dataFormatada =
+
+      date.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      });
+
+    const horaFormatada =
+
+      date.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
+    return `${dataFormatada} ${horaFormatada}`;
+
+    //poderia ser também return dataFormatada + ' ' + horaFormatada;
+  }
+
+  async function delSchedule(scheduleId) {
+    const { error } = await supabase
+      .from('schedule')
+      .delete()
+      .eq('id', scheduleId);
+
+    if (error) {
+      console.log("ERRO AO DELETAR AGENDA:", error.message);
+    } else {
+      console.log("AGENDA DELETADA");
+      setSchedule(prev => prev.filter(ag => ag.id !== scheduleId));
+
+    }
+  }
 
   const [inserirAgenda, setInserirAgenda] = useState(false); // Estado para controlar formulário
   const tipoUsuario = localStorage.getItem('tipoUsuario'); // Pega tipo de usuário que foi colocado no arquivo user
@@ -104,8 +216,8 @@ function Schedule() {
                 <form className="addScheduleForm" onSubmit={(e) => e.preventDefault()}>
                   <input
                     type="datetime-local" // Input para data
-                    value={schedule.date} // Valor do estado
-                    onChange={(e) => setSchedule([{ ...schedule, date: e.target.value }])} // Atualiza estado
+                    value={novaSchedule.date} // Valor do estado
+                    onChange={(e) => setNovaSchedule({ ...novaSchedule, date: e.target.value })} // Atualiza estado
                   />
                   <button type="button" onClick={creatSchedule}>
                     Adicionar
@@ -121,24 +233,45 @@ function Schedule() {
                   <tr>
                     <th>Data</th>
                     <th>Médico</th>
-                    {tipoUsuario !== 'patient' && <th>Status</th>}  {/* Oculta para paciente */}
-                    <th>Avaliação</th>
-                    <th>Paciente</th>
+                    {tipoUsuario !== 'patient' && <th>Paciente</th>}
+                    {tipoUsuario === 'patient' && <th>Status</th>}
                     <th>Pagamento</th>
+                    <th>Avaliação</th>
                     <th>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   {schedule.map((agenda) => (
                     <tr key={agenda.id} className="agendaCard">
-                      <td>{agenda.date}</td>
+                      <td>{agenda?.date ? formatarData(agenda.date) : ''}</td>
                       <td>{agenda.doctors?.nome}</td>
-                      {tipoUsuario !== 'patient' && <td>{agenda.status}</td>} {/* Oculta para paciente */}
-                      <td>{agenda.avaliacao}</td>
-                      <td>{agenda.patient_id}</td>
-                      <td>{agenda.payment_id}</td>
+
+                      {tipoUsuario !== 'patient' && <td>{agenda.patient?.nome}</td>}
+                      {tipoUsuario === 'patient' && <td>{agenda.statusPatient}</td>}
+
                       <td>
-                        {/* botões etc */}
+                        {tipoUsuario === 'patient'
+                          ? agenda.payment?.status || 'Reembolsado'
+                          : agenda.payment?.status || ''}
+                      </td>
+
+                      <td>{agenda.avaliacao}</td>
+
+                      <td>
+                        {tipoUsuario === 'patient'
+                          ? <button
+                            onClick={() => cancelarConsulta(agenda.id, agenda.payment_id)}
+                            disabled={agenda.statusPatient === 'Cancelada'}
+                          >
+                            Cancelar consulta
+                          </button>
+                          : <button
+                            onClick={() => delSchedule(agenda.id)}
+
+                          >
+                            Deletar                        </button>
+                        }
+
                       </td>
                     </tr>
                   ))}

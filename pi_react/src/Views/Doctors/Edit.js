@@ -150,29 +150,29 @@ function Doctor() { // Componente React Doctor
 
             <p>
               <label>Nome*</label>
-              <input id="nome" type="text" placeholder="Nome do titular" onChange={(e) => setDoctor({ ...doctor, nome: e.target.value })} disabled />
+              <input id="nome" type="text"  value={doctor.nome} disabled />
             </p>
 
             <p>
               <label>E-mail*</label>
-              <input id="email" type="email" placeholder="exemplo@email.com" onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} required />
+              <input id="email" type="email" value={doctor.email} onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} required />
             </p>
 
             <p>
               <label>CPF*</label>
-              <input id="cpf" type="text" placeholder="000.000.000-00" onChange={(e) => setDoctor({ ...doctor, cpf: e.target.value })}  disabled />
+              <input id="cpf" type="text" value={doctor.cpf}  disabled />
             </p>
 
             <p>
               <label>Número do CRM*</label>
-              <input id="numerodocrm" type="text" placeholder="CRM" onChange={(e) => setDoctor({ ...doctor, numeroCRM: e.target.value })}  disabled />
+              <input id="numerodocrm" type="text" value={doctor.numeroCRM}  disabled />
             </p>
 
             <p>
               <label>UF do CRM*</label>
               <select
                 value={doctor.ufCRM}
-                onChange={(e) => setDoctor({ ...doctor, ufCRM: e.target.value })}
+                
                  disabled
               >
                 <option value="">Selecione um estado</option>
@@ -207,17 +207,17 @@ function Doctor() { // Componente React Doctor
             </p>
             <p>
               <label>Data de Emissão*</label>
-              <input id="dataEmissao" type="date" onChange={(e) => setDoctor({ ...doctor, dataEmissaoCRM: e.target.value })}  disabled />
+              <input id="dataEmissao" type="date" value={doctor.dataEmissaoCRM}  disabled />
             </p>
 
             <p>
               <label>Telefone*</label>
-              <input id="telefone" type="text" placeholder="Insira o Telefone" onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} required />
+              <input id="telefone" type="text" value={doctor.telefone} onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} required />
             </p>
 
             <p>
               <label>Especialidade*</label>
-              <select value={doctor.especialidade_id} onChange={(e) => setDoctor({ ...doctor, especialidade_id: e.target.value })}  disabled>
+              <select value={doctor.especialidade_id}  disabled>
                 <option value="">Selecione uma especialidade</option>
                 {especialidade.map(
                   e => (
@@ -230,7 +230,7 @@ function Doctor() { // Componente React Doctor
 
             <p>
               <label>Resumo Profissional*</label>
-              <textarea rows="7" id="resumoProfissional" type='text' onChange={(e) => setDoctor({ ...doctor, resumoProfissional: e.target.value })} required />
+              <textarea rows="7" id="resumoProfissional" type='text' value={doctor.resumoProfissional} required />
             </p>
             <div className='upload'>
 
@@ -243,12 +243,7 @@ function Doctor() { // Componente React Doctor
                 {doctor.residencia?.map((file, index) => (
                   <div key={index} className="fileItem">
                     <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
-                      setDoctor(prev => ({
-                        ...prev,
-                        residencia: prev.residencia.filter((_, i) => i !== index)
-                      }));
-                    }}>Remover</button>
+                    
                   </div>
                 ))}
               </div>
@@ -262,12 +257,7 @@ function Doctor() { // Componente React Doctor
                 {doctor.diploma?.map((file, index) => (
                   <div key={index} className="fileItem">
                     <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
-                      setDoctor(prev => ({
-                        ...prev,
-                        diploma: prev.diploma.filter((_, i) => i !== index)
-                      }));
-                    }}>Remover</button>
+                    
                   </div>
                 ))}
               </div>
@@ -281,12 +271,7 @@ function Doctor() { // Componente React Doctor
                 {doctor.situacaoRegular?.map((file, index) => (
                   <div key={index} className="fileItem">
                     <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
-                      setDoctor(prev => ({
-                        ...prev,
-                        situacaoRegular: prev.situacaoRegular.filter((_, i) => i !== index)
-                      }));
-                    }}>Remover</button>
+                    
                   </div>
                 ))}
               </div>
@@ -300,22 +285,12 @@ function Doctor() { // Componente React Doctor
                 {doctor.fotoPerfil?.map((file, index) => (
                   <div key={index} className="fileItem">
                     <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
-                      setDoctor(prev => ({
-                        ...prev,
-                        fotoPerfil: prev.fotoPerfil.filter((_, i) => i !== index)
-                      }));
-                    }}>Remover</button>
+                    
                   </div>
                 ))}
               </div>
 
             </div>
-
-            <p>
-              <label>Senha*</label>
-              <input id="password" type="password" onChange={(e) => setDoctor({ ...doctor, senha: e.target.value })} required />
-            </p>
 
           <button className="buttonSucess" type="button" onClick={update} disabled={loading}>
             {loading ? "Salvando..." : "Salvar"} {/* Botão que mostra loading */}

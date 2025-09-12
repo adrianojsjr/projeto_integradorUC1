@@ -338,7 +338,7 @@ function User() { // componente principal User
       if (redirect) {
         nav(redirect, { replace: true });
       } else {
-        nav(tipoUsuario === 'doctor' ? `/doctors/edit/${uid}` : "/doctors", { replace: true });
+        nav(tipoUsuario === 'doctor' ? `/schedule/${uid}` : "/doctors", { replace: true });
       }
 
       setMsg("✅ Login realizado com sucesso!");
@@ -539,12 +539,12 @@ function User() { // componente principal User
                 {doctor.diploma?.map((file, index) => (
                   <div key={index} className="fileItem">
                     <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
+                    <button className='btnDelete' type="button" onClick={() => {
                       setDoctor(prev => ({
                         ...prev,
                         diploma: prev.diploma.filter((_, i) => i !== index)
                       }));
-                    }}>Remover</button>
+                    }}>❌ Remover</button>
                   </div>
                 ))}
               </div>
@@ -558,12 +558,12 @@ function User() { // componente principal User
                 {doctor.situacaoRegular?.map((file, index) => (
                   <div key={index} className="fileItem">
                     <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
+                    <button className='btnDelete' type="button" onClick={() => {
                       setDoctor(prev => ({
                         ...prev,
                         situacaoRegular: prev.situacaoRegular.filter((_, i) => i !== index)
                       }));
-                    }}>Remover</button>
+                    }}>❌ Remover</button>
                   </div>
                 ))}
               </div>
@@ -577,12 +577,12 @@ function User() { // componente principal User
                 {doctor.fotoPerfil?.map((file, index) => (
                   <div key={index} className="fileItem">
                     <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
+                    <button className='btnDelete' type="button" onClick={() => {
                       setDoctor(prev => ({
                         ...prev,
                         fotoPerfil: prev.fotoPerfil.filter((_, i) => i !== index)
                       }));
-                    }}>Remover</button>
+                    }}>❌ Remover</button>
                   </div>
                 ))}
               </div>
