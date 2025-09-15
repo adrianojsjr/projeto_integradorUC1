@@ -25,6 +25,7 @@ function Doctor() {
   const [filtro, setFiltro] = useState("");
 
 
+
   useEffect(() => {
     listarMedicos(); // Chama função para buscar todos os médicos
     listarEspecialidades();
@@ -224,13 +225,15 @@ function Doctor() {
 
                     <div className="dataDisponivel">
 
-                      {schedule.filter(agenda => agenda.doctor_id === medico.supra_id).length === 0 ? (
+                      {schedule.filter(agenda => agenda.doctor_id === medico.supra_id && agenda.status === "Disponível").length === 0 ? (
                         <p className="semConsulta">Nenhum horário disponível.</p>
                       ) : (
                         schedule
-                          .filter(agenda => agenda.doctor_id === medico.supra_id)
+                          .filter(agenda => agenda.doctor_id === medico.supra_id && agenda.status === "Disponível")
                           .map(agenda => (
-                            <button key={agenda.id} className="btnData" onClick={() => validarSessao(agenda.id, medico.supra_id)}> {formatarData(agenda.date)} </button>
+                            <button key={agenda.id} className="btnData" onClick={() => validarSessao(agenda.id, medico.supra_id)}>
+                              {formatarData(agenda.date)}
+                            </button>
                           ))
                       )}
 

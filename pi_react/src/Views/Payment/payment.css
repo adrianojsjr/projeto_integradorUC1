@@ -6,10 +6,112 @@ Verde: #33B291
 */
 
 
-.pagamento .formaPagamento{
-    background: white;
-    padding: 40px;
-    text-align: center;
+.consultaPagamento {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  
+}
+
+.infoConsultaPagamento {
+  display: flex;
+  flex-direction: column;
+  min-width: 320px;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+  align-items: center;
+}
+
+.infoConsultaPagamento img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--verde-agua);
+}
+
+.infoConsultaPagamento h3 {
+  color: var(--azul);
+  margin-bottom: 5px;
+}
+
+.infoConsultaPagamento p {
+  color: #333;
+  font-size: 16px;
+}
+
+.infoConsultaPagamento .btnGeral {
+  background-color: var(--verde-agua);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.infoConsultaPagamento .btnGeral:hover {
+  background-color: var(--verde);
+}
+
+/* Área de pagamento */
+.pagamento {
+  flex: 1;
+  min-width: 320px;
+  max-width: 500px;
+  background: #fff;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+
+.formaPagamento {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.formaPagamento label {
+  font-weight: 500;
+  color: var(--cinza-azulado);
+}
+
+.formaPagamento select {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--borda);
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.formaPagamento select:focus {
+  border-color: var(--azul);
+  box-shadow: 0 0 6px rgba(30, 90, 205, 0.3);
+}
+
+.cartaoPixBoleto h3{
+  text-align: center;
+}
+
+.cartaoPixBoleto img {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  border: 2px solid var(--borda);
+  border-radius: 8px;
+  padding: 8px;
+  background: #fafafa;
 }
 
 

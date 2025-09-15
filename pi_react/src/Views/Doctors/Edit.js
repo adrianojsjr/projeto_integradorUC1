@@ -101,7 +101,8 @@ function Doctor() { // Componente React Doctor
     window.location.reload(); // Recarrega a página
   }
 
-   const enviarArquivo = async (e, campo, pasta) => {
+  
+    const enviarArquivo = async (e, campo, pasta) => {
       const file = e.target.files[0];
       if (!file) return;
   
@@ -125,11 +126,12 @@ function Doctor() { // Componente React Doctor
           const prevFiles = Array.isArray(prev[campo]) ? prev[campo] : [];
           return {
             ...prev,
-            [campo]: [...prevFiles, { name: file.name, url: publicData.publicUrl }]
+            [campo]: [{ name: file.name, url: publicData.publicUrl }]
           };
         });
   
         setMsg("Upload realizado com sucesso!");
+        setTimeout(() => setMsg(""), 3000);
       } catch (err) {
         console.error("Erro ao fazer upload:", err.message);
         setMsg(`Erro: ${err.message}`);
@@ -148,32 +150,45 @@ function Doctor() { // Componente React Doctor
 
           <h3>Cadastro Médico</h3>
 
+          <p className='fotoPerfil'>  <img
+            src={doctor.fotoPerfil?.[0]?.url}
+
+          />
+          </p>
+
+          <div className='upload'>
+            <p>
+              <input type="file" id="uploadFoto" onChange={(e) => enviarArquivo(e, "fotoPerfil", "fotoPerfil")} />
+              <label htmlFor="uploadFoto" className="btnUpload"> Alterar Foto de Perfil</label>
+            </p>
+            </div>
+
             <p>
               <label>Nome*</label>
-              <input id="nome" type="text" placeholder="Nome do titular" onChange={(e) => setDoctor({ ...doctor, nome: e.target.value })} disabled />
+              <input id="nome" type="text" value={doctor.nome} disabled />
             </p>
 
             <p>
               <label>E-mail*</label>
-              <input id="email" type="email" placeholder="exemplo@email.com" onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} required />
+              <input id="email" type="email" value={doctor.email} onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} required />
             </p>
 
             <p>
               <label>CPF*</label>
-              <input id="cpf" type="text" placeholder="000.000.000-00" onChange={(e) => setDoctor({ ...doctor, cpf: e.target.value })}  disabled />
+              <input id="cpf" type="text" value={doctor.cpf} disabled />
             </p>
 
             <p>
               <label>Número do CRM*</label>
-              <input id="numerodocrm" type="text" placeholder="CRM" onChange={(e) => setDoctor({ ...doctor, numeroCRM: e.target.value })}  disabled />
+              <input id="numerodocrm" type="text" value={doctor.numeroCRM} disabled />
             </p>
 
             <p>
               <label>UF do CRM*</label>
               <select
                 value={doctor.ufCRM}
-                onChange={(e) => setDoctor({ ...doctor, ufCRM: e.target.value })}
-                 disabled
+
+                disabled
               >
                 <option value="">Selecione um estado</option>
                 <option value="AC">AC</option>
@@ -207,17 +222,17 @@ function Doctor() { // Componente React Doctor
             </p>
             <p>
               <label>Data de Emissão*</label>
-              <input id="dataEmissao" type="date" onChange={(e) => setDoctor({ ...doctor, dataEmissaoCRM: e.target.value })}  disabled />
+              <input id="dataEmissao" type="date" value={doctor.dataEmissaoCRM} disabled />
             </p>
 
             <p>
               <label>Telefone*</label>
-              <input id="telefone" type="text" placeholder="Insira o Telefone" onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} required />
+              <input id="telefone" type="text" value={doctor.telefone} onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} required />
             </p>
 
             <p>
               <label>Especialidade*</label>
-              <select value={doctor.especialidade_id} onChange={(e) => setDoctor({ ...doctor, especialidade_id: e.target.value })}  disabled>
+              <select value={doctor.especialidade_id} disabled>
                 <option value="">Selecione uma especialidade</option>
                 {especialidade.map(
                   e => (
@@ -230,100 +245,16 @@ function Doctor() { // Componente React Doctor
 
             <p>
               <label>Resumo Profissional*</label>
-              <textarea rows="7" id="resumoProfissional" type='text' onChange={(e) => setDoctor({ ...doctor, resumoProfissional: e.target.value })} required />
-            </p>
-            <div className='upload'>
-
-              {/* Comprovante de residência */}
-              <p>
-                <input type="file" id="uploadResidencia" onChange={(e) => enviarArquivo(e, "residencia", "residencias")} />
-                <label htmlFor="uploadResidencia" className="btnUpload">Enviar comprovante de residência*</label>
-              </p>
-              <div className="uploadedFiles">
-                {doctor.residencia?.map((file, index) => (
-                  <div key={index} className="fileItem">
-                    <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
-                      setDoctor(prev => ({
-                        ...prev,
-                        residencia: prev.residencia.filter((_, i) => i !== index)
-                      }));
-                    }}>Remover</button>
-                  </div>
-                ))}
-              </div>
-
-              {/* Diploma acadêmico */}
-              <p>
-                <input type="file" id="uploadDiploma" onChange={(e) => enviarArquivo(e, "diploma", "diplomas")} />
-                <label htmlFor="uploadDiploma" className="btnUpload">Anexar diploma acadêmico*</label>
-              </p>
-              <div className="uploadedFiles">
-                {doctor.diploma?.map((file, index) => (
-                  <div key={index} className="fileItem">
-                    <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
-                      setDoctor(prev => ({
-                        ...prev,
-                        diploma: prev.diploma.filter((_, i) => i !== index)
-                      }));
-                    }}>Remover</button>
-                  </div>
-                ))}
-              </div>
-
-              {/* Comprovante de situação regular */}
-              <p>
-                <input type="file" id="uploadComprovante" onChange={(e) => enviarArquivo(e, "situacaoRegular", "situacaoRegular")} />
-                <label htmlFor="uploadComprovante" className="btnUpload">Comprovante de situação regular*</label>
-              </p>
-              <div className="uploadedFiles">
-                {doctor.situacaoRegular?.map((file, index) => (
-                  <div key={index} className="fileItem">
-                    <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
-                      setDoctor(prev => ({
-                        ...prev,
-                        situacaoRegular: prev.situacaoRegular.filter((_, i) => i !== index)
-                      }));
-                    }}>Remover</button>
-                  </div>
-                ))}
-              </div>
-
-              {/* Foto de perfil */}
-              <p>
-                <input type="file" id="uploadFoto" onChange={(e) => enviarArquivo(e, "fotoPerfil", "fotoPerfil")} />
-                <label htmlFor="uploadFoto" className="btnUpload">Foto de Perfil*</label>
-              </p>
-              <div className="uploadedFiles">
-                {doctor.fotoPerfil?.map((file, index) => (
-                  <div key={index} className="fileItem">
-                    <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
-                      setDoctor(prev => ({
-                        ...prev,
-                        fotoPerfil: prev.fotoPerfil.filter((_, i) => i !== index)
-                      }));
-                    }}>Remover</button>
-                  </div>
-                ))}
-              </div>
-
-            </div>
-
-            <p>
-              <label>Senha*</label>
-              <input id="password" type="password" onChange={(e) => setDoctor({ ...doctor, senha: e.target.value })} required />
+              <textarea rows="7" id="resumoProfissional" type='text' value={doctor.resumoProfissional} required />
             </p>
 
-          <button className="buttonSucess" type="button" onClick={update} disabled={loading}>
-            {loading ? "Salvando..." : "Salvar"} {/* Botão que mostra loading */}
-          </button>
+            <button className="buttonSucess" type="button" onClick={update} disabled={loading}>
+              {loading ? "Salvando..." : "Salvar"} {/* Botão que mostra loading */}
+            </button>
 
-          <button className="buttonLogout" type="button" onClick={logout}>
-            Sair
-          </button>
+            <button className="buttonLogout" type="button" onClick={logout}>
+              Sair
+            </button>
 
         </form>
       </div>

@@ -66,27 +66,87 @@ function User() { // componente principal User
 
   }
 
+  function validarCRM(crm) {
+    // Só letras maiúsculas, números e traço
+    const regex = /^[A-Z0-9\-]+$/i;
+    if (!crm) return false; // obrigatório
+    if (crm.length < 4 || crm.length > 10) return false; // tamanho
+
+    if (!regex.test(crm)) return false; // caracteres inválidos
+
+    return true;
+  }
+
+  function validarCPF(cpf) {
+    cpf = cpf.replace(/[^\d]+/g, ""); // Remove caracteres não numéricos
+
+    if (cpf.length !== 11) return false;
+
+    // Elimina CPFs com todos dígitos iguais
+    if (/^(\d)\1{10}$/.test(cpf)) return false;
+
+    // Valida primeiro dígito verificador
+    let soma = 0;
+    for (let i = 0; i < 9; i++) {
+      soma += parseInt(cpf.charAt(i)) * (10 - i);
+    }
+    let resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.charAt(9))) return false;
+
+    // Valida segundo dígito verificador
+    soma = 0;
+    for (let i = 0; i < 10; i++) {
+      soma += parseInt(cpf.charAt(i)) * (11 - i);
+    }
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.charAt(10))) return false;
+
+    return true;
+  }
+
+
 
   // função de cadastro de médico
   async function register() {
     // validação antes de chamar o Supabase
-    if (
-      !doctor.nome ||
-      !doctor.email ||
-      !doctor.senha ||
-      !doctor.cpf ||
-      !doctor.telefone ||
-      !doctor.numeroCRM ||
-      !doctor.ufCRM ||
-      !doctor.dataEmissaoCRM ||
-      !doctor.especialidade_id ||
-      !doctor.resumoProfissional ||
-      !doctor.residencia ||
-      !doctor.diploma ||
-      !doctor.situacaoRegular ||
-      !doctor.fotoPerfil
-    ) {
-      setMsg("⚠️ Há campos obrigatórios que precisam ser preenchidos!");
+    const camposFaltando = [];
+
+    if (!doctor.nome || doctor.nome.trim() === "") camposFaltando.push("Nome");
+    else if (/\d/.test(doctor.nome)) camposFaltando.push("Nome (não pode conter números)");
+
+    if (!doctor.email) camposFaltando.push("Email");
+    if (!doctor.senha) camposFaltando.push("Senha");
+    if (!doctor.cpf) camposFaltando.push("CPF");
+    if (!doctor.telefone) camposFaltando.push("Telefone");
+    if (!doctor.numeroCRM) camposFaltando.push("Número do CRM");
+    if (!doctor.ufCRM) camposFaltando.push("UF do CRM");
+    if (!doctor.dataEmissaoCRM) camposFaltando.push("Data de Emissão do CRM");
+    if (!doctor.especialidade_id) camposFaltando.push("Especialidade");
+    if (!doctor.resumoProfissional) camposFaltando.push("Resumo Profissional");
+
+    if (doctor.residencia.length === 0) camposFaltando.push("Comprovante de Residência");
+    if (doctor.diploma.length === 0) camposFaltando.push("Diploma Acadêmico");
+    if (doctor.situacaoRegular.length === 0) camposFaltando.push("Comprovante de Situação Regular");
+    if (doctor.fotoPerfil.length === 0) camposFaltando.push("Foto de Perfil");
+
+    if (camposFaltando.length > 0) {
+      setMsg(`⚠️ Preencha os seguintes campos obrigatórios:\n- ${camposFaltando.join("\n- ")}`);
+      setTimeout(() => setMsg(""), 7000);
+      return;
+    }
+
+
+
+    if (!emailValido(doctor.email)) {
+      setMsg("❌ E-mail inválido. Verifique o endereço digitado.");
+      setTimeout(() => setMsg(""), 4000);
+      return;
+    }
+
+    if (!validarCPF(doctor.cpf)) {
+      setMsg("⚠️ CPF inválido!");
       setTimeout(() => setMsg(""), 5000);
       return;
     }
@@ -94,14 +154,13 @@ function User() { // componente principal User
     setLoading(true);
 
     try {
-      // cria usuário no Supabase Auth
       let { data, error } = await supabase.auth.signUp({
         email: doctor.email,
         password: doctor.senha
       });
       if (error) {
-        // tratamento específico para email já cadastrado
-        if (error.message.includes("already registered")) {
+        console.log("Erro no cadastro do médico:", error.message);
+        if (error.message.toLowerCase().includes("already registered") || error.message.toLowerCase().includes("duplicate")) {
           setMsg("❌ Este e-mail já está cadastrado!");
           setTimeout(() => setMsg(""), 5000);
           setLoading(false);
@@ -110,14 +169,24 @@ function User() { // componente principal User
           throw error;
         }
       }
+
       const uid = data?.user?.id;
 
-      //remove campos que não existem na tabela
+      // Verifica se já existe registro na tabela doctors com esse supra_id
+      let { data: existingDoctor, error: errCheck } = await supabase
+        .from("doctors")
+        .select("supra_id")
+        .eq("supra_id", uid)
+        .single();
 
-      delete doctor.senha
+      if (existingDoctor) {
+        setMsg("❌ Este e-mail já está cadastrado!");
+        setLoading(false);
+        return;
+      }
 
+      delete doctor.senha;
 
-      // insere dados do médico na tabela, incluindo URLs de arquivos
       let { error: eD } = await supabase
         .from("doctors")
         .insert([{
@@ -133,13 +202,12 @@ function User() { // componente principal User
 
     } catch (e) {
       setMsg(`❌ Error: ${e.message}`);
-      console.log(e.message)
+      console.log(e.message);
     }
 
     setLoading(false);
     setTimeout(() => setMsg(""), 5000);
   }
-
   // função de cadastro de paciente
   async function registerPatient() {
     if (
@@ -150,6 +218,18 @@ function User() { // componente principal User
       !patient.telefone
     ) {
       setMsg("⚠️ Há campos obrigatórios que precisam ser preenchidos!");
+      setTimeout(() => setMsg(""), 5000);
+      return;
+    }
+
+    if (!emailValido(patient.email)) {
+      setMsg("❌ E-mail inválido. Verifique o endereço digitado.");
+      setTimeout(() => setMsg(""), 5000);
+      return;
+    }
+
+    if (!validarCPF(patient.cpf)) {
+      setMsg("⚠️ CPF inválido!");
       setTimeout(() => setMsg(""), 5000);
       return;
     }
@@ -176,7 +256,7 @@ function User() { // componente principal User
             nome: patient.nome,
             cpf: patient.cpf,
             ativo: true,
-            
+
           }
         ]);
 
@@ -196,67 +276,82 @@ function User() { // componente principal User
     setTimeout(() => setMsg(""), 5000);
   }
 
-async function logar() {
-  setLoading(true);
-  try {
-    // Verifica se o email existe em doctors
-    let { data: doctorExists } = await supabase
-      .from('doctors')
-      .select('supra_id')
-      .eq('email', doctor.email)
-      .single();
-
-    // Verifica se o email existe em patients
-    let { data: patientExists } = await supabase
-      .from('patients')
-      .select('supra_id')
-      .eq('email', doctor.email)
-      .single();
-
-    // Se não existir em nenhum, redireciona para cadastro
-    if (!doctorExists && !patientExists) {
-      setMsg("❌ Email não cadastrado. Redirecionando para cadastro...");
-      setLoading(false);
-      nav('/cadastro'); // Ajuste essa rota para sua página de cadastro
-      return;
-    }
-
-    // Caso exista, segue o fluxo normal de login
-    let { data, error } = await supabase.auth.signInWithPassword({
-      email: doctor.email,
-      password: doctor.senha
-    });
-
-    if (error) throw error;
-
-    const uid = data.user.id;
-
-    let tipoUsuario = doctorExists ? 'doctor' : 'patient';
-
-    localStorage.setItem('tipoUsuario', tipoUsuario);
-    localStorage.setItem('supaSession', data.session);
-
-    // Redireciona para a tela original, se existir parâmetro redirect
-    const params = new URLSearchParams(location.search);
-    const redirect = params.get("redirect");
-
-    if (redirect) {
-      nav(redirect, { replace: true });
-    } else {
-      if (tipoUsuario === 'doctor') {
-        nav(`/doctors/edit/${uid}`, { replace: true });
-      } else {
-        nav("/doctors", { replace: true });
-      }
-    }
-
-    setMsg("Login realizado com sucesso!");
-  } catch (err) {
-    setMsg("Error: " + err.message);
+  function emailValido(email) {
+    // Regex simples e funcional
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
   }
-  setLoading(false);
-  window.location.reload();
-}
+
+  async function logar() {
+    setLoading(true);
+    try {
+      // Verifica se o email existe em doctors
+      let { data: doctorExists } = await supabase
+        .from('doctors')
+        .select('supra_id')
+        .eq('email', doctor.email)
+        .single();
+
+      // Verifica se o email existe em patients
+      let { data: patientExists } = await supabase
+        .from('patients')
+        .select('supra_id')
+        .eq('email', doctor.email)
+        .single();
+
+      // Se não existir em nenhum, redireciona para cadastro
+      if (!doctorExists && !patientExists) {
+        setMsg("❌ Email não cadastrado");
+        setLoading(false);
+        setTimeout(() => setMsg(""), 4000);
+        nav('/user');
+        return;
+      }
+
+      // Login com Supabase Auth
+      let { data, error } = await supabase.auth.signInWithPassword({
+        email: doctor.email,
+        password: doctor.senha
+      });
+
+      if (error) {
+        // erro de login (senha errada, conta não confirmada etc.)
+        if (error.message === "Invalid login credentials") {
+          setMsg("❌ Email ou senha incorretos.");
+        } else {
+          setMsg("❌ Erro ao tentar logar: " + error.message);
+        }
+        setLoading(false);
+        setTimeout(() => setMsg(""), 4000);
+        return;
+      }
+
+      const uid = data.user.id;
+      const tipoUsuario = doctorExists ? 'doctor' : 'patient';
+
+      localStorage.setItem('tipoUsuario', tipoUsuario);
+      localStorage.setItem('supaSession', data.session);
+
+      const params = new URLSearchParams(location.search);
+      const redirect = params.get("redirect");
+
+      if (redirect) {
+        nav(redirect, { replace: true });
+      } else {
+        nav(tipoUsuario === 'doctor' ? `/schedule/${uid}` : "/doctors", { replace: true });
+      }
+
+      setMsg("✅ Login realizado com sucesso!");
+      setTimeout(() => setMsg(""), 4000);
+
+      window.location.reload();
+    } catch (err) {
+      setMsg("❌ Ocorreu um erro inesperado: " + err.message);
+      setTimeout(() => setMsg(""), 4000);
+    } finally {
+      setLoading(false);
+    }
+  }
 
 
   const enviarArquivo = async (e, campo, pasta) => {
@@ -283,11 +378,12 @@ async function logar() {
         const prevFiles = Array.isArray(prev[campo]) ? prev[campo] : [];
         return {
           ...prev,
-          [campo]: [...prevFiles, { name: file.name, url: publicData.publicUrl }]
+          [campo]: [{ name: file.name, url: publicData.publicUrl }]
         };
       });
 
       setMsg("Upload realizado com sucesso!");
+      setTimeout(() => setMsg(""), 3000);
     } catch (err) {
       console.error("Erro ao fazer upload:", err.message);
       setMsg(`Erro: ${err.message}`);
@@ -328,6 +424,36 @@ async function logar() {
               <p>Cadastre-se agora e comece a atender online de forma rápida, prática e sem burocracia.</p>
             </div>
             <h3>Cadastro Médico</h3>
+
+            <p className='fotoPerfil'>  <img
+              src={doctor.fotoPerfil?.[0]?.url}
+
+            />
+            </p>
+
+            <div className='upload'>
+              <p>
+                <input type="file" id="uploadFoto" onChange={(e) => enviarArquivo(e, "fotoPerfil", "fotoPerfil")} />
+                <label htmlFor="uploadFoto" className="btnUpload">Enviar Foto de Perfil*</label>
+              </p>
+
+              <div className="uploadedFiles">
+                {doctor.fotoPerfil?.map((file, index) => (
+                  <div key={index} className="fileItem">
+                    <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
+                    <button className='btnDelete' type="button" onClick={() => {
+                      setDoctor(prev => ({
+                        ...prev,
+                        fotoPerfil: prev.fotoPerfil.filter((_, i) => i !== index)
+                      }));
+                    }}>❌ Remover</button>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+
+
 
             <p>
               <label>Nome*</label>
@@ -424,12 +550,12 @@ async function logar() {
                 {doctor.residencia?.map((file, index) => (
                   <div key={index} className="fileItem">
                     <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
+                    <button className='btnDelete' type="button" onClick={() => {
                       setDoctor(prev => ({
                         ...prev,
                         residencia: prev.residencia.filter((_, i) => i !== index)
                       }));
-                    }}>Remover</button>
+                    }}>❌ Remover</button>
                   </div>
                 ))}
               </div>
@@ -443,12 +569,12 @@ async function logar() {
                 {doctor.diploma?.map((file, index) => (
                   <div key={index} className="fileItem">
                     <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
+                    <button className='btnDelete' type="button" onClick={() => {
                       setDoctor(prev => ({
                         ...prev,
                         diploma: prev.diploma.filter((_, i) => i !== index)
                       }));
-                    }}>Remover</button>
+                    }}>❌ Remover</button>
                   </div>
                 ))}
               </div>
@@ -462,34 +588,17 @@ async function logar() {
                 {doctor.situacaoRegular?.map((file, index) => (
                   <div key={index} className="fileItem">
                     <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
+                    <button className='btnDelete' type="button" onClick={() => {
                       setDoctor(prev => ({
                         ...prev,
                         situacaoRegular: prev.situacaoRegular.filter((_, i) => i !== index)
                       }));
-                    }}>Remover</button>
+                    }}>❌ Remover</button>
                   </div>
                 ))}
               </div>
 
-              {/* Foto de perfil */}
-              <p>
-                <input type="file" id="uploadFoto" onChange={(e) => enviarArquivo(e, "fotoPerfil", "fotoPerfil")} />
-                <label htmlFor="uploadFoto" className="btnUpload">Foto de Perfil*</label>
-              </p>
-              <div className="uploadedFiles">
-                {doctor.fotoPerfil?.map((file, index) => (
-                  <div key={index} className="fileItem">
-                    <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button type="button" onClick={() => {
-                      setDoctor(prev => ({
-                        ...prev,
-                        fotoPerfil: prev.fotoPerfil.filter((_, i) => i !== index)
-                      }));
-                    }}>Remover</button>
-                  </div>
-                ))}
-              </div>
+
 
             </div>
 
