@@ -1,39 +1,40 @@
 :root {
-  --azul: #1e5acd;
-  --cinza-azulado: #40566e;
-  --verde-agua: #11b5ba;
-  --verde: #33B291;
-  --borda: #dce3ec;
+    --azul: #1e5acd;
+    --cinza-azulado: #40566e;
+    --verde-agua: #11b5ba;
+    --verde: #33B291;
+    --borda: #dce3ec;
 }
 
 /*Texto de apresentação da plataforma*/
 
 .apresentacaoPlataforma {
-  text-align: center;
-  padding: 30px 20px;
-  margin: 20px auto;
-  background-color: #f5faff;
-  border-radius: 12px;
-  max-width: 800px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    padding: 30px 20px;
+    margin: 20px auto;
+    background-color: #f5faff;
+    border-radius: 12px;
+    max-width: 800px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .apresentacaoPlataforma h2 {
-  color: #007BFF;
-  font-size: 26px;
-  margin-bottom: 10px;
+    color: #007BFF;
+    font-size: 26px;
+    margin-bottom: 10px;
 }
 
 .apresentacaoPlataforma p {
-  color: #333;
-  font-size: 16px;
-  line-height: 1.6;
-  margin: 10px 0;
+    color: #333;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 10px 0;
 }
 
 .apresentacaoPlataforma strong {
-  color: #00856F; /* verde suave para destaque */
+    color: #00856F;
+    /* verde suave para destaque */
 }
 
 /*Card com as infos da consulta*/
@@ -45,7 +46,7 @@
     gap: 30px;
     background-color: white;
     border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 /*img, nome, especialidade e btn ver mais*/
@@ -58,16 +59,22 @@
     padding: 30px;
 }
 
-.cardInfoConsulta .infoConsulta img{
-   
-    width: 150px;
-    height: 150px;
+.cardInfoConsulta .infoConsulta img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--verde-agua);
 }
 
 
 .detalhesMedico img {
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--verde-agua);
+    margin-left: 50px;
 }
 
 
@@ -150,7 +157,7 @@
     box-shadow: 0 0 6px rgba(37, 99, 235, 0.5);
 }
 
-.dadosGeraisConsulta{
+.dadosGeraisConsulta {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -163,4 +170,3 @@
 
 
 }
-

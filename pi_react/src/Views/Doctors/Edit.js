@@ -101,7 +101,8 @@ function Doctor() { // Componente React Doctor
     window.location.reload(); // Recarrega a página
   }
 
-   const enviarArquivo = async (e, campo, pasta) => {
+  
+    const enviarArquivo = async (e, campo, pasta) => {
       const file = e.target.files[0];
       if (!file) return;
   
@@ -125,11 +126,12 @@ function Doctor() { // Componente React Doctor
           const prevFiles = Array.isArray(prev[campo]) ? prev[campo] : [];
           return {
             ...prev,
-            [campo]: [...prevFiles, { name: file.name, url: publicData.publicUrl }]
+            [campo]: [{ name: file.name, url: publicData.publicUrl }]
           };
         });
   
         setMsg("Upload realizado com sucesso!");
+        setTimeout(() => setMsg(""), 3000);
       } catch (err) {
         console.error("Erro ao fazer upload:", err.message);
         setMsg(`Erro: ${err.message}`);
@@ -148,9 +150,22 @@ function Doctor() { // Componente React Doctor
 
           <h3>Cadastro Médico</h3>
 
+          <p className='fotoPerfil'>  <img
+            src={doctor.fotoPerfil?.[0]?.url}
+
+          />
+          </p>
+
+          <div className='upload'>
+            <p>
+              <input type="file" id="uploadFoto" onChange={(e) => enviarArquivo(e, "fotoPerfil", "fotoPerfil")} />
+              <label htmlFor="uploadFoto" className="btnUpload"> Alterar Foto de Perfil</label>
+            </p>
+            </div>
+
             <p>
               <label>Nome*</label>
-              <input id="nome" type="text"  value={doctor.nome} disabled />
+              <input id="nome" type="text" value={doctor.nome} disabled />
             </p>
 
             <p>
@@ -160,20 +175,20 @@ function Doctor() { // Componente React Doctor
 
             <p>
               <label>CPF*</label>
-              <input id="cpf" type="text" value={doctor.cpf}  disabled />
+              <input id="cpf" type="text" value={doctor.cpf} disabled />
             </p>
 
             <p>
               <label>Número do CRM*</label>
-              <input id="numerodocrm" type="text" value={doctor.numeroCRM}  disabled />
+              <input id="numerodocrm" type="text" value={doctor.numeroCRM} disabled />
             </p>
 
             <p>
               <label>UF do CRM*</label>
               <select
                 value={doctor.ufCRM}
-                
-                 disabled
+
+                disabled
               >
                 <option value="">Selecione um estado</option>
                 <option value="AC">AC</option>
@@ -207,7 +222,7 @@ function Doctor() { // Componente React Doctor
             </p>
             <p>
               <label>Data de Emissão*</label>
-              <input id="dataEmissao" type="date" value={doctor.dataEmissaoCRM}  disabled />
+              <input id="dataEmissao" type="date" value={doctor.dataEmissaoCRM} disabled />
             </p>
 
             <p>
@@ -217,7 +232,7 @@ function Doctor() { // Componente React Doctor
 
             <p>
               <label>Especialidade*</label>
-              <select value={doctor.especialidade_id}  disabled>
+              <select value={doctor.especialidade_id} disabled>
                 <option value="">Selecione uma especialidade</option>
                 {especialidade.map(
                   e => (
@@ -232,73 +247,14 @@ function Doctor() { // Componente React Doctor
               <label>Resumo Profissional*</label>
               <textarea rows="7" id="resumoProfissional" type='text' value={doctor.resumoProfissional} required />
             </p>
-            <div className='upload'>
 
-              {/* Comprovante de residência */}
-              <p>
-                <input type="file" id="uploadResidencia" onChange={(e) => enviarArquivo(e, "residencia", "residencias")} />
-                <label htmlFor="uploadResidencia" className="btnUpload">Enviar comprovante de residência*</label>
-              </p>
-              <div className="uploadedFiles">
-                {doctor.residencia?.map((file, index) => (
-                  <div key={index} className="fileItem">
-                    <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    
-                  </div>
-                ))}
-              </div>
+            <button className="buttonSucess" type="button" onClick={update} disabled={loading}>
+              {loading ? "Salvando..." : "Salvar"} {/* Botão que mostra loading */}
+            </button>
 
-              {/* Diploma acadêmico */}
-              <p>
-                <input type="file" id="uploadDiploma" onChange={(e) => enviarArquivo(e, "diploma", "diplomas")} />
-                <label htmlFor="uploadDiploma" className="btnUpload">Anexar diploma acadêmico*</label>
-              </p>
-              <div className="uploadedFiles">
-                {doctor.diploma?.map((file, index) => (
-                  <div key={index} className="fileItem">
-                    <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    
-                  </div>
-                ))}
-              </div>
-
-              {/* Comprovante de situação regular */}
-              <p>
-                <input type="file" id="uploadComprovante" onChange={(e) => enviarArquivo(e, "situacaoRegular", "situacaoRegular")} />
-                <label htmlFor="uploadComprovante" className="btnUpload">Comprovante de situação regular*</label>
-              </p>
-              <div className="uploadedFiles">
-                {doctor.situacaoRegular?.map((file, index) => (
-                  <div key={index} className="fileItem">
-                    <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    
-                  </div>
-                ))}
-              </div>
-
-              {/* Foto de perfil */}
-              <p>
-                <input type="file" id="uploadFoto" onChange={(e) => enviarArquivo(e, "fotoPerfil", "fotoPerfil")} />
-                <label htmlFor="uploadFoto" className="btnUpload">Foto de Perfil*</label>
-              </p>
-              <div className="uploadedFiles">
-                {doctor.fotoPerfil?.map((file, index) => (
-                  <div key={index} className="fileItem">
-                    <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    
-                  </div>
-                ))}
-              </div>
-
-            </div>
-
-          <button className="buttonSucess" type="button" onClick={update} disabled={loading}>
-            {loading ? "Salvando..." : "Salvar"} {/* Botão que mostra loading */}
-          </button>
-
-          <button className="buttonLogout" type="button" onClick={logout}>
-            Sair
-          </button>
+            <button className="buttonLogout" type="button" onClick={logout}>
+              Sair
+            </button>
 
         </form>
       </div>

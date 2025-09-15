@@ -2,7 +2,7 @@
 //import './Style.css';
 
 import { useEffect, useState } from 'react';
-import { replace, useNavigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
 import Button from 'react-bootstrap/Button';
 
@@ -91,7 +91,11 @@ function PaymentCreate() {
     }
   }
 
+
+
   function formatarData(data) {
+   
+
     const date = new Date(data)
 
     const dataFormatada =
@@ -114,48 +118,48 @@ function PaymentCreate() {
     //poderia ser também return dataFormatada + ' ' + horaFormatada;
   }
 
-async function updateSchedule(idPagamento) {
-  const { data: dU } = await supabase.auth.getUser();
-  const uid = dU?.user?.id;
-
-  // Atualiza no banco como indisponível
-  const { data, error } = await supabase
-    .from('schedule')
-    .update({ status: 'Indisponível', statusPatient:"Agendada", patient_id: uid, payment_id: idPagamento })
-    .eq('id', scheduleId)
-    .select()
-    .single();
-
-  if (error) {
-    console.error('Erro ao atualizar agendamento:', error);
-    return;
-  }
-
-  // Atualiza estado local para mostrar "Agendado" ao paciente
-  setAgenda(prev => ({ ...prev, displayStatus: 'Agendado', patient_id: uid, payment_id: idPagamento }));
-
-  console.log('Agenda atualizada no banco e exibida como agendada para paciente:', data);
-}
-
-async function updatePayment(idPagamento) {
-  const { dataP, errorP } = await supabase
-    .from('payment')
-    .update({ status: 'Pago' })
-    .eq('id', idPagamento)
-    .select()
-    .single();
-
-  if (errorP) {
-    console.error('Erro ao atualizar pagamento', errorP);
-  } else {
-    console.log("Pagamento atualizado:", dataP);
-
-    // Atualiza estado local do agendamento também
+  async function updateSchedule(idPagamento) {
     const { data: dU } = await supabase.auth.getUser();
     const uid = dU?.user?.id;
+
+    // Atualiza no banco como indisponível
+    const { data, error } = await supabase
+      .from('schedule')
+      .update({ status: 'Indisponível', statusPatient: "Agendada", patient_id: uid, payment_id: idPagamento })
+      .eq('id', scheduleId)
+      .select('*')
+      .single();
+
+    if (error) {
+      console.error('Erro ao atualizar agendamento:', error);
+      return;
+    }
+
+    // Atualiza estado local para mostrar "Agendado" ao paciente
     setAgenda(prev => ({ ...prev, displayStatus: 'Agendado', patient_id: uid, payment_id: idPagamento }));
+
+    console.log('Agenda atualizada no banco e exibida como agendada para paciente:', data);
   }
-}
+
+  async function updatePayment(idPagamento) {
+    const { dataP, errorP } = await supabase
+      .from('payment')
+      .update({ status: 'Pago' })
+      .eq('id', idPagamento)
+      .select('*')
+      .single();
+
+    if (errorP) {
+      console.error('Erro ao atualizar pagamento', errorP);
+    } else {
+      console.log("Pagamento atualizado:", dataP);
+
+      // Atualiza estado local do agendamento também
+      const { data: dU } = await supabase.auth.getUser();
+      const uid = dU?.user?.id;
+      setAgenda(prev => ({ ...prev, displayStatus: 'Agendado', patient_id: uid, payment_id: idPagamento }));
+    }
+  }
 
   async function finalizarAgendamento() {
     const idPagamento = await fazerPagamento();
@@ -174,9 +178,9 @@ async function updatePayment(idPagamento) {
 
   return (
     <div className="alinhamentoPagina">
-      <div className='cardInfoConsulta'>
+      <div className='consultaPagamento'>
 
-        <div className='infoConsulta'>
+        <div className='infoConsultaPagamento'>
 
           <h3>Resumo da Consulta</h3>
           <img
@@ -193,97 +197,97 @@ async function updatePayment(idPagamento) {
           </button>
 
         </div>
+        <div className="pagamento">
 
-      </div>
+          <form className='formaPagamento'>
+            <label >Escolha a forma de pagamento:</label>
+            <select
+              value={payment.tipo_pagamento}
+              onChange={(e) => setPayment({ ...payment, tipo_pagamento: e.target.value })}
+              required
+            >
+              <option value="">Selecione...</option>
+              <option value="cartao">Cartão de Crédito</option>
+              <option value="pix">Pix</option>
+              <option value="boleto">Boleto</option>
+            </select>
+          </form>
 
-      <div className="pagamento">
+          {payment.tipo_pagamento === 'cartao' && (
+            <div className="cartaoPixBoleto">
+              <h3>Pagamento com Cartão</h3>
+              <form>
+                <label>Nome completo</label>
+                <input type="text" id="nome" placeholder="Nome do titular" required />
 
-        <form className='formaPagamento'>
-          <label >Escolha a forma de pagamento:</label>
-          <select
-            value={payment.tipo_pagamento}
-            onChange={(e) => setPayment({ ...payment, tipo_pagamento: e.target.value })}
-            required
-          >
-            <option value="">Selecione...</option>
-            <option value="cartao">Cartão de Crédito</option>
-            <option value="pix">Pix</option>
-            <option value="boleto">Boleto</option>
-          </select>
-        </form>
+                <label>CPF</label>
+                <input type="text" id="cpf" placeholder="000.000.000-00" required />
 
-        {payment.tipo_pagamento === 'cartao' && (
-          <div className="cartaoPixBoleto">
-            <h3>Pagamento com Cartão</h3>
-            <form>
-              <label>Nome completo</label>
-              <input type="text" id="nome" placeholder="Nome do titular" required />
+                <label>Número do Cartão</label>
+                <input type="text" id="numero" placeholder="XXXX XXXX XXXX XXXX" required />
 
-              <label>CPF</label>
-              <input type="text" id="cpf" placeholder="000.000.000-00" required />
+                <div className="validadeCVV">
+                  <div className="cartaoValidade">
+                    <label>Validade</label>
+                    <input type="text" id="validade" placeholder="MM/AA" required />
+                  </div>
 
-              <label>Número do Cartão</label>
-              <input type="text" id="numero" placeholder="XXXX XXXX XXXX XXXX" required />
-
-              <div className="validadeCVV">
-                <div className="cartaoValidade">
-                  <label>Validade</label>
-                  <input type="text" id="validade" placeholder="MM/AA" required />
+                  <div className="cartaoCVV">
+                    <label>CVV</label>
+                    <input type="text" id="cvv" placeholder="123" required />
+                  </div>
                 </div>
 
-                <div className="cartaoCVV">
-                  <label>CVV</label>
-                  <input type="text" id="cvv" placeholder="123" required />
-                </div>
-              </div>
+                <button className='btnGeral'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    finalizarAgendamento();
+                  }}
+                >
+                  Confirmar pagamento
+                </button>
+              </form>
+            </div>
+          )}
+          {payment.tipo_pagamento === 'pix' && (
+            <div className="cartaoPixBoleto">
+              <h3>Pagamento por Pix</h3>
 
-              <button className='btnGeral'
-                onClick={(e) => {
-                  e.preventDefault();
-                  finalizarAgendamento();
-                }}
-              >
-                Confirmar pagamento
+              <p>Escaneie o QR Code abaixo para realizar o pagamento:</p>
+              <img
+                src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=pagamento-fake"
+                alt="QR Code Pix"
+              />
+              <p>Ou copie a chave Pix: <strong>pagamento@consulta.com</strong></p>
+
+              <button className='btnGeral' type="button" onClick={(e) => {
+                e.preventDefault();
+                finalizarAgendamento();
+              }}>
+                Concluir
               </button>
-            </form>
-          </div>
-        )}
-        {payment.tipo_pagamento === 'pix' && (
-          <div className="cartaoPixBoleto">
-            <h3>Pagamento por Pix</h3>
 
-            <p>Escaneie o QR Code abaixo para realizar o pagamento:</p>
-            <img
-              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=pagamento-fake"
-              alt="QR Code Pix"
-            />
-            <p>Ou copie a chave Pix: <strong>pagamento@consulta.com</strong></p>
+            </div>
+          )}
+          {payment.tipo_pagamento === 'boleto' && (
+            <div className="cartaoPixBoleto">
+              <h3>Pagamento via Boleto Bancário</h3>
+              <p>
+                Clique no botão abaixo para gerar o boleto. Após o pagamento, pode levar até
+                <strong> 3 dias úteis </strong> para a confirmação.
+              </p>
+              <button className='btnGeral' type="button" onClick={(e) => {
+                e.preventDefault();
+                finalizarAgendamento();
+              }}>
+                Gerar Boleto
+              </button>
+            </div>
+          )}
+        </div>
 
-            <button className='btnGeral' type="button" onClick={(e) => {
-              e.preventDefault();
-              finalizarAgendamento();
-            }}>
-              Concluir
-            </button>
-
-          </div>
-        )}
-        {payment.tipo_pagamento === 'boleto' && (
-          <div className="cartaoPixBoleto">
-            <h3>Pagamento via Boleto Bancário</h3>
-            <p>
-              Clique no botão abaixo para gerar o boleto. Após o pagamento, pode levar até
-              <strong> 3 dias úteis </strong> para a confirmação.
-            </p>
-            <button className='btnGeral' type="button" onClick={(e) => {
-              e.preventDefault();
-              finalizarAgendamento();
-            }}>
-              Gerar Boleto
-            </button>
-          </div>
-        )}
       </div>
+
 
     </div>
   );

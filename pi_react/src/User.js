@@ -378,7 +378,7 @@ function User() { // componente principal User
         const prevFiles = Array.isArray(prev[campo]) ? prev[campo] : [];
         return {
           ...prev,
-          [campo]: [...prevFiles, { name: file.name, url: publicData.publicUrl }]
+          [campo]: [{ name: file.name, url: publicData.publicUrl }]
         };
       });
 
@@ -424,6 +424,36 @@ function User() { // componente principal User
               <p>Cadastre-se agora e comece a atender online de forma rápida, prática e sem burocracia.</p>
             </div>
             <h3>Cadastro Médico</h3>
+
+            <p className='fotoPerfil'>  <img
+              src={doctor.fotoPerfil?.[0]?.url}
+
+            />
+            </p>
+
+            <div className='upload'>
+              <p>
+                <input type="file" id="uploadFoto" onChange={(e) => enviarArquivo(e, "fotoPerfil", "fotoPerfil")} />
+                <label htmlFor="uploadFoto" className="btnUpload">Enviar Foto de Perfil*</label>
+              </p>
+
+              <div className="uploadedFiles">
+                {doctor.fotoPerfil?.map((file, index) => (
+                  <div key={index} className="fileItem">
+                    <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
+                    <button className='btnDelete' type="button" onClick={() => {
+                      setDoctor(prev => ({
+                        ...prev,
+                        fotoPerfil: prev.fotoPerfil.filter((_, i) => i !== index)
+                      }));
+                    }}>❌ Remover</button>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+
+
 
             <p>
               <label>Nome*</label>
@@ -568,24 +598,7 @@ function User() { // componente principal User
                 ))}
               </div>
 
-              {/* Foto de perfil */}
-              <p>
-                <input type="file" id="uploadFoto" onChange={(e) => enviarArquivo(e, "fotoPerfil", "fotoPerfil")} />
-                <label htmlFor="uploadFoto" className="btnUpload">Foto de Perfil*</label>
-              </p>
-              <div className="uploadedFiles">
-                {doctor.fotoPerfil?.map((file, index) => (
-                  <div key={index} className="fileItem">
-                    <span href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</span>
-                    <button className='btnDelete' type="button" onClick={() => {
-                      setDoctor(prev => ({
-                        ...prev,
-                        fotoPerfil: prev.fotoPerfil.filter((_, i) => i !== index)
-                      }));
-                    }}>❌ Remover</button>
-                  </div>
-                ))}
-              </div>
+
 
             </div>
 

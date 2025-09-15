@@ -83,53 +83,53 @@ function Doctor() {
 
 
   return (
-      <div className="alinhamentoPagina">
+    <div className="alinhamentoPagina">
 
 
-        <div className="dadosGeraisConsulta">
+      <div className="dadosGeraisConsulta">
 
-            <div className="detalhesMedico">
+        <div className="detalhesMedico">
 
-              <div className="descricaoEspecialidade">
-                <h2>{doctor.nome}</h2>
-                <p>{doctor.especialidade?.nome}</p>
-                <p>{doctor.especialidade?.descricao}</p>
-              </div>
-
-              <div>
-                <img
-                    src={doctor.fotoPerfil?.[0]?.url}
-                    alt={doctor.nome}
-                  />
-              </div>
-
-            </div>
-
-          <div className="experiencia">
-            <h3>Resumo Profissional</h3>
-            <p>{doctor.resumoProfissional}</p>
+          <div className="descricaoEspecialidade">
+            <h2>{doctor.nome}</h2>
+            <p>{doctor.especialidade?.nome}</p>
+            <p>{doctor.especialidade?.descricao}</p>
           </div>
 
-          <div className="calendario">
+          <div>
+            <img
+              src={doctor.fotoPerfil?.[0]?.url}
+              
+            />
+          </div>
 
-            <h3>Disponibilidade</h3>
-            <p>Selecione o dia e horário de sua preferência para o atendimento</p>
+        </div>
 
-            <div>
+        <div className="experiencia">
+          <h3>Resumo Profissional</h3>
+          <p>{doctor.resumoProfissional}</p>
+        </div>
 
-              <div className="dataDisponivel">
+        <div className="calendario">
 
-                {schedule.filter(agenda => agenda.doctor_id === doctor.supra_id).length === 0 ? (
-                  <p className="semConsulta">Nenhum horário disponível.</p>
-                ) : (
-                  schedule
-                    .filter(agenda => agenda.doctor_id === doctor.supra_id)
-                    .map(agenda => (
-                      <button key={agenda.id} className="btnData" onClick={validarSessao}>{formatarData(agenda.date)} </button>
-                    ))
-                )}
+          <h3>Disponibilidade</h3>
+          <p>Selecione o dia e horário de sua preferência para o atendimento</p>
 
-              </div>
+          <div>
+
+            <div className="dataDisponivel">
+
+              {schedule.filter(agenda => agenda.doctor_id === doctor.supra_id && agenda.status === "Disponível").length === 0 ? (
+                <p className="semConsulta">Nenhum horário disponível.</p>
+              ) : (
+                schedule
+                  .filter(agenda => agenda.doctor_id === doctor.supra_id && agenda.status === "Disponível")
+                  .map(agenda => (
+                    <button key={agenda.id} className="btnData" onClick={() => validarSessao(agenda.id, doctor.supra_id)}>
+                      {formatarData(agenda.date)}
+                    </button>
+                  ))
+              )}
 
             </div>
 
@@ -138,6 +138,8 @@ function Doctor() {
         </div>
 
       </div>
+
+    </div>
 
   );
 }
