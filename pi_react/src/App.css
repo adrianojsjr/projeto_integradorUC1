@@ -150,26 +150,11 @@ body {
 
 /* Rodapé */
 
-.rodape {
-  display: flex;
-  margin-top: 100px;
-  justify-content: space-between;
-  /* Espaçamento entre logo, texto e botão */
-  align-items: center;
-  /* Alinha verticalmente ao centro */
-  margin-left: 50px;
-  margin-right: 50px;
-
-}
-
-.rodape img {
-  width: 150px;
-  /* Tamanho do logo */
-}
-
-.rodape p {
-  color: #40566e;
-  /* Cor cinza azulado para texto */
-  font-size: 30px;
-  /* Tamanho da fonte para destaque */
+footer {
+  background-color: #0d47a1;
+  color: white;
+  padding: 30px 20px 15px;
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+  margin-top: 150px; /* empurra o footer para o fim quando necessário */
 }

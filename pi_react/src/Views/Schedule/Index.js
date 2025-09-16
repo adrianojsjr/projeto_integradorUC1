@@ -134,6 +134,7 @@ function Schedule() { // Componente principal da agenda
       .update({
         status: 'Disponível',       // Horário volta a estar livre
         statusPatient: 'Cancelada', // Marca histórico do paciente como cancelado
+        avaliacao: null,
         payment_id: null            // Libera referência do pagamento
       })
       .eq('id', scheduleId)
@@ -234,89 +235,121 @@ function Schedule() { // Componente principal da agenda
 
     if (error) {
       console.error('Erro ao atualizar avaliação:', error);
+      return;
     } else {
       setSchedule(prev =>
         prev.map(ag =>
           ag.id === scheduleId ? { ...ag, avaliacao: valor } : ag
         )
       );
+
+      // Buscar próxima consulta do paciente para aplicar desconto
+      const { data: sessionData } = await supabase.auth.getSession();
+      const uid = sessionData?.session?.user?.id;
+
+      const { data: proximas, error: errNext } = await supabase
+        .from('schedule')
+        .select()
+        .eq('patient_id', uid)
+        .neq('statusPatient', 'Concluída')
+        .order('date', { ascending: true })
+        .limit(1);
+
+      if (errNext) {
+        console.error("Erro ao buscar próxima consulta:", errNext);
+        return;
+      }
+
+      if (proximas && proximas.length > 0) {
+        const proximaConsultaId = proximas[0].id;
+
+        // Criar registro de desconto na tabela desconto
+        const { data: descontoData, error: descontoError } = await supabase
+          .from('desconto')
+          .insert([
+            {
+              patient_id: uid,
+              schedule_id: proximaConsultaId,
+              percentual: 10,
+              usado: false,
+            },
+          ]);
+
+        if (descontoError) {
+          console.error("Erro ao criar desconto:", descontoError);
+        } else {
+          alert("Obrigado pela avaliação! Você ganhou 10% de desconto na próxima consulta.");
+        }
+      }
     }
   }
 
 
   return (
-
-    <div className="alinhamentoPagina"> {/* Div que centraliza o conteúdo */}
-
+    <div className="alinhamentoPagina">
       {tipoUsuario === 'patient' && schedule.length === 0 ? (
         <p className="semConsulta">Nenhuma consulta encontrada.</p>
-        // Se o usuário for paciente e não tiver consultas, mostra esta mensagem
       ) : (
         <>
           {tipoUsuario === "doctor" && (
-            <div className="agenda"> {/* Div que contém botão e formulário do médico */}
+            <div className="agenda">
               <button onClick={() => setInserirAgenda(!inserirAgenda)}>
                 {inserirAgenda ? "Fechar formulário" : "Adicionar Novo Horário"}
-                {/* Botão para abrir ou fechar formulário */}
               </button>
 
               {inserirAgenda && (
                 <form className="addScheduleForm" onSubmit={(e) => e.preventDefault()}>
-                  {/* Formulário para adicionar novo horário */}
                   <input
-                    type="datetime-local" // Campo para escolher data e hora
-                    value={novaSchedule.date} // Valor vem do estado novaSchedule
+                    type="datetime-local"
+                    value={novaSchedule.date}
                     onChange={(e) => setNovaSchedule({ ...novaSchedule, date: e.target.value })}
-                  // Atualiza o estado quando o usuário escolhe uma data
                   />
                   <button type="button" onClick={creatSchedule}>
-                    Adicionar {/* Botão que chama a função para criar novo horário */}
+                    Adicionar
                   </button>
                 </form>
               )}
             </div>
           )}
 
-          <div className="agendaContainer"> {/* Container da tabela de horários */}
-            <table className="tabelaAgenda"> {/* Tabela para mostrar horários */}
+          <div className="agendaContainer">
+            <table className="tabelaAgenda">
               <thead>
                 <tr>
-                  <th>Data</th> {/* Coluna da data */}
-                  <th>Médico</th> {/* Coluna do nome do médico */}
-                  {tipoUsuario !== 'patient' && <th>Paciente</th>}
-                  {/* Coluna do paciente só aparece se não for paciente */}
-                  <th>Status</th> {/* Coluna do status da consulta */}
-                  <th>Pagamento</th> {/* Coluna do status do pagamento */}
-                  <th>Avaliação</th> {/* Coluna da avaliação do paciente */}
-                  <th>Ações</th> {/* Coluna dos botões de ação */}
+                  <th>Data</th>
+                  <th>Médico</th>
+                  {tipoUsuario !== 'patient' ? <th>Paciente</th> : null}
+                  <th>Status</th>
+                  <th>Pagamento</th>
+                  <th>Avaliação</th>
+                  <th>Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {schedule.map((agenda) => (
-                  <tr key={agenda.id} className="agendaCard"> {/* Cada linha é uma consulta */}
+                  <tr key={agenda.id} className="agendaCard">
                     <td>{agenda?.date ? formatarData(agenda.date) : ''}</td>
-                    {/* Mostra a data formatada */}
-                    <td>{agenda.doctors?.nome}</td> {/* Nome do médico */}
-                    {tipoUsuario !== 'patient' && <td>{agenda.patient?.nome}</td>}
-                    {/* Nome do paciente se não for paciente */}
-                    <td>{agenda.statusPatient}</td> {/* Status da consulta */}
+                    <td>{agenda.doctors?.nome}</td>
+                    {tipoUsuario !== 'patient' ? <td>{agenda.patient?.nome}</td> : null}
+                    <td>{agenda.statusPatient}</td>
                     <td>
                       {tipoUsuario === 'patient'
                         ? agenda.payment?.status || 'Reembolsado'
-                        : agenda.payment?.status || ''
-                      }
-                      {/* Mostra status do pagamento, ou 'Reembolsado' se paciente */}
+                        : agenda.payment?.status || ''}
                     </td>
                     <td>
                       {tipoUsuario === 'patient' ? (
-                        agenda.avaliacao ? (
-                          agenda.avaliacao // Mostra a avaliação se já tiver
+                        agenda.statusPatient === 'Cancelada' ? (
+                          <span>Consulta cancelada</span>
+                        ) : agenda.statusPatient !== 'Concluída' ? (
+                          <span></span> // Ou apenas vazio
+                        ) : agenda.avaliacao ? (
+                          agenda.avaliacao
                         ) : (
                           <select
                             value={agenda.avaliacao || ''}
                             onChange={(e) => updateAvaliacao(agenda.id, parseInt(e.target.value))}
                           >
-                            {/* Select para avaliar a consulta */}
                             <option value="">Avalie sua consulta</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -326,30 +359,29 @@ function Schedule() { // Componente principal da agenda
                           </select>
                         )
                       ) : (
-                        agenda.avaliacao // Para o médico, apenas mostra avaliação
+                        agenda.avaliacao
                       )}
                     </td>
                     <td>
                       {tipoUsuario === 'patient' ? (
                         <button
                           onClick={() => cancelarConsulta(agenda.id, agenda.payment_id)}
-                          disabled={agenda.statusPatient === 'Cancelada' || agenda.statusPatient === 'Concluída'}
+                          disabled={
+                            agenda.statusPatient === 'Cancelada' ||
+                            agenda.statusPatient === 'Concluída'
+                          }
                         >
-                          Cancelar consulta {/* Paciente pode cancelar se não estiver concluída ou cancelada */}
+                          Cancelar consulta
                         </button>
                       ) : agenda.patient_id ? (
                         <button
                           onClick={() => finalizarConsulta(agenda.id)}
                           disabled={agenda.statusPatient === "Concluída"}
                         >
-                          Finalizar consulta {/* Médico pode finalizar se ainda não estiver concluída */}
+                          Finalizar consulta
                         </button>
                       ) : (
-                        <button
-                          onClick={() => delSchedule(agenda.id)}
-                        >
-                          Deletar {/* Médico pode deletar horário sem paciente */}
-                        </button>
+                        <button onClick={() => delSchedule(agenda.id)}>Deletar</button>
                       )}
                     </td>
                   </tr>
@@ -360,7 +392,6 @@ function Schedule() { // Componente principal da agenda
         </>
       )}
     </div>
-
   );
 }
 
