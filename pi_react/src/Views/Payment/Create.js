@@ -1,64 +1,68 @@
-// Payment.js
-//import './Style.css';
-
-import { useEffect, useState } from 'react';
-import { useNavigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
-import { createClient } from '@supabase/supabase-js';
-import Button from 'react-bootstrap/Button';
-
+import { useEffect, useState, useRef } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../../User';
+import './payment.css';
 
 function PaymentCreate() {
   const nav = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
-  const [scheduleId, setScheduleId] = useState()
-  const [doctorId, setDoctorId] = useState()
+  const [scheduleId, setScheduleId] = useState();
+  const [doctorId, setDoctorId] = useState();
 
-  // Estado para armazenar os dados do pagamento
-  const [payment, setPayment] = useState([]);
-
+  const [payment, setPayment] = useState({ tipo_pagamento: '' });
   const [doctor, setDoctor] = useState(null);
   const [agenda, setAgenda] = useState(null);
 
-  // Estado para armazenar os pagamentos buscados
-  const [payments, setPayments] = useState([]);
+  const [msg, setMsg] = useState(''); // mensagem para exibir na tela
+  const msgTimer = useRef(null); // para controlar o tempo da mensagem
 
   useEffect(() => {
-    setDoctorId(searchParams.get('doctorId'))
-    lerDoctor(searchParams.get('doctorId'))
-    setScheduleId(searchParams.get('scheduleId'))
-    lerAgenda(searchParams.get('scheduleId'))
-  }, [])
+    const sId = searchParams.get('scheduleId');
+    const dId = searchParams.get('doctorId');
 
+    setScheduleId(sId);
+    setDoctorId(dId);
+
+    lerAgenda(sId);
+    lerDoctor(dId);
+  }, []);
+
+  // efeito para rolar a tela e sumir a mensagem
+  useEffect(() => {
+    if (msg) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (msgTimer.current) clearTimeout(msgTimer.current);
+      msgTimer.current = setTimeout(() => setMsg(''), 3000);
+    }
+    return () => {
+      if (msgTimer.current) clearTimeout(msgTimer.current);
+    };
+  }, [msg]);
 
   async function lerDoctor(id) {
-    console.log(id)
-    let { data: dataDoctor, error } = await supabase
+    const { data: dataDoctor, error } = await supabase
       .from('doctors')
       .select('*, especialidade(nome)')
       .eq('supra_id', id)
-      .single()
-
-    setDoctor(dataDoctor); // Atualiza o estado com os dados do médico
-  }
-
-
-  async function lerAgenda(id) {
-
-    let { data: dataSchedule, error } = await supabase
-      .from('schedule')
-      .select('*') // Seleciona todos os campos + nome do médico
-      .eq('id', id) // Filtra pelo ID do médico
       .single();
 
-    setAgenda(dataSchedule || []); // Atualiza estado
+    if (!error) setDoctor(dataDoctor);
   }
 
-  // Função para salvar o pagamento no Supabase
+  async function lerAgenda(id) {
+    const { data: dataSchedule, error } = await supabase
+      .from('schedule')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (!error) setAgenda(dataSchedule);
+  }
+
   async function fazerPagamento() {
     try {
-      const { data: dU, error: eU } = await supabase.auth.getUser();
+      const { data: dU } = await supabase.auth.getUser();
       const uid = dU?.user?.id;
 
       if (!uid) {
@@ -66,11 +70,7 @@ function PaymentCreate() {
         return;
       }
 
-      const novoPagamento = {
-        tipo_pagamento: payment.tipo_pagamento,
-        patient_id: uid
-      };
-
+      const novoPagamento = { tipo_pagamento: payment.tipo_pagamento, patient_id: uid };
       const { data, error } = await supabase
         .from('payment')
         .insert([novoPagamento])
@@ -79,50 +79,23 @@ function PaymentCreate() {
 
       if (error) {
         console.error('Erro ao salvar pagamento:', error);
-        alert('Erro ao salvar pagamento');
+        setMsg('Erro ao salvar pagamento!');
+        return null;
       } else {
-        alert('Pagamento salvo com sucesso!');
-        setPayment({ tipo_pagamento: '', patient_id: '', doctor_id: '' });
-        console.log(data)
-        return data.id
+        setPayment({ tipo_pagamento: '' });
+        return data.id;
       }
     } catch (err) {
       console.error('Erro inesperado:', err);
+      setMsg('Erro inesperado ao processar pagamento.');
+      return null;
     }
-  }
-
-
-
-  function formatarData(data) {
-   
-
-    const date = new Date(data)
-
-    const dataFormatada =
-
-      date.toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      });
-
-    const horaFormatada =
-
-      date.toLocaleTimeString('pt-BR', {
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-
-    return `${dataFormatada} ${horaFormatada}`;
-
-    //poderia ser também return dataFormatada + ' ' + horaFormatada;
   }
 
   async function updateSchedule(idPagamento) {
     const { data: dU } = await supabase.auth.getUser();
     const uid = dU?.user?.id;
 
-    // Atualiza no banco como indisponível
     const { data, error } = await supabase
       .from('schedule')
       .update({ status: 'Indisponível', statusPatient: "Agendada", patient_id: uid, payment_id: idPagamento })
@@ -130,77 +103,87 @@ function PaymentCreate() {
       .select('*')
       .single();
 
-    if (error) {
+    if (!error) {
+      setAgenda(prev => ({
+        ...prev,
+        displayStatus: 'Consulta agendada!',
+        patient_id: uid,
+        payment_id: idPagamento
+      }));
+      setMsg('Consulta agendada com sucesso!');
+    } else {
       console.error('Erro ao atualizar agendamento:', error);
-      return;
+      setMsg('Erro ao atualizar agendamento.');
     }
-
-    // Atualiza estado local para mostrar "Agendado" ao paciente
-    setAgenda(prev => ({ ...prev, displayStatus: 'Agendado', patient_id: uid, payment_id: idPagamento }));
-
-    console.log('Agenda atualizada no banco e exibida como agendada para paciente:', data);
   }
 
   async function updatePayment(idPagamento) {
-    const { dataP, errorP } = await supabase
+    const { data: dataP, error: errorP } = await supabase
       .from('payment')
       .update({ status: 'Pago' })
       .eq('id', idPagamento)
       .select('*')
       .single();
 
-    if (errorP) {
-      console.error('Erro ao atualizar pagamento', errorP);
-    } else {
-      console.log("Pagamento atualizado:", dataP);
-
-      // Atualiza estado local do agendamento também
+    if (!errorP) {
       const { data: dU } = await supabase.auth.getUser();
       const uid = dU?.user?.id;
-      setAgenda(prev => ({ ...prev, displayStatus: 'Agendado', patient_id: uid, payment_id: idPagamento }));
+      setAgenda(prev => ({
+        ...prev,
+        displayStatus: 'Consulta agendada!',
+        patient_id: uid,
+        payment_id: idPagamento
+      }));
+      setMsg('Pagamento confirmado e consulta agendada!');
+    } else {
+      console.error('Erro ao atualizar pagamento:', errorP);
+      setMsg('Erro ao confirmar pagamento.');
     }
   }
 
   async function finalizarAgendamento() {
+    const { data: dU } = await supabase.auth.getUser();
+    const uid = dU?.user?.id;
     const idPagamento = await fazerPagamento();
 
-
-    if (scheduleId) { //se a agenda existe, vai para update
+    if (scheduleId && idPagamento) {
       await updateSchedule(idPagamento);
-      await updatePayment(idPagamento)
-      nav('/doctors');
+      await updatePayment(idPagamento);
+      setTimeout(() => nav(`/schedule/${uid}`), 4000);
+    } else {
+      setMsg('Erro no agendamento.');
     }
-    else {
-      console.log('Erro no agendamento')
-    }
-
   }
 
+  function formatarData(data) {
+    const date = new Date(data);
+    const dataFormatada = date.toLocaleDateString('pt-BR');
+    const horaFormatada = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    return `${dataFormatada} ${horaFormatada}`;
+  }
   return (
     <div className="alinhamentoPagina">
+      {msg && <div className="msgFeedback">{msg}</div>}
+
       <div className='consultaPagamento'>
-
         <div className='infoConsultaPagamento'>
-
           <h3>Resumo da Consulta</h3>
           <img
             src={doctor?.fotoPerfil?.[0]?.url || '/imagens/avatar-generico.png'}
             alt="Foto do médico"
           />
-          <p>{doctor ? doctor.nome : ''} <br /></p>
-          {doctor?.especialidade?.nome} <br />
+          <p>{doctor ? doctor.nome : ''}<br /></p>
+          {doctor?.especialidade?.nome}<br />
           <p>R$ 30,00</p>
-          {agenda ? formatarData(agenda.date) : ''}<br /><br />
-
+          <p>{agenda ? (agenda.displayStatus || formatarData(agenda.date)) : ''}</p>
           <button className='btnGeral' onClick={() => nav(`/doctors/${doctorId}`, { replace: true })}>
             Escolher outro horário
           </button>
-
         </div>
-        <div className="pagamento">
 
+        <div className="pagamento">
           <form className='formaPagamento'>
-            <label >Escolha a forma de pagamento:</label>
+            <label>Escolha a forma de pagamento:</label>
             <select
               value={payment.tipo_pagamento}
               onChange={(e) => setPayment({ ...payment, tipo_pagamento: e.target.value })}
@@ -218,80 +201,57 @@ function PaymentCreate() {
               <h3>Pagamento com Cartão</h3>
               <form>
                 <label>Nome completo</label>
-                <input type="text" id="nome" placeholder="Nome do titular" required />
-
+                <input type="text" placeholder="Nome do titular" required />
                 <label>CPF</label>
-                <input type="text" id="cpf" placeholder="000.000.000-00" required />
-
+                <input type="text" placeholder="000.000.000-00" required />
                 <label>Número do Cartão</label>
-                <input type="text" id="numero" placeholder="XXXX XXXX XXXX XXXX" required />
+                <input type="text" placeholder="XXXX XXXX XXXX XXXX" required />
 
                 <div className="validadeCVV">
                   <div className="cartaoValidade">
                     <label>Validade</label>
-                    <input type="text" id="validade" placeholder="MM/AA" required />
+                    <input type="text" placeholder="MM/AA" required />
                   </div>
-
                   <div className="cartaoCVV">
                     <label>CVV</label>
-                    <input type="text" id="cvv" placeholder="123" required />
+                    <input type="text" placeholder="123" required />
                   </div>
                 </div>
 
-                <button className='btnGeral'
-                  onClick={(e) => {
-                    e.preventDefault();
-                    finalizarAgendamento();
-                  }}
-                >
+                <button className='btnGeral' onClick={(e) => { e.preventDefault(); finalizarAgendamento(); }}>
                   Confirmar pagamento
                 </button>
               </form>
             </div>
           )}
+
           {payment.tipo_pagamento === 'pix' && (
             <div className="cartaoPixBoleto">
               <h3>Pagamento por Pix</h3>
-
               <p>Escaneie o QR Code abaixo para realizar o pagamento:</p>
-              <img
-                src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=pagamento-fake"
-                alt="QR Code Pix"
-              />
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=pagamento-fake" alt="QR Code Pix" />
               <p>Ou copie a chave Pix: <strong>pagamento@consulta.com</strong></p>
-
-              <button className='btnGeral' type="button" onClick={(e) => {
-                e.preventDefault();
-                finalizarAgendamento();
-              }}>
+              <button className='btnGeral' type="button" onClick={(e) => { e.preventDefault(); finalizarAgendamento(); }}>
                 Concluir
               </button>
-
             </div>
           )}
+
           {payment.tipo_pagamento === 'boleto' && (
             <div className="cartaoPixBoleto">
               <h3>Pagamento via Boleto Bancário</h3>
               <p>
-                Clique no botão abaixo para gerar o boleto. Após o pagamento, pode levar até
-                <strong> 3 dias úteis </strong> para a confirmação.
+                Clique no botão abaixo para gerar o boleto. Após o pagamento, pode levar até <strong>3 dias úteis</strong> para a confirmação.
               </p>
-              <button className='btnGeral' type="button" onClick={(e) => {
-                e.preventDefault();
-                finalizarAgendamento();
-              }}>
+              <button className='btnGeral' type="button" onClick={(e) => { e.preventDefault(); finalizarAgendamento(); }}>
                 Gerar Boleto
               </button>
             </div>
           )}
         </div>
-
       </div>
-
-
     </div>
   );
-
 }
 
 export default PaymentCreate;

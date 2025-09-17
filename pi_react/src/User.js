@@ -418,8 +418,8 @@ function User() { // componente principal User
               <ul>
                 <li>Divulgue sua agenda de forma simples e prática: basta cadastrar seus horários disponíveis.</li>
                 <li>Receba pacientes diretamente pela plataforma, com agendamentos automáticos na sua agenda.</li>
-                <li>Cada consulta tem duração padrão de 15 minutos, garantindo organização e produtividade.</li>
-                <li>O valor da consulta é de R$ 30,00, com recebimento líquido 75% deste valor.</li>
+                <li>Cada consulta tem duração padrão de 30 minutos, garantindo organização e produtividade.</li>
+                <li>O valor da consulta é de R$ 120,00, com recebimento líquido 75% deste valor.</li>
               </ul>
               <p>Cadastre-se agora e comece a atender online de forma rápida, prática e sem burocracia.</p>
             </div>

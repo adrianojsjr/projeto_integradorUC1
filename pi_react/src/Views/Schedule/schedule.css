@@ -3,109 +3,178 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f6fa;
+  color: #333;
+}
+
+/* Mensagem de feedback */
+.msgFeedback {
+  background-color: #27ae60;
+  color: white;
+  padding: 12px 20px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: opacity 0.3s ease;
 }
 
 /* Botão de adicionar novo horário */
 .agenda button {
-  background-color: #33B291;
-  /* Verde secundário */
+  background-color: #1abc9c;
   color: white;
   padding: 12px 20px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
+  transition: all 0.3s;
   margin-bottom: 15px;
 }
 
-/* Formulário de adição de horário */
-.formAgenda {
-  display: flex;
-  justify-content: center; /* centraliza horizontalmente */
-  align-items: center;     /* centraliza verticalmente */
-  
+.agenda button:hover {
+  background-color: #16a085;
+  transform: translateY(-2px);
 }
 
-/* Container do calendário */
-.formAgenda .calendario {
+/* Formulário de adição de horário */
+.addScheduleForm {
   display: flex;
   gap: 10px;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 5px rgba(70, 69, 69, 0.089);
-  line-height: 25px;
-  border-radius: 12px;
-  padding: 15px;
-  height: 150px;
+  margin-top: 10px;
 }
 
-/* Botão de adicionar horário no formulário */
-.formAgenda button {
-  background-color: #11b5ba;
-  /* Verde-água */
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
+.addScheduleForm input[type="datetime-local"] {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  flex: 1;
 }
 
 /* Container da tabela */
 .agendaContainer {
   overflow-x: auto;
-  /* Permite rolagem horizontal se necessário */
+  margin-top: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 /* Tabela da agenda */
 .tabelaAgenda {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   text-align: center;
-  margin-top: 20px;
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 /* Cabeçalho da tabela */
 .tabelaAgenda th {
-  background-color: #1e5acd;
+  background:  #357ABD;
   color: white;
-  padding: 12px;
-  border: 1px solid #40566e;
+  padding: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.95rem;
 }
 
 /* Células da tabela */
 .tabelaAgenda td {
-  border: 1px solid #ddd;
-  padding: 12px;
+  padding: 14px;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+  max-width: 200px;
+  text-align: center;
 }
 
-/* Linha da tabela com hover */
-.tabelaAgenda tr.agendaCard:hover {
-  background-color: #f2f2f2;
+/* Linha alternada */
+.tabelaAgenda tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
 
-/* Botão de cancelar dentro da tabela */
-.btnCancel {
-  background-color: #e74c3c;
-  color: white;
-  padding: 6px 12px;
+/* Hover da linha */
+.tabelaAgenda tbody tr:hover {
+  background-color: #e0f0ff;
+}
+
+/* Altura fixa das linhas */
+.tabelaAgenda tbody tr {
+  height: 60px;
+}
+
+/* Nome do médico completo */
+.tabelaAgenda td:nth-child(2) {
+  white-space: normal;
+  word-break: break-word;
+  overflow: visible;
+}
+
+/* Nome do paciente truncado com tooltip */
+.tabelaAgenda td:nth-child(3) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Botões dentro da tabela */
+.tabelaAgenda button {
+  padding: 6px 14px;
   border: none;
   border-radius: 6px;
+  font-weight: bold;
   cursor: pointer;
+  transition: all 0.3s;
+  margin: 2px;
+  font-size: 0.85rem;
+}
+
+/* Botões específicos */
+.tabelaAgenda .btnCancel {
+  background-color: #e74c3c;
+  color: white;
+}
+.tabelaAgenda .btnCancel:hover {
+  background-color: #c0392b;
+}
+
+.tabelaAgenda .btnFinalize {
+  background-color: #27ae60;
+  color: white;
+}
+.tabelaAgenda .btnFinalize:hover {
+  background-color: #1e8449;
+}
+
+.tabelaAgenda .btnDelete {
+  background-color: #f39c12;
+  color: white;
+}
+.tabelaAgenda .btnDelete:hover {
+  background-color: #d68910;
 }
 
 /* Mensagem quando não há consulta */
 .semConsulta {
   text-align: center;
   margin-top: 30px;
-  color: #40566e;
+  color: #555;
   font-weight: bold;
+  font-size: 1rem;
 }
 
-select{
-  border: 1px solid var(--cinza-azulado);
+/* Select estilizado */
+select {
+  border: 1px solid #ccc;
   border-radius: 8px;
-  font-size: .95rem;
-  padding: 13px;
+  font-size: 0.95rem;
+  padding: 10px;
+  background-color: white;
+  cursor: pointer;
 }
