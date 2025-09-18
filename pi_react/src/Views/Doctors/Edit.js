@@ -61,9 +61,9 @@ function Doctor() { // Componente React Doctor
 
       if (editError) throw editError; // Lança erro caso ocorra
 
-      setDoctor(edit); // Atualiza estado com dados retornados
+      setMsg("Cadastro atualizado com sucesso!"); // Mensagem de sucesso
 
-      setMsg("Cadastro realizado com sucesso!"); // Mensagem de sucesso
+      setDoctor(edit); // Atualiza estado com dados retornados
 
       nav(`/schedule/${uid}`, { replace: true });
 
@@ -101,44 +101,44 @@ function Doctor() { // Componente React Doctor
     window.location.reload(); // Recarrega a página
   }
 
-  
-    const enviarArquivo = async (e, campo, pasta) => {
-      const file = e.target.files[0];
-      if (!file) return;
-  
-      try {
-        setLoading(true);
-        setMsg("");
-  
-        const filePath = `${pasta}/${Date.now()}-${file.name}`;
-  
-        const { error: uploadError } = await supabase.storage
-          .from("arquivos_medicos")
-          .upload(filePath, file, { upsert: true });
-  
-        if (uploadError) throw uploadError;
-  
-        const { data: publicData } = supabase.storage
-          .from("arquivos_medicos")
-          .getPublicUrl(filePath);
-  
-        setDoctor(prev => {
-          const prevFiles = Array.isArray(prev[campo]) ? prev[campo] : [];
-          return {
-            ...prev,
-            [campo]: [{ name: file.name, url: publicData.publicUrl }]
-          };
-        });
-  
-        setMsg("Upload realizado com sucesso!");
-        setTimeout(() => setMsg(""), 3000);
-      } catch (err) {
-        console.error("Erro ao fazer upload:", err.message);
-        setMsg(`Erro: ${err.message}`);
-      } finally {
-        setLoading(false);
-      }
-    };
+
+  const enviarArquivo = async (e, campo, pasta) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setLoading(true);
+      setMsg("");
+
+      const filePath = `${pasta}/${Date.now()}-${file.name}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("arquivos_medicos")
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicData } = supabase.storage
+        .from("arquivos_medicos")
+        .getPublicUrl(filePath);
+
+      setDoctor(prev => {
+        const prevFiles = Array.isArray(prev[campo]) ? prev[campo] : [];
+        return {
+          ...prev,
+          [campo]: [{ name: file.name, url: publicData.publicUrl }]
+        };
+      });
+
+      setMsg("Upload realizado com sucesso!");
+      setTimeout(() => setMsg(""), 3000);
+    } catch (err) {
+      console.error("Erro ao fazer upload:", err.message);
+      setMsg(`Erro: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
 
@@ -161,100 +161,100 @@ function Doctor() { // Componente React Doctor
               <input type="file" id="uploadFoto" onChange={(e) => enviarArquivo(e, "fotoPerfil", "fotoPerfil")} />
               <label htmlFor="uploadFoto" className="btnUpload"> Alterar Foto de Perfil</label>
             </p>
-            </div>
+          </div>
 
-            <p>
-              <label>Nome*</label>
-              <input id="nome" type="text" value={doctor.nome} disabled />
-            </p>
+          <p>
+            <label>Nome*</label>
+            <input id="nome" type="text" value={doctor.nome} disabled />
+          </p>
 
-            <p>
-              <label>E-mail*</label>
-              <input id="email" type="email" value={doctor.email} onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} required />
-            </p>
+          <p>
+            <label>E-mail*</label>
+            <input id="email" type="email" value={doctor.email} onChange={(e) => setDoctor({ ...doctor, email: e.target.value })} required />
+          </p>
 
-            <p>
-              <label>CPF*</label>
-              <input id="cpf" type="text" value={doctor.cpf} disabled />
-            </p>
+          <p>
+            <label>CPF*</label>
+            <input id="cpf" type="text" value={doctor.cpf} disabled />
+          </p>
 
-            <p>
-              <label>Número do CRM*</label>
-              <input id="numerodocrm" type="text" value={doctor.numeroCRM} disabled />
-            </p>
+          <p>
+            <label>Número do CRM*</label>
+            <input id="numerodocrm" type="text" value={doctor.numeroCRM} disabled />
+          </p>
 
-            <p>
-              <label>UF do CRM*</label>
-              <select
-                value={doctor.ufCRM}
+          <p>
+            <label>UF do CRM*</label>
+            <select
+              value={doctor.ufCRM}
 
-                disabled
-              >
-                <option value="">Selecione um estado</option>
-                <option value="AC">AC</option>
-                <option value="AL">AL</option>
-                <option value="AP">AP</option>
-                <option value="AM">AM</option>
-                <option value="BA">BA</option>
-                <option value="CE">CE</option>
-                <option value="DF">DF</option>
-                <option value="ES">ES</option>
-                <option value="GO">GO</option>
-                <option value="MA">MA</option>
-                <option value="MT">MT</option>
-                <option value="MS">MS</option>
-                <option value="MG">MG</option>
-                <option value="PA">PA</option>
-                <option value="PB">PB</option>
-                <option value="PR">PR</option>
-                <option value="PE">PE</option>
-                <option value="PI">PI</option>
-                <option value="RJ">RJ</option>
-                <option value="RN">RN</option>
-                <option value="RS">RS</option>
-                <option value="RO">RO</option>
-                <option value="RR">RR</option>
-                <option value="SC">SC</option>
-                <option value="SP">SP</option>
-                <option value="SE">SE</option>
-                <option value="TO">TO</option>
-              </select>
-            </p>
-            <p>
-              <label>Data de Emissão*</label>
-              <input id="dataEmissao" type="date" value={doctor.dataEmissaoCRM} disabled />
-            </p>
+              disabled
+            >
+              <option value="">Selecione um estado</option>
+              <option value="AC">AC</option>
+              <option value="AL">AL</option>
+              <option value="AP">AP</option>
+              <option value="AM">AM</option>
+              <option value="BA">BA</option>
+              <option value="CE">CE</option>
+              <option value="DF">DF</option>
+              <option value="ES">ES</option>
+              <option value="GO">GO</option>
+              <option value="MA">MA</option>
+              <option value="MT">MT</option>
+              <option value="MS">MS</option>
+              <option value="MG">MG</option>
+              <option value="PA">PA</option>
+              <option value="PB">PB</option>
+              <option value="PR">PR</option>
+              <option value="PE">PE</option>
+              <option value="PI">PI</option>
+              <option value="RJ">RJ</option>
+              <option value="RN">RN</option>
+              <option value="RS">RS</option>
+              <option value="RO">RO</option>
+              <option value="RR">RR</option>
+              <option value="SC">SC</option>
+              <option value="SP">SP</option>
+              <option value="SE">SE</option>
+              <option value="TO">TO</option>
+            </select>
+          </p>
+          <p>
+            <label>Data de Emissão*</label>
+            <input id="dataEmissao" type="date" value={doctor.dataEmissaoCRM} disabled />
+          </p>
 
-            <p>
-              <label>Telefone*</label>
-              <input id="telefone" type="text" value={doctor.telefone} onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} />
-            </p>
+          <p>
+            <label>Telefone*</label>
+            <input id="telefone" type="text" value={doctor.telefone} onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} />
+          </p>
 
-            <p>
-              <label>Especialidade*</label>
-              <select value={doctor.especialidade_id} disabled>
-                <option value="">Selecione uma especialidade</option>
-                {especialidade.map(
-                  e => (
-                    <option key={e.id} value={e.id}>{e.nome}</option>
-                  )
+          <p>
+            <label>Especialidade*</label>
+            <select value={doctor.especialidade_id} disabled>
+              <option value="">Selecione uma especialidade</option>
+              {especialidade.map(
+                e => (
+                  <option key={e.id} value={e.id}>{e.nome}</option>
                 )
-                }
-              </select>
-            </p>
+              )
+              }
+            </select>
+          </p>
 
-            <p>
-              <label>Resumo Profissional*</label>
-              <textarea rows="7" id="resumoProfissional" type='text' value={doctor.resumoProfissional} onChange={(e) => setDoctor({ ...doctor, resumoProfissional: e.target.value })} />
-            </p>
+          <p>
+            <label>Resumo Profissional*</label>
+            <textarea rows="7" id="resumoProfissional" type='text' value={doctor.resumoProfissional} onChange={(e) => setDoctor({ ...doctor, resumoProfissional: e.target.value })} />
+          </p>
 
-            <button className="buttonSucess" type="button" onClick={update} disabled={loading}>
-              {loading ? "Salvando..." : "Salvar"} {/* Botão que mostra loading */}
-            </button>
+          <button className="buttonSucess" type="button" onClick={update} disabled={loading}>
+            {loading ? "Salvando..." : "Salvar"} {/* Botão que mostra loading */}
+          </button>
 
-            <button className="buttonLogout" type="button" onClick={logout}>
-              Sair
-            </button>
+          <button className="buttonLogout" type="button" onClick={logout}>
+            Sair
+          </button>
 
         </form>
       </div>

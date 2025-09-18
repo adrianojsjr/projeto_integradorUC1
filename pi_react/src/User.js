@@ -342,7 +342,7 @@ function User() { // componente principal User
       if (redirect) {
         nav(redirect, { replace: true });
       } else {
-        nav(tipoUsuario === 'doctor' ? `/schedule/${uid}` : "/doctors", { replace: true });
+        nav(tipoUsuario === 'doctor' ? `/schedule/${uid}` : "/", { replace: true });
       }
       
       window.location.reload();
