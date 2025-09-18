@@ -44,7 +44,7 @@ function App() {
     }
     pegarUid()
   }, []);
- 
+
 
 
   return (
@@ -82,7 +82,7 @@ function App() {
             )}
           </nav>
         </div>
-            
+
         <Routes> {/* Define as rotas */}
           <Route path='/user' element={<User />} />
           <Route path='/doctors' element={<Doctors />} />
@@ -95,11 +95,19 @@ function App() {
             <Route path='/patients/:id' element={<Patients />} />
             <Route path='/payment/create/' element={<PaymentCreate />} />
             <Route path='/payment/:id' element={<PaymentShow />} />
-             
+
           </Route>
 
           <Route path='/' element={<Navigate to='/doctors' replace />} />
         </Routes>
+
+        <footer>
+          <h4>Contato</h4>
+          <p>Email: suporte@conectmed.com</p>
+          <p>Telefone: (11) 99999-9999</p>
+          <p>© {new Date().getFullYear()} ConectMed. Todos os direitos reservados.</p>
+        </footer>
+
       </main>
     </Router>
   );

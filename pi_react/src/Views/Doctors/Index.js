@@ -181,7 +181,7 @@ function Doctor() {
         <div className='apresentacaoPlataforma'>
           <h2>🩺 Bem-vindo ao ConectMed!</h2>
           <p>
-            Agende suas consultas médicas por apenas <strong>R$30,00</strong>, com rapidez, praticidade e 100% online.<br />
+            Agende suas consultas médicas por apenas <strong>R$120,00</strong>, com rapidez, praticidade e 100% online.<br />
             Escolha a especialidade, veja os horários disponíveis e marque sua consulta em poucos cliques.
           </p>
           <p><strong>🕐 Sem filas. Sem complicações. Só saúde acessível.</strong></p>
