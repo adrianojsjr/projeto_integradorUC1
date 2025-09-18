@@ -227,7 +227,7 @@ function Doctor() { // Componente React Doctor
 
             <p>
               <label>Telefone*</label>
-              <input id="telefone" type="text" value={doctor.telefone} onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} required />
+              <input id="telefone" type="text" value={doctor.telefone} onChange={(e) => setDoctor({ ...doctor, telefone: e.target.value })} />
             </p>
 
             <p>
@@ -245,7 +245,7 @@ function Doctor() { // Componente React Doctor
 
             <p>
               <label>Resumo Profissional*</label>
-              <textarea rows="7" id="resumoProfissional" type='text' value={doctor.resumoProfissional} required />
+              <textarea rows="7" id="resumoProfissional" type='text' value={doctor.resumoProfissional} onChange={(e) => setDoctor({ ...doctor, resumoProfissional: e.target.value })} />
             </p>
 
             <button className="buttonSucess" type="button" onClick={update} disabled={loading}>
