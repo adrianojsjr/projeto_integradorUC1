@@ -335,15 +335,16 @@ function User() { // componente principal User
       const params = new URLSearchParams(location.search);
       const redirect = params.get("redirect");
 
+      setMsg("✅ Login realizado com sucesso!");
+      setTimeout(() => setMsg(""), 4000);
+
+
       if (redirect) {
         nav(redirect, { replace: true });
       } else {
         nav(tipoUsuario === 'doctor' ? `/schedule/${uid}` : "/doctors", { replace: true });
       }
-
-      setMsg("✅ Login realizado com sucesso!");
-      setTimeout(() => setMsg(""), 4000);
-
+      
       window.location.reload();
     } catch (err) {
       setMsg("❌ Ocorreu um erro inesperado: " + err.message);
