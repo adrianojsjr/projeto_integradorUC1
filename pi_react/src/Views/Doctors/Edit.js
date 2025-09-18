@@ -14,7 +14,21 @@ function Doctor() { // Componente React Doctor
   const { id } = useParams(); // Pega o parâmetro 'id' da URL
 
   // Estado do médico, já inicializado com todas as propriedades
-  const [doctor, setDoctor] = useState({ nome: "" });
+  const [doctor, setDoctor] = useState({
+    nome: "",
+    fotoPerfil: [],
+    email: "",
+    telefone: "",
+    cpf: "",
+    numeroCRM: "",
+    ufCRM: "",
+    dataEmissaoCRM: "",
+    especialidade_id: "",
+    resumoProfissional: "",
+    residencia: "",
+    diploma: "",
+    situacaoRegular: ""
+  });
 
   const [loading, setLoading] = useState(false); // Estado para loading do botão
   const [msg, setMsg] = useState(""); // Estado para mensagens de sucesso ou erro
@@ -63,7 +77,9 @@ function Doctor() { // Componente React Doctor
 
       setMsg("Cadastro atualizado com sucesso!"); // Mensagem de sucesso
 
-      setDoctor(edit); // Atualiza estado com dados retornados
+      if (edit && edit.length > 0) {
+        setDoctor(prev => ({ ...prev, ...edit[0] }));
+      }
 
       nav(`/schedule/${uid}`, { replace: true });
 
@@ -150,10 +166,7 @@ function Doctor() { // Componente React Doctor
 
           <h3>Cadastro Médico</h3>
 
-          <p className='fotoPerfil'>  <img
-            src={doctor.fotoPerfil?.[0]?.url}
-
-          />
+          <p className='fotoPerfil'>  <img src={doctor.fotoPerfil?.[0]?.url || "/default.jpg"} alt="Foto do Médico" />
           </p>
 
           <div className='upload'>

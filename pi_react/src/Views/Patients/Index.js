@@ -21,7 +21,7 @@ function Patient() {
   const { id } = useParams(); // Pega o ID do paciente
   const [schedule, setSchedule] = useState([]);
   const [msg, setMsg] = useState("");
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     listarPacientes(id);
@@ -29,6 +29,44 @@ function Patient() {
   }, [id])
 
 
+  async function update() {
+    setLoading(true); // Ativa loading
+
+    try {
+      // 1. Pega usuário logado no Auth
+      const { data: dU, error: eU } = await supabase.auth.getUser();
+      const uid = dU?.user?.id; // Pega uid do usuário logado
+
+      if (!uid) nav("/user", { replace: true }); // Redireciona caso não exista uid
+
+      // 2. Atualiza dados do médico na tabela 'doctos' (possível erro de digitação, deveria ser 'doctors')
+      const { data: edit, error: editError } = await supabase.from("patient").update([
+        {
+          email: patient.email,
+          telefone: patient.telefone,
+          senha: patient.senha,
+          nome: patient.nome
+
+        },
+      ]).eq('supra_id', id); // Atualiza apenas o médico com o supra_id igual ao id da URL
+
+      if (editError) throw editError; // Lança erro caso ocorra
+
+      setMsg("Cadastro atualizado com sucesso!"); // Mensagem de sucesso
+
+      setPatient(edit); // Atualiza estado com dados retornados
+
+      nav('/', { replace: true });
+
+
+    } catch (e) {
+      setMsg(`Error: ${e.message}`); // Mensagem de erro
+    }
+
+    setLoading(false); // Desativa loading
+
+    setTimeout(() => setMsg(""), 5000); // Limpa mensagem após 5 segundos
+  }
 
   async function listarPacientes(id) {
     let { data: dataPatient, error } = await supabase
@@ -36,7 +74,7 @@ function Patient() {
       .select('*')
       .eq('supra_id', id)
       .single()
-    setPatient(dataPatient); 
+    setPatient(dataPatient);
   }
 
   if (!patient) return <p>Carregando...</p>;
@@ -95,7 +133,7 @@ function Patient() {
     // Limpa qualquer dado local (se usado)
     localStorage.clear();
     sessionStorage.clear();
-    
+
     nav("/user", { replace: true });
     window.location.reload(); // Recarrega a página
   }
@@ -107,38 +145,38 @@ function Patient() {
       <div class="card">
 
 
-      <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={(e) => e.preventDefault()}>
 
-        <p>
-          <label>Nome</label>
-          <input id="nome" type="text" placeholder="Nome do titular" value={patient.nome} onChange={(e) => setPatient({ ...patient, nome: e.target.value })} required />
-        </p>
+          <p>
+            <label>Nome</label>
+            <input id="nome" type="text" placeholder="Nome do titular" value={patient.nome} onChange={(e) => setPatient({ ...patient, nome: e.target.value })} required />
+          </p>
 
-        <p>
-          <label>E-mail</label>
-          <input id="email" type="email" placeholder="exemplo@email.com" value={patient.email} onChange={(e) => setPatient({ ...patient, email: e.target.value })} required />
-        </p>
+          <p>
+            <label>E-mail</label>
+            <input id="email" type="email" placeholder="exemplo@email.com" value={patient.email} onChange={(e) => setPatient({ ...patient, email: e.target.value })} required />
+          </p>
 
-        <p>
-          <label>CPF</label>
-          <input id="cpf" type="text" placeholder="000.000.000-00" value={patient.cpf} onChange={(e) => setPatient({ ...patient, cpf: e.target.value })} required />
-        </p>
+          <p>
+            <label>CPF</label>
+            <input id="cpf" type="text" placeholder="000.000.000-00" value={patient.cpf} onChange={(e) => setPatient({ ...patient, cpf: e.target.value })} required />
+          </p>
 
 
-        <p>
-          <label>Telefone</label>
-          <input id="telefone" type="text" placeholder="Insira o Telefone" value={patient.telefone} onChange={(e) => setPatient({ ...patient, telefone: e.target.value })} required />
-        </p>
+          <p>
+            <label>Telefone</label>
+            <input id="telefone" type="text" placeholder="Insira o Telefone" value={patient.telefone} onChange={(e) => setPatient({ ...patient, telefone: e.target.value })} required />
+          </p>
 
-        <button className="buttonSucess" type="button" onClick={listarPacientes} disabled={loading}>
-          {loading ? "Salvando..." : "Salvar"}
-        </button>
+          <button className="buttonSucess" type="button" onClick={update} disabled={loading}>
+            {loading ? "Salvando..." : "Salvar"}
+          </button>
 
-         <button className="buttonLogout" type="button" onClick={logout}>
+          <button className="buttonLogout" type="button" onClick={logout}>
             Sair
           </button>
 
-      </form>
+        </form>
 
       </div>
 
