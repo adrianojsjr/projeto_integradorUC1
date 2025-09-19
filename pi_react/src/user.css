@@ -6,6 +6,10 @@
   --borda: #dce3ec;
 }
 
+.app{
+  display: block;
+}
+
 /* Formulário de login */
 .card {
   width: 500px;

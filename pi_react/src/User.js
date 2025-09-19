@@ -398,7 +398,7 @@ function User() { // componente principal User
 
 
   return (
-    <main className="App">
+    <main className="app">
       
       <div className="card">
         <div className='alert'>
