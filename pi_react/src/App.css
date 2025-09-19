@@ -1,245 +1,152 @@
-/* Paleta de cores:
-Verde-água: #11b5ba (vibrante, ideal para destaque)
-Cinza azulado: #40566e (ótimo para texto, bordas e contornos)
-Azul: #1e5acd (fundo ou botões primários)
-Verde: #33B291 (secundário, suave)
-*/
-
-@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
-
-
 /* =============================
-   Reset e estrutura básica
+   Importação de fontes
    ============================= */
+   @import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
-
-body {
-  cursor: default;
-  font-family: "Rubik", sans-serif;
-  margin: 0;
-}
-
-.alinhamentoPagina {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  margin-left: 50px;
-  margin-right: 50px;
-}
-
-/* =============================
-   Cabeçalho: logo, texto e botão
-   ============================= */
-
-
-.inicio .menu {
-  display: flex;
-  justify-content: space-around;
-  /* Espaçamento entre logo, texto e botão */
-  align-items: center;
-  background-color: white;
-  font-family: Arial, sans-serif;
-}
-
-.inicio .menu span {
-  width: 414px;
-}
-
-
-.inicio .menu img {
-  width: 150px;
-  /* Tamanho do logo */
-}
-
-
-.inicio .menu .btnNav {
-  display: flex;
-  gap: 10px;
-  justify-content: right;
-  width: 414px;
-}
-
-.inicio .menu p {
-  color: #40566e;
-  /* Cor cinza azulado para texto */
-  font-size: 30px;
-  /* Tamanho da fonte para destaque */
-  width: 414px;
-}
-
-/* Botão "CADASTRE-SE" */
-.inicio .menu a {
-  background-color: #1e5acd;
-  /* Cor de fundo azul principal */
-  color: #ffffff;
-  /* Cor do texto: branco */
-  border-radius: 6px;
-  /* Bordas arredondadas */
-  padding: 12px 24px;
-  /* Espaçamento interno vertical e horizontal */
-  font-size: 16px;
-  /* Tamanho da fonte */
-  font-weight: 600;
-  /* Negrito */
-  cursor: pointer;
-  /* Cursor tipo "mãozinha" */
-  text-decoration: none;
-  /* Remove sublinhado do link */
-  box-shadow: 0 4px 8px rgba(30, 90, 205, 0.25);
-  /* Sombra sutil para destaque */
-}
-
-/* =============================
-   Área do campo de busca com gradiente
-   ============================= */
-.inicio .menuBusca {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* Alinha verticalmente ao centro */
-  background: linear-gradient(90deg, #1e5acd 0%, #1e5acd 20%, #33B291 100%);
-  height: 200px;
-  /* Altura da área */
-}
-
-/* Container dos elementos de busca */
-.inicio .menuBusca .busca {
-  display: flex;
-  align-items: center;
-  /* Centraliza verticalmente input e botões */
-  gap: 5px;
-  /* Espaçamento entre eles */
-}
-
-/* Campo de busca */
-.inicio .menuBusca input {
-  padding: 10px 20px;
-  /* Espaçamento confortável para digitar */
-  border: none;
-  /* Remove borda padrão */
-  border-radius: 6px;
-  /* Bordas arredondadas */
-  font-size: 16px;
-  /* Tamanho da fonte */
-  color: #333;
-  /* Cor do texto digitado */
-  width: 250px;
-  /* Largura fixa */
-}
-
-/* Botões "Buscar" e "Filtros" */
-.btn {
-  background-color: #11b5ba;
-  /* Verde-água vibrante para destaque */
-  color: #ffffff;
-  /* Texto branco */
-  border: none;
-  /* Sem borda */
-  border-radius: 6px;
-  /* Bordas arredondadas */
-  padding: 10px 20px;
-  /* Espaçamento interno */
-  font-size: 16px;
-  /* Tamanho da fonte */
-  font-weight: 500;
-  /* Peso médio */
-  margin-left: 5px;
-  /* Espaço à esquerda para separar dos elementos anteriores */
-}
-
-
-/* Rodapé */
-
-footer {
-  background-color: #0d47a1;
-  color: white;
-  padding: 30px 20px 15px;
-  font-family: 'Segoe UI', sans-serif;
-  text-align: center;
-  margin-top: 150px;
-  /* empurra o footer para o fim quando necessário */
-}
-
-/* Telas menores que 768px (tablet e mobile) */
-@media (max-width: 768px) {
-  .inicio .menu {
-    align-items: center;
-    flex-wrap: wrap;
-    /* evita que elementos saiam da tela */
-    gap: 10px;
-  }
-
-  .inicio .menu p {
-    display: none;
-    /* esconde textos grandes */
-  }
-
-  .inicio .menu span {
-    font-size: 24px;
-    /* reduz tamanho do texto */
-    text-align: center;
-    margin: 10px 0;
-    width: 100%;
-  }
-
-  .inicio .menu .btnNav {
-    justify-content: center;
-    width: 100%;
-    gap: 10px;
-  }
-
-  .inicio .menu img {
-    width: 100px;
-    height: auto;
-  }
-
-  .inicio .menuBusca {
-    height: auto;
-    padding: 20px 10px;
-  }
-
-  .inicio .menuBusca .busca {
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .inicio .menuBusca input {
-    width: 100%;
-    max-width: 100%;
-  }
-}
-
-/* Telas muito pequenas (mobile < 480px) */
-@media (max-width: 480px) {
-  .inicio .menu span {
-    font-size: 20px;
-  }
-
-  .inicio .menu p {
-    display: none;
-    /* esconde textos grandes */
-  }
-
-  .inicio .menu img {
-    width: 80px;
-    /* reduz um pouco mais a logo */
-    height: auto;
-  }
-
-  .inicio .menu a {
-    padding: 8px 14px;
-    font-size: 14px;
-  }
-
-  .inicio .menuBusca input {
-    padding: 6px 10px;
-    font-size: 14px;
-  }
-
-  .btn {
-    padding: 6px 10px;
-    font-size: 14px;
-  }
-}
+   /* =============================
+      Reset e estrutura básica
+      ============================= */
+   body, html {
+     margin: 0;
+     padding: 0;
+     font-family: "Rubik", sans-serif;
+     background-color: #f5f6fa;
+     color: #333;
+   }
+   
+   .alinhamentoPagina {
+     display: flex;
+     flex-direction: column;
+     justify-content: flex-start;
+     margin: 0 50px;
+   }
+   
+   /* =============================
+      Header / Nav
+      ============================= */
+   .inicio .menu {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     background-color: #ffffff;
+     padding: 15px 30px;
+     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+     border-radius: 12px;
+     margin-bottom: 20px;
+   }
+   
+   .inicio .menu img {
+     width: 150px;
+     height: auto;
+   }
+   
+   .inicio .menu .btnNav {
+     display: flex;
+     gap: 10px;
+   }
+   
+   .inicio .menu .btnNav a {
+     background-color: #1e5acd;
+     color: #ffffff;
+     border-radius: 6px;
+     padding: 10px 20px;
+     font-size: 16px;
+     font-weight: 600;
+     cursor: pointer;
+     text-decoration: none;
+     transition: background 0.3s, transform 0.2s;
+     box-shadow: 0 4px 8px rgba(30, 90, 205, 0.25);
+   }
+   
+   .inicio .menu .btnNav a:hover {
+     background-color: #1546a0;
+     transform: translateY(-2px);
+   }
+   
+   .inicio .menu p {
+     color: #40566e;
+     font-size: 24px;
+     margin: 0;
+     text-align: center;
+     flex: 1;
+   }
+   
+   /* =============================
+      Seção de busca / destaque
+      ============================= */
+   .inicio .menuBusca {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     background: linear-gradient(90deg, #1e5acd 0%, #33B291 100%);
+     height: 180px;
+     border-radius: 12px;
+     margin-bottom: 40px;
+     padding: 20px;
+   }
+   
+   .inicio .menuBusca .busca {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+   }
+   
+   .inicio .menuBusca input {
+     padding: 10px 20px;
+     border: none;
+     border-radius: 6px;
+     font-size: 16px;
+     width: 250px;
+   }
+   
+   .inicio .menuBusca .btn {
+     background-color: #11b5ba;
+     color: #ffffff;
+     border: none;
+     border-radius: 6px;
+     padding: 10px 20px;
+     font-size: 16px;
+     font-weight: 500;
+     cursor: pointer;
+     transition: background 0.3s, transform 0.2s;
+   }
+   
+   .inicio .menuBusca .btn:hover {
+     background-color: #0ea1a6;
+     transform: translateY(-2px);
+   }
+   
+   /* =============================
+      Footer
+      ============================= */
+   footer {
+     background-color: #1e5acd;
+     color: white;
+     padding: 30px 20px;
+     text-align: center;
+     font-family: 'Segoe UI', sans-serif;
+     margin-top: 100px;
+     border-radius: 12px 12px 0 0;
+   }
+   
+   footer h4 {
+     margin: 0 0 10px 0;
+     font-size: 18px;
+   }
+   
+   footer p {
+     margin: 5px 0;
+     font-size: 14px;
+   }
+   
+   /* =============================
+      Links do footer
+      ============================= */
+   footer a {
+     color: #11b5ba;
+     text-decoration: none;
+   }
+   
+   footer a:hover {
+     text-decoration: underline;
+   }
