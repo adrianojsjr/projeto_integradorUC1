@@ -6,7 +6,7 @@ import { replace, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
 import "./payment.css";
 
-import { supabase } from '../../User';
+import { supabase } from '../User/Index';
 
 function Payment() {
   const nav = useNavigate();

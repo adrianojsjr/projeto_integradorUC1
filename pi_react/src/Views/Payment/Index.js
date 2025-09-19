@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
 import { replace, useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
-import { supabase } from '../../User';
+import { supabase } from '../User/Index';
 
 // Componente de pagamento para gerenciar transações
 function Payment() {

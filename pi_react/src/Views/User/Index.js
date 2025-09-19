@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { createClient } from "@supabase/supabase-js";
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import './App.css';
+import '../../App.css';
 import './user.css';
 
 // informações para conexão com Supabase
@@ -304,7 +304,8 @@ function User() { // componente principal User
         setMsg("❌ Email não cadastrado");
         setLoading(false);
         setTimeout(() => setMsg(""), 4000);
-        nav('/user');
+        nav('/user'
+        );
         return;
       }
 
@@ -335,15 +336,16 @@ function User() { // componente principal User
       const params = new URLSearchParams(location.search);
       const redirect = params.get("redirect");
 
-      if (redirect) {
-        nav(redirect, { replace: true });
-      } else {
-        nav(tipoUsuario === 'doctor' ? `/schedule/${uid}` : "/doctors", { replace: true });
-      }
-
       setMsg("✅ Login realizado com sucesso!");
       setTimeout(() => setMsg(""), 4000);
 
+
+      if (redirect) {
+        nav(redirect, { replace: true });
+      } else {
+        nav(tipoUsuario === 'doctor' ? `/schedule/${uid}` : "/", { replace: true });
+      }
+      
       window.location.reload();
     } catch (err) {
       setMsg("❌ Ocorreu um erro inesperado: " + err.message);
@@ -397,9 +399,8 @@ function User() { // componente principal User
 
 
   return (
-    <main className="App">
-
-
+    <main className="app">
+      
       <div className="card">
         <div className='alert'>
           {msg && (

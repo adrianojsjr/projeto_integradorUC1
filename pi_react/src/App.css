@@ -1,13 +1,4 @@
 /* =============================
-   Paleta de cores
-   =============================
-Verde-água: #11b5ba
-Cinza azulado: #40566e
-Azul: #1e5acd
-Verde: #33B291
-*/
-
-/* =============================
    Importação de fontes
    ============================= */
    @import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
@@ -159,36 +150,3 @@ Verde: #33B291
    footer a:hover {
      text-decoration: underline;
    }
-   
-   /* =============================
-      Responsividade
-      ============================= */
-   @media (max-width: 768px) {
-     .inicio .menu {
-       flex-direction: column;
-       align-items: flex-start;
-     }
-   
-     .inicio .menu p {
-       font-size: 20px;
-       text-align: left;
-       margin: 10px 0;
-     }
-   
-     .inicio .menu .btnNav {
-       width: 100%;
-       justify-content: space-around;
-     }
-   
-     .inicio .menuBusca {
-       flex-direction: column;
-       height: auto;
-       padding: 20px;
-     }
-   
-     .inicio .menuBusca input {
-       width: 100%;
-       margin-bottom: 10px;
-     }
-   }
-   

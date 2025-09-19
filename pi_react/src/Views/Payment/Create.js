@@ -1,7 +1,12 @@
+// Payment.js
+//import './Style.css';
+
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { supabase } from '../../User';
-import './payment.css';
+import { useNavigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { createClient } from '@supabase/supabase-js';
+import Button from 'react-bootstrap/Button';
+
+import { supabase } from '../User/Index';
 
 function PaymentCreate() {
   const nav = useNavigate();

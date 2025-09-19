@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
-import { supabase } from '../../User';
+import { supabase } from '../User/Index';
 
 function Doctor() {
 

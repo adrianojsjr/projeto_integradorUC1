@@ -13,9 +13,9 @@ import PaymentCreate from './Views/Payment/Create';
 
 import Schedule from './Views/Schedule/Index';
 
-import User from './User'
+import User from './Views/User/Index';
 
-import { supabase } from './User';
+import { supabase } from './Views/User/Index';
 
 import logo from "./logo_teste.png"
 
@@ -49,7 +49,7 @@ function App() {
 
   return (
     <Router>
-      <main>
+      <main className='app'>
         <div className='inicio'>
           <nav>
             {hasSession ? ( // Se usuário estiver logado
@@ -58,7 +58,7 @@ function App() {
                 <div className='btnNav'>
                   {isPatient ? (
                     <>
-                      <Link to="/doctors">Inicio</Link>
+                      <Link to="/">Inicio</Link>
                       <Link to={`/schedule/${uid}`}>Consultas</Link>
                       <Link to={`/patients/${uid}`}>Meu Perfil</Link>
                     </>
@@ -75,7 +75,7 @@ function App() {
                 <span> <img src={logo} alt="logo" /> </span>
                 <p>Sua consulta na palma da mão</p>
                 <div className='btnNav'>
-                  <Link to="/doctors">Inicio</Link>
+                  <Link to="/">Inicio</Link>
                   <Link to="/user">Login/Cadastro</Link>
                 </div>
               </div>
@@ -98,15 +98,19 @@ function App() {
 
           </Route>
 
-          <Route path='/' element={<Navigate to='/doctors' replace />} />
+          <Route path='/' element={<Navigate to='/' replace />} />
         </Routes>
 
-        <footer>
-          <h4>Contato</h4>
-          <p>Email: suporte@conectmed.com</p>
-          <p>Telefone: (11) 99999-9999</p>
-          <p>© {new Date().getFullYear()} ConectMed. Todos os direitos reservados.</p>
-        </footer>
+        
+          <footer >
+            <h4>Contato</h4>
+            <p>Email: suporte@conectmed.com</p>
+            <p>Telefone: (11) 99999-9999</p>
+            <p>© {new Date().getFullYear()} ConectMed. Todos os direitos reservados.</p>
+          </footer>
+        
+
+
 
       </main>
     </Router>
