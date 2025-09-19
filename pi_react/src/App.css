@@ -41,7 +41,7 @@ body {
   font-family: Arial, sans-serif;
 }
 
-.inicio .menu span{
+.inicio .menu span {
   width: 414px;
 }
 
@@ -52,7 +52,7 @@ body {
 }
 
 
-.inicio .menu .btnNav{
+.inicio .menu .btnNav {
   display: flex;
   gap: 10px;
   justify-content: right;
@@ -156,5 +156,90 @@ footer {
   padding: 30px 20px 15px;
   font-family: 'Segoe UI', sans-serif;
   text-align: center;
-  margin-top: 150px; /* empurra o footer para o fim quando necessário */
+  margin-top: 150px;
+  /* empurra o footer para o fim quando necessário */
+}
+
+/* Telas menores que 768px (tablet e mobile) */
+@media (max-width: 768px) {
+  .inicio .menu {
+    align-items: center;
+    flex-wrap: wrap;
+    /* evita que elementos saiam da tela */
+    gap: 10px;
+  }
+
+  .inicio .menu p {
+    display: none;
+    /* esconde textos grandes */
+  }
+
+  .inicio .menu span {
+    font-size: 24px;
+    /* reduz tamanho do texto */
+    text-align: center;
+    margin: 10px 0;
+    width: 100%;
+  }
+
+  .inicio .menu .btnNav {
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .inicio .menu img {
+    width: 100px;
+    height: auto;
+  }
+
+  .inicio .menuBusca {
+    height: auto;
+    padding: 20px 10px;
+  }
+
+  .inicio .menuBusca .busca {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .inicio .menuBusca input {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Telas muito pequenas (mobile < 480px) */
+@media (max-width: 480px) {
+  .inicio .menu span {
+    font-size: 20px;
+  }
+
+  .inicio .menu p {
+    display: none;
+    /* esconde textos grandes */
+  }
+
+  .inicio .menu img {
+    width: 80px;
+    /* reduz um pouco mais a logo */
+    height: auto;
+  }
+
+  .inicio .menu a {
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+
+  .inicio .menuBusca input {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
+  .btn {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
 }
