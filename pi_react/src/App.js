@@ -49,7 +49,7 @@ function App() {
 
   return (
     <Router>
-      <main>
+      <main className='main-content'>
         <div className='inicio'>
           <nav>
             {hasSession ? ( // Se usuário estiver logado

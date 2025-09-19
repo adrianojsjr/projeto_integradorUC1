@@ -1,15 +1,14 @@
-/* Paleta de cores:
-Verde-água: #11b5ba (vibrante, ideal para destaque)
-Cinza azulado: #40566e (ótimo para texto, bordas e contornos)
-Azul: #1e5acd (fundo ou botões primários)
-Verde: #33B291 (secundário, suave)
+/* =============================
+   Paleta de cores
+   =============================
+Verde-água: #11b5ba
+Cinza azulado: #40566e
+Azul: #1e5acd
+Verde: #33B291
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
-
-
 /* =============================
-   Reset e estrutura básica
+   Importação de fontes
    ============================= */
 
 
