@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createClient } from "@supabase/supabase-js";
-import { useNavigate, useParams } from 'react-router-dom';
+import { replace, useNavigate, useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
 import { supabase } from '../User/Index';
@@ -135,6 +135,7 @@ function Patient() {
     sessionStorage.clear();
 
     window.location.reload(); // Recarrega a página
+    nav('/', {replace: true})
   }
 
 
