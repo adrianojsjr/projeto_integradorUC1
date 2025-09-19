@@ -6,7 +6,7 @@ import { useNavigate, useLocation, useParams, useSearchParams } from 'react-rout
 import { createClient } from '@supabase/supabase-js';
 import Button from 'react-bootstrap/Button';
 
-import { supabase } from '../../User';
+import { supabase } from '../User/Index';
 
 function PaymentCreate() {
   const nav = useNavigate();

@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'; // Importa funções 
 
 import "react-datepicker/dist/react-datepicker.css"; // Importa estilo para o calendário
 
-import { supabase } from '../../User'; // Importa a conexão com o Supabase
+import { supabase } from '../User/Index'; // Importa a conexão com o Supabase
 
 import "./schedule.css"; // Importa o estilo da página
 

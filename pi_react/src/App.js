@@ -13,9 +13,9 @@ import PaymentCreate from './Views/Payment/Create';
 
 import Schedule from './Views/Schedule/Index';
 
-import User from './User'
+import User from './Views/User/Index';
 
-import { supabase } from './User';
+import { supabase } from './Views/User/Index';
 
 import logo from "./logo_teste.png"
 
@@ -72,8 +72,10 @@ function App() {
               </div>
             ) : ( // Se não estiver logado
               <div className='menu'>
-                <span> <img src={logo} alt="logo" /> </span>
-                <p>Sua consulta na palma da mão</p>
+                <div className='logo'>
+                  <span> <img src={logo} alt="logo" /> </span>
+                  <p>Sua consulta na palma da mão</p>
+                </div>
                 <div className='btnNav'>
                   <Link to="/doctors">Inicio</Link>
                   <Link to="/user">Login/Cadastro</Link>

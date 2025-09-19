@@ -41,6 +41,10 @@ body {
   font-family: Arial, sans-serif;
 }
 
+.inicio .menu .logo{
+  display: flex;
+}
+
 .inicio .menu span{
   width: 414px;
 }
@@ -157,4 +161,57 @@ footer {
   font-family: 'Segoe UI', sans-serif;
   text-align: center;
   margin-top: 150px; /* empurra o footer para o fim quando necessário */
+}
+
+
+@media (max-width: 770px) {
+ .inicio .menu {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  
+}
+
+.inicio .menu img {
+  width: 70px;
+  /* Tamanho do logo */
+}
+
+.inicio .menu .logo span{
+  width: auto;
+}
+
+.inicio .menu p {
+  width: auto;
+  font-size: 15px;
+ 
+}
+
+.inicio .menu .btnNav{
+  width: auto;
+}
+
+/* Botão "CADASTRE-SE" */
+.inicio .menu a {
+  background-color: #1e5acd;
+  /* Cor de fundo azul principal */
+  color: #ffffff;
+  /* Cor do texto: branco */
+  border-radius: 6px;
+  /* Bordas arredondadas */
+  padding: 12px 24px;
+  /* Espaçamento interno vertical e horizontal */
+  font-size: 16px;
+  /* Tamanho da fonte */
+  font-weight: 600;
+  /* Negrito */
+  cursor: pointer;
+  /* Cursor tipo "mãozinha" */
+  text-decoration: none;
+  /* Remove sublinhado do link */
+  box-shadow: 0 4px 8px rgba(30, 90, 205, 0.25);
+  /* Sombra sutil para destaque */
+}
+
+
 }

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { createClient } from "@supabase/supabase-js";
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import './App.css';
+import '../../App.css';
 import './user.css';
 
 // informações para conexão com Supabase
