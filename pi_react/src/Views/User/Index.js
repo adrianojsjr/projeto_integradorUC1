@@ -304,7 +304,8 @@ function User() { // componente principal User
         setMsg("❌ Email não cadastrado");
         setLoading(false);
         setTimeout(() => setMsg(""), 4000);
-        nav('/user');
+        nav('/user'
+        );
         return;
       }
 

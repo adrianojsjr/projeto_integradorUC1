@@ -58,7 +58,7 @@ function App() {
                 <div className='btnNav'>
                   {isPatient ? (
                     <>
-                      <Link to="/doctors">Inicio</Link>
+                      <Link to="/">Inicio</Link>
                       <Link to={`/schedule/${uid}`}>Consultas</Link>
                       <Link to={`/patients/${uid}`}>Meu Perfil</Link>
                     </>
@@ -75,7 +75,7 @@ function App() {
                 <span> <img src={logo} alt="logo" /> </span>
                 <p>Sua consulta na palma da mão</p>
                 <div className='btnNav'>
-                  <Link to="/doctors">Inicio</Link>
+                  <Link to="/">Inicio</Link>
                   <Link to="/user">Login/Cadastro</Link>
                 </div>
               </div>
@@ -98,7 +98,7 @@ function App() {
 
           </Route>
 
-          <Route path='/' element={<Navigate to='/doctors' replace />} />
+          <Route path='/' element={<Navigate to='/' replace />} />
         </Routes>
 
         
