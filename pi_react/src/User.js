@@ -399,8 +399,7 @@ function User() { // componente principal User
 
   return (
     <main className="App">
-
-
+      
       <div className="card">
         <div className='alert'>
           {msg && (

@@ -13,14 +13,26 @@ Verde: #33B291
    @import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
    /* =============================
-      Reset e estrutura básica
-      ============================= */
-   body, html {
+         Reset e estrutura básica
+         ============================= */
+   html, body {
      margin: 0;
      padding: 0;
      font-family: "Rubik", sans-serif;
      background-color: #f5f6fa;
      color: #333;
+   }
+   
+   main {
+     display: flex;
+     flex-direction: column;
+     justify-content: space-around;
+     min-height: 100vh; /* altura total da tela */
+
+   }
+   
+   .main-content {
+     flex: 1; /* ocupa todo o espaço antes do footer */
    }
    
    .alinhamentoPagina {
@@ -31,15 +43,15 @@ Verde: #33B291
    }
    
    /* =============================
-      Header / Nav
-      ============================= */
+         Header / Nav
+         ============================= */
    .inicio .menu {
      display: flex;
      justify-content: space-between;
      align-items: center;
      background-color: #ffffff;
      padding: 15px 30px;
-     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
      border-radius: 12px;
      margin-bottom: 20px;
    }
@@ -81,8 +93,8 @@ Verde: #33B291
    }
    
    /* =============================
-      Seção de busca / destaque
-      ============================= */
+         Seção de busca / destaque
+         ============================= */
    .inicio .menuBusca {
      display: flex;
      justify-content: center;
@@ -126,15 +138,14 @@ Verde: #33B291
    }
    
    /* =============================
-      Footer
-      ============================= */
+         Footer
+         ============================= */
    footer {
      background-color: #1e5acd;
      color: white;
      padding: 30px 20px;
      text-align: center;
      font-family: 'Segoe UI', sans-serif;
-     margin-top: 100px;
      border-radius: 12px 12px 0 0;
    }
    
@@ -149,8 +160,8 @@ Verde: #33B291
    }
    
    /* =============================
-      Links do footer
-      ============================= */
+         Links do footer
+         ============================= */
    footer a {
      color: #11b5ba;
      text-decoration: none;
@@ -161,8 +172,8 @@ Verde: #33B291
    }
    
    /* =============================
-      Responsividade
-      ============================= */
+         Responsividade
+         ============================= */
    @media (max-width: 768px) {
      .inicio .menu {
        flex-direction: column;

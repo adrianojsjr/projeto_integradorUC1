@@ -113,7 +113,6 @@ function Doctor() { // Componente React Doctor
     localStorage.clear();
     sessionStorage.clear();
 
-    nav("/user", { replace: true });
     window.location.reload(); // Recarrega a página
   }
 
