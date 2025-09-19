@@ -1,14 +1,15 @@
-/* =============================
-   Paleta de cores
-   =============================
-Verde-água: #11b5ba
-Cinza azulado: #40566e
-Azul: #1e5acd
-Verde: #33B291
+/* Paleta de cores:
+Verde-água: #11b5ba (vibrante, ideal para destaque)
+Cinza azulado: #40566e (ótimo para texto, bordas e contornos)
+Azul: #1e5acd (fundo ou botões primários)
+Verde: #33B291 (secundário, suave)
 */
 
+@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+
 /* =============================
-   Importação de fontes
+   Reset e estrutura básica
    ============================= */
 
 
@@ -38,10 +39,6 @@ body {
   align-items: center;
   background-color: white;
   font-family: Arial, sans-serif;
-}
-
-.inicio .menu .logo{
-  display: flex;
 }
 
 .inicio .menu span{
@@ -160,57 +157,4 @@ footer {
   font-family: 'Segoe UI', sans-serif;
   text-align: center;
   margin-top: 150px; /* empurra o footer para o fim quando necessário */
-}
-
-
-@media (max-width: 770px) {
- .inicio .menu {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 15px;
-  
-}
-
-.inicio .menu img {
-  width: 70px;
-  /* Tamanho do logo */
-}
-
-.inicio .menu .logo span{
-  width: auto;
-}
-
-.inicio .menu p {
-  width: auto;
-  font-size: 15px;
- 
-}
-
-.inicio .menu .btnNav{
-  width: auto;
-}
-
-/* Botão "CADASTRE-SE" */
-.inicio .menu a {
-  background-color: #1e5acd;
-  /* Cor de fundo azul principal */
-  color: #ffffff;
-  /* Cor do texto: branco */
-  border-radius: 6px;
-  /* Bordas arredondadas */
-  padding: 12px 24px;
-  /* Espaçamento interno vertical e horizontal */
-  font-size: 16px;
-  /* Tamanho da fonte */
-  font-weight: 600;
-  /* Negrito */
-  cursor: pointer;
-  /* Cursor tipo "mãozinha" */
-  text-decoration: none;
-  /* Remove sublinhado do link */
-  box-shadow: 0 4px 8px rgba(30, 90, 205, 0.25);
-  /* Sombra sutil para destaque */
-}
-
-
 }

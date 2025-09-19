@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { supabase } from '../../User';
+import { supabase } from '../User/Index';
 
 import "react-datepicker/dist/react-datepicker.css";
 import "./schedule.css";

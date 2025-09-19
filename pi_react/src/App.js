@@ -49,7 +49,7 @@ function App() {
 
   return (
     <Router>
-      <main className='main-content'>
+      <main className='app'>
         <div className='inicio'>
           <nav>
             {hasSession ? ( // Se usuário estiver logado
@@ -72,10 +72,8 @@ function App() {
               </div>
             ) : ( // Se não estiver logado
               <div className='menu'>
-                <div className='logo'>
-                  <span> <img src={logo} alt="logo" /> </span>
-                  <p>Sua consulta na palma da mão</p>
-                </div>
+                <span> <img src={logo} alt="logo" /> </span>
+                <p>Sua consulta na palma da mão</p>
                 <div className='btnNav'>
                   <Link to="/doctors">Inicio</Link>
                   <Link to="/user">Login/Cadastro</Link>
@@ -103,12 +101,16 @@ function App() {
           <Route path='/' element={<Navigate to='/doctors' replace />} />
         </Routes>
 
-        <footer>
-          <h4>Contato</h4>
-          <p>Email: suporte@conectmed.com</p>
-          <p>Telefone: (11) 99999-9999</p>
-          <p>© {new Date().getFullYear()} ConectMed. Todos os direitos reservados.</p>
-        </footer>
+        
+          <footer >
+            <h4>Contato</h4>
+            <p>Email: suporte@conectmed.com</p>
+            <p>Telefone: (11) 99999-9999</p>
+            <p>© {new Date().getFullYear()} ConectMed. Todos os direitos reservados.</p>
+          </footer>
+        
+
+
 
       </main>
     </Router>

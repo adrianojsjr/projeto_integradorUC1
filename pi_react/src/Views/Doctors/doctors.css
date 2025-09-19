@@ -170,3 +170,79 @@
 
 
 }
+
+
+@media (max-width: 770px) {
+    
+
+.apresentacaoPlataforma h2 {
+    font-size: 17px;
+}
+
+.apresentacaoPlataforma p {
+    font-size: 15px;
+}
+
+
+/*Card com as infos da consulta*/
+
+.cardInfoConsulta {
+    display: flex;
+    flex-direction: column;
+}
+
+/*img, nome, especialidade e btn ver mais*/
+.infoConsulta {
+    flex-direction: column;
+    padding: 0px;
+    text-align: center;
+}
+
+.cardInfoConsulta .infoConsulta img {
+    width: 150px;
+    height: 150px;
+}
+
+.detalhesMedico img {
+    width: 150px;
+    height: 150px;
+    margin-left: 0px;
+}
+
+
+.infoConsulta .btnVerMais {
+    font-size: 15px;
+}
+
+/*Calendário*/
+
+.calendario {
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+
+}
+
+
+.especialidade {
+    width: 300px;
+   text-align: center;
+}
+
+
+
+.dadosGeraisConsulta {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.dadosGeraisConsulta .detalhesMedico {
+
+    display: flex;
+    flex-direction: row;
+
+
+}
+  
+}

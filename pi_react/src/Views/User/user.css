@@ -6,13 +6,9 @@
   --borda: #dce3ec;
 }
 
-.app{
-  display: block;
-}
-
 /* Formulário de login */
 .card {
-  max-width: 500px;
+  max-width: 80vh;
   margin: 20px auto;
   padding: 20px;
   background: #fff;
@@ -177,29 +173,3 @@ button {
 }
 
 /* ---------------- RESPONSIVIDADE ---------------- */
-
-/* Ajuste de layout para telas menores */
-@media (max-width: 600px) {
-  .card {
-    width: 95%;
-    padding: 15px;
-  }
-
-  .card input,
-  .card select,
-  .card textarea,
-  button {
-    font-size: 0.9rem;
-    padding: 12px;
-  }
-
-  .btnUpload {
-    padding: 12px;
-    font-size: 0.9rem;
-  }
-
-  .card .fotoPerfil img {
-    max-width: 120px;
-    height: auto;
-  }
-}

@@ -1,7 +1,7 @@
 // Payment.js
 //import './Style.css';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
 import Button from 'react-bootstrap/Button';
