@@ -10,7 +10,7 @@
 
 /* Mensagem de feedback */
 .msgFeedback {
-  background-color: #27ae60;
+  background-color: #acae27;
   color: white;
   padding: 12px 20px;
   margin-bottom: 15px;
@@ -60,6 +60,7 @@
   margin-top: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom: 40px;
 }
 
 /* Tabela da agenda */

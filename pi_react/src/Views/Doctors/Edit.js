@@ -12,6 +12,8 @@ const supabase = createClient(supabaseUrl, supabaseKey); // Cria cliente Supabas
 function Doctor() { // Componente React Doctor
   const nav = useNavigate(); // Hook para navegação programática
   const { id } = useParams(); // Pega o parâmetro 'id' da URL
+  const [novaSenha, setNovaSenha] = useState("");
+  const [confirmarSenha, setConfirmarSenha] = useState("");
 
   // Estado do médico, já inicializado com todas as propriedades
   const [doctor, setDoctor] = useState({
@@ -49,51 +51,67 @@ function Doctor() { // Componente React Doctor
     listarEspecialidades();
   }, [])
 
-  // Função para atualizar dados do médico
   async function update() {
-    setLoading(true); // Ativa loading
-
+    setLoading(true);
+    setMsg("");
+  
     try {
-      // 1. Pega usuário logado no Auth
-      const { data: dU, error: eU } = await supabase.auth.getUser();
-      const uid = dU?.user?.id; // Pega uid do usuário logado
-
-      if (!uid) nav("/user", { replace: true }); // Redireciona caso não exista uid
-
-      // 2. Atualiza dados do médico na tabela 'doctos' (possível erro de digitação, deveria ser 'doctors')
-      const { data: edit, error: editError } = await supabase.from("doctors").update([
-        {
-          email: doctor.email,
-          telefone: doctor.telefone,
-          residencia: doctor.residencia,
-          diploma: doctor.diploma,
-          situacaoRegular: doctor.situacaoRegular,
-          fotoPerfil: doctor.fotoPerfil,
-          especialidade_id: doctor.especialidade_id
-        },
-      ]).eq('supra_id', id); // Atualiza apenas o médico com o supra_id igual ao id da URL
-
-      if (editError) throw editError; // Lança erro caso ocorra
-
-      setMsg("Cadastro atualizado com sucesso!"); // Mensagem de sucesso
-
-      if (edit && edit.length > 0) {
-        setDoctor(prev => ({ ...prev, ...edit[0] }));
+      // Pega usuário logado no Auth
+      const { data: dU } = await supabase.auth.getUser();
+      const uid = dU?.user?.id;
+      if (!uid) return nav("/user", { replace: true });
+  
+      // Atualiza dados do médico na tabela 'doctors'
+      const { data: edit, error: editError } = await supabase
+        .from("doctors")
+        .update([
+          {
+            email: doctor.email,
+            telefone: doctor.telefone,
+            residencia: doctor.residencia,
+            diploma: doctor.diploma,
+            situacaoRegular: doctor.situacaoRegular,
+            fotoPerfil: doctor.fotoPerfil,
+            especialidade_id: doctor.especialidade_id
+          },
+        ])
+        .eq('supra_id', id);
+  
+      if (editError) throw editError;
+  
+      // Atualiza a senha se informada
+      if (novaSenha) {
+        if (novaSenha !== confirmarSenha) throw new Error("A confirmação da senha não confere!");
+  
+        const { error: pwdError } = await supabase.auth.updateUser({ password: novaSenha });
+        if (pwdError) {
+          if (pwdError.message.includes("New password should be different")) {
+            throw new Error("A nova senha deve ser diferente da senha atual!");
+          } else {
+            throw pwdError;
+          }
+        }
       }
-
-      nav(`/schedule/${uid}`, { replace: true });
-
-
+  
+      // Atualiza o estado do doctor
+      if (edit && edit.length > 0) setDoctor(prev => ({ ...prev, ...edit[0] }));
+  
+      // Mensagem de sucesso
+      setMsg("Dados alterados com sucesso!");
+  
+      // Redireciona após 2 segundos, para a mensagem aparecer
+      setTimeout(() => nav(`/schedule/${uid}`, { replace: true }), 2000);
+  
     } catch (e) {
-      setMsg(`Error: ${e.message}`); // Mensagem de erro
+      setMsg(`Erro: ${e.message}`);
+    } finally {
+      setLoading(false);
+      // Limpa mensagem após 5 segundos
+      setTimeout(() => setMsg(""), 5000);
     }
-
-    setLoading(false); // Desativa loading
-
-    setTimeout(() => setMsg(""), 5000); // Limpa mensagem após 5 segundos
   }
-
-
+  
+  
 
   // Função para buscar dados do médico
   async function listarMedicos() {
@@ -164,6 +182,7 @@ function Doctor() { // Componente React Doctor
         <form onSubmit={(e) => e.preventDefault()}>
 
           <h3>Cadastro Médico</h3>
+          {msg && <p className="mensagem">{msg}</p>}
 
           <p className='fotoPerfil'>  <img src={doctor.fotoPerfil?.[0]?.url || "/default.jpg"} alt="Foto do Médico" />
           </p>
@@ -258,6 +277,26 @@ function Doctor() { // Componente React Doctor
           <p>
             <label>Resumo Profissional*</label>
             <textarea rows="7" id="resumoProfissional" type='text' value={doctor.resumoProfissional} onChange={(e) => setDoctor({ ...doctor, resumoProfissional: e.target.value })} />
+          </p>
+
+          <p>
+            <label>Nova Senha</label>
+            <input
+              type="password"
+              value={novaSenha}
+              onChange={(e) => setNovaSenha(e.target.value)}
+              placeholder="Digite a nova senha"
+            />
+          </p>
+
+          <p>
+            <label>Confirmar Senha</label>
+            <input
+              type="password"
+              value={confirmarSenha}
+              onChange={(e) => setConfirmarSenha(e.target.value)}
+              placeholder="Confirme a nova senha"
+            />
           </p>
 
           <button className="buttonSucess" type="button" onClick={update} disabled={loading}>

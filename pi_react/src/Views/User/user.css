@@ -6,9 +6,12 @@
   --borda: #dce3ec;
 }
 
+
+
+
 /* Formulário de login */
 .card {
-  max-width: 80vh;
+  width: 500px;
   margin: 20px auto;
   padding: 20px;
   background: #fff;
@@ -16,7 +19,10 @@
   border-radius: 10px;
   display: flex;
   flex-direction: column;
+  margin-bottom: 95px;
+  margin-top: 95px;
 }
+
 
 /* Labels*/
 .card label {

@@ -1,160 +1,156 @@
 /* =============================
    Importação de fontes
    ============================= */
-   @import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
-   /* =============================
+/* =============================
       Reset e estrutura básica
       ============================= */
-   body, html {
-     margin: 0;
-     padding: 0;
-     font-family: "Rubik", sans-serif;
-     background-color: #f5f6fa;
-     color: #333;
-   }
-   
-   .alinhamentoPagina {
-     display: flex;
-     flex-direction: column;
-     justify-content: flex-start;
-     margin: 0 50px;
-   }
-   
-   /* =============================
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: "Rubik", sans-serif;
+  background-color: #f5f6fa;
+  color: #333;
+  height: 100vh;
+}
+
+
+/* =============================
       Header / Nav
       ============================= */
-   .inicio .menu {
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
-     background-color: #ffffff;
-     padding: 15px 30px;
-     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-     border-radius: 12px;
-     margin-bottom: 20px;
-   }
-   
-   .inicio .menu span{
-    width: 400px;
-   }
+.inicio .menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 15px 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
 
-   .inicio .menu img {
-     width: 150px;
-     height: auto;
-   }
-   
-   .inicio .menu .btnNav {
-     display: flex;
-     gap: 10px;
-     width: 400px;
-     justify-content: right;
-   }
-   
-   .inicio .menu .btnNav a {
-     background-color: #1e5acd;
-     color: #ffffff;
-     border-radius: 6px;
-     padding: 10px 20px;
-     font-size: 16px;
-     font-weight: 600;
-     cursor: pointer;
-     text-decoration: none;
-     transition: background 0.3s, transform 0.2s;
-     box-shadow: 0 4px 8px rgba(30, 90, 205, 0.25);
-     
-   }
-   
-   .inicio .menu .btnNav a:hover {
-     background-color: #1546a0;
-     transform: translateY(-2px);
-   }
-   
-   .inicio .menu p {
-     color: #40566e;
-     font-size: 24px;
-     margin: 0;
-     text-align: center;
-     flex: 1;
-     width: 400px;
-   }
-   
-   /* =============================
+.inicio .menu span {
+  width: 400px;
+}
+
+.inicio .menu img {
+  width: 150px;
+  height: auto;
+}
+
+.inicio .menu .btnNav {
+  display: flex;
+  gap: 10px;
+  width: 400px;
+  justify-content: right;
+}
+
+.inicio .menu .btnNav a {
+  background-color: #1e5acd;
+  color: #ffffff;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.3s, transform 0.2s;
+  box-shadow: 0 4px 8px rgba(30, 90, 205, 0.25);
+
+}
+
+.inicio .menu .btnNav a:hover {
+  background-color: #1546a0;
+  transform: translateY(-2px);
+}
+
+.inicio .menu p {
+  color: #40566e;
+  font-size: 24px;
+  margin: 0;
+  text-align: center;
+  flex: 1;
+  width: 400px;
+}
+
+/* =============================
       Seção de busca / destaque
       ============================= */
-   .inicio .menuBusca {
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     background: linear-gradient(90deg, #1e5acd 0%, #33B291 100%);
-     height: 180px;
-     border-radius: 12px;
-     margin-bottom: 40px;
-     padding: 20px;
-   }
-   
-   .inicio .menuBusca .busca {
-     display: flex;
-     align-items: center;
-     gap: 10px;
-   }
-   
-   .inicio .menuBusca input {
-     padding: 10px 20px;
-     border: none;
-     border-radius: 6px;
-     font-size: 16px;
-     width: 250px;
-   }
-   
-   .inicio .menuBusca .btn {
-     background-color: #11b5ba;
-     color: #ffffff;
-     border: none;
-     border-radius: 6px;
-     padding: 10px 20px;
-     font-size: 16px;
-     font-weight: 500;
-     cursor: pointer;
-     transition: background 0.3s, transform 0.2s;
-   }
-   
-   .inicio .menuBusca .btn:hover {
-     background-color: #0ea1a6;
-     transform: translateY(-2px);
-   }
-   
-   /* =============================
+.inicio .menuBusca {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(90deg, #1e5acd 0%, #33B291 100%);
+  height: 180px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+  padding: 20px;
+}
+
+.inicio .menuBusca .busca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.inicio .menuBusca input {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  width: 250px;
+}
+
+.inicio .menuBusca .btn {
+  background-color: #11b5ba;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.inicio .menuBusca .btn:hover {
+  background-color: #0ea1a6;
+  transform: translateY(-2px);
+}
+
+/* =============================
       Footer
       ============================= */
-   footer {
-     background-color: #1e5acd;
-     color: white;
-     padding: 30px 20px;
-     text-align: center;
-     font-family: 'Segoe UI', sans-serif;
-     margin-top: 100px;
-     border-radius: 12px 12px 0 0;
-   }
-   
-   footer h4 {
-     margin: 0 0 10px 0;
-     font-size: 18px;
-   }
-   
-   footer p {
-     margin: 5px 0;
-     font-size: 14px;
-   }
-   
-   /* =============================
+footer {
+  background-color: #2f70e7;
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+  border-radius: 12px 12px 0 0;
+}
+
+
+footer h4 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+}
+
+footer p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+/* =============================
       Links do footer
       ============================= */
-   footer a {
-     color: #11b5ba;
-     text-decoration: none;
-   }
-   
-   footer a:hover {
-     text-decoration: underline;
-   }
+footer a {
+  color: #11b5ba;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}

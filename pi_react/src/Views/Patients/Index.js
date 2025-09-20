@@ -125,7 +125,6 @@ function Patient() {
 
     nav(`/payment/`, { replace: true });
   };
-
   // Função para deslogar
   async function logout() {
     await supabase.auth.signOut();
@@ -135,7 +134,6 @@ function Patient() {
     sessionStorage.clear();
 
     window.location.reload(); // Recarrega a página
-    nav('/', {replace: true})
   }
 
 
