@@ -10,7 +10,7 @@ function Schedule() {
   const nav = useNavigate();
   const { id } = useParams();
   const [msg, setMsg] = useState(""); // Mensagem de feedback
-  const [loading, setLoading] = useState(false); // Estado para ações em andamento
+  const [loading, setLoading] = useState(true); // Estado para carregamento inicial
   const [schedule, setSchedule] = useState([]); // Lista de horários/consultas
   const [novaSchedule, setNovaSchedule] = useState({ date: "", status: "Disponível" }); // Formulário de novo horário
   const [inserirAgenda, setInserirAgenda] = useState(false); // Mostrar ou ocultar o formulário
@@ -24,8 +24,17 @@ function Schedule() {
 
   // Função utilitária para obter ID do usuário atual
   async function getCurrentUserId() {
-    const { data } = await supabase.auth.getSession();
-    return data?.session?.user?.id;
+    try {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error('Erro ao obter sessão:', error);
+        return null;
+      }
+      return data?.session?.user?.id;
+    } catch (error) {
+      console.error('Erro inesperado:', error);
+      return null;
+    }
   }
 
   // Carrega os horários ao carregar a página
@@ -43,51 +52,71 @@ function Schedule() {
       return;
     }
 
-    // Converte string ISO para data local sem fuso
-    const [datePart, timePart] = novaSchedule.date.split('T');
-    const [year, month, day] = datePart.split('-').map(Number);
-    const [hour, minute] = timePart.split(':').map(Number);
-    const localDate = new Date(year, month - 1, day, hour, minute);
-    const isoLocal = localDate.toISOString().slice(0, 19);
+    setLoading(true);
+    try {
+      const [datePart, timePart] = novaSchedule.date.split('T');
+      const [year, month, day] = datePart.split('-').map(Number);
+      const [hour, minute] = timePart.split(':').map(Number);
+      const localDate = new Date(year, month - 1, day, hour, minute);
+      const isoLocal = localDate.toISOString().slice(0, 19);
 
-    const { data, error } = await supabase
-      .from('schedule')
-      .insert([{ date: isoLocal, doctor_id: uid, status: "Disponível" }])
-      .select();
+      const { data, error } = await supabase
+        .from('schedule')
+        .insert([{ date: isoLocal, doctor_id: uid, status: "Disponível" }])
+        .select();
 
-    if (error) {
-      exibirMsg("Erro ao criar horário.");
-      console.error(error.message);
-    } else {
-      setSchedule(prev => [...prev, ...data]);
-      setNovaSchedule({ date: "", status: "Disponível" });
-      setInserirAgenda(false);
-      exibirMsg("Horário criado com sucesso!");
+      if (error) {
+        exibirMsg("Erro ao criar horário.");
+      } else {
+
+        setSchedule(prev => [...prev, ...data]);
+        setNovaSchedule({ date: "", status: "Disponível" });
+        setInserirAgenda(false);
+        exibirMsg("Horário criado com sucesso!");
+        await readSchedule();
+      }
+    } catch (error) {
+      exibirMsg("Erro inesperado ao criar horário.");
+    } finally {
+      setLoading(false);
     }
   }
 
   // Lê os horários do banco, com filtros por tipo de usuário
   async function readSchedule() {
-    const uid = await getCurrentUserId();
+    setLoading(true);
+    try {
+      const uid = await getCurrentUserId();
+      if (!uid) {
+        nav("/user", { replace: true });
+        return;
+      }
 
-    let query = supabase
-      .from('schedule')
-      .select(`*, doctors!inner(nome), patient:patient_id(nome), payment(status)`)
-      .order('date', { ascending: false });
+      let query = supabase
+        .from('schedule')
+        .select(`*, 
+           doctors!inner(nome), 
+           patient:patient_id(nome), 
+           payment:payment_id(status)`) 
+        .order('date', { ascending: false });
 
-    if (tipoUsuario === 'doctor') {
-      query = query.eq('doctor_id', uid);
-    } else if (tipoUsuario === 'patient') {
-      query = query.or(`patient_id.eq.${uid},statusPatient.eq.Cancelada`);
-    }
+      if (tipoUsuario === 'doctor') {
+        query = query.eq('doctor_id', uid);
+      } else if (tipoUsuario === 'patient') {
+        query = query.eq('patient_id', uid);
+      }
 
-    const { data: dataSchedule, error } = await query;
+      const { data: dataSchedule, error } = await query;
 
-    if (error) {
-      exibirMsg("Erro ao buscar agenda.");
-      console.error(error);
-    } else {
-      setSchedule(dataSchedule || []);
+      if (error) {
+        exibirMsg("Erro ao buscar agenda.");
+      } else {
+        setSchedule(dataSchedule || []);
+      }
+    } catch (error) {
+      exibirMsg("Erro inesperado ao carregar agenda.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -95,154 +124,237 @@ function Schedule() {
   async function updatePayment(idPagamento) {
     if (!idPagamento) return;
 
-    const { error } = await supabase
-      .from('payment')
-      .update({ status: 'Cancelado' })
-      .eq('id', idPagamento);
+    try {
+      const { error } = await supabase
+        .from('payment')
+        .update({ status: 'Cancelado' })
+        .eq('id', idPagamento);
 
-    if (error) {
-      console.error('Erro ao cancelar pagamento:', error);
-    } else {
-      setSchedule(prev =>
-        prev.map(ag =>
-          ag.payment_id === idPagamento
-            ? { ...ag, payment: { ...ag.payment, status: 'Cancelado' } }
-            : ag
-        )
-      );
+      if (error) {
+        throw error;
+      } else {
+        setSchedule(prev =>
+          prev.map(ag =>
+            ag.payment_id === idPagamento
+              ? { ...ag, payment: { ...ag.payment, status: 'Cancelado' } }
+              : ag
+          )
+        );
+      }
+    } catch (error) {
+      throw error;
     }
   }
 
   // Atualiza a consulta após cancelamento
   async function updateSchedule(scheduleId) {
-    const { data, error } = await supabase
-      .from('schedule')
-      .update({
-        status: 'Disponível',
-        statusPatient: 'Cancelada',
-        avaliacao: null,
-        payment_id: null
-      })
-      .eq('id', scheduleId)
-      .select()
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from('schedule')
+        .update({
+          status: 'Disponível',
+          statusPatient: 'Cancelada',
+          avaliacao: null,
+          patient_id: null,
+          payment_id: null
+        })
+        .eq('id', scheduleId)
+        .select()
+        .single();
 
-    if (!error) {
+      if (error) throw error;
+
       setSchedule(prev =>
         prev.map(ag =>
           ag.id === scheduleId
-            ? { ...ag, status: 'Disponível', statusPatient: 'Cancelada', payment: { ...(ag.payment || {}), status: 'Reembolsado' } }
+            ? {
+              ...ag,
+              status: 'Disponível',
+              statusPatient: 'Cancelada',
+              patient_id: null,
+              patient: null,
+              payment: null
+            }
             : ag
         )
       );
+    } catch (error) {
+      throw error;
     }
   }
 
   // Cancela consulta (paciente)
   async function cancelarConsulta(scheduleId, idPagamento) {
-    await updatePayment(idPagamento);
-    await updateSchedule(scheduleId);
-    exibirMsg("Consulta cancelada com sucesso!");
+    setLoading(true);
+    try {
+      if (idPagamento) {
+        await updatePayment(idPagamento);
+      }
+      await updateSchedule(scheduleId);
+      exibirMsg("Consulta cancelada com sucesso!");
+    } catch (error) {
+      exibirMsg("Erro ao cancelar consulta.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   // Finaliza uma consulta (médico)
   async function finalizarConsulta(scheduleId) {
-    const { error } = await supabase
-      .from('schedule')
-      .update({ statusPatient: 'Concluída' })
-      .eq('id', scheduleId);
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from('schedule')
+        .update({ statusPatient: 'Concluída' })
+        .eq('id', scheduleId);
 
-    if (!error) {
-      setSchedule(prev =>
-        prev.map(ag =>
-          ag.id === scheduleId ? { ...ag, statusPatient: 'Concluída' } : ag
-        )
-      );
-      exibirMsg('Consulta concluída!');
-    } else {
-      console.error('Erro ao finalizar consulta:', error);
+      if (error) {
+        exibirMsg('Erro ao finalizar consulta.');
+      } else {
+        setSchedule(prev =>
+          prev.map(ag =>
+            ag.id === scheduleId ? { ...ag, statusPatient: 'Concluída' } : ag
+          )
+        );
+        exibirMsg('Consulta concluída!');
+      }
+    } catch (error) {
+      exibirMsg('Erro inesperado ao finalizar consulta.');
+    } finally {
+      setLoading(false);
     }
   }
 
   // Deleta um horário (sem paciente)
   async function deleteSchedule(scheduleId) {
-    const { error } = await supabase
-      .from('schedule')
-      .delete()
-      .eq('id', scheduleId);
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from('schedule')
+        .delete()
+        .eq('id', scheduleId);
 
-    if (!error) {
-      setSchedule(prev => prev.filter(ag => ag.id !== scheduleId));
-      exibirMsg("Horário deletado!");
-    } else {
-      console.error("Erro ao deletar:", error.message);
+      if (error) {
+        exibirMsg("Erro ao deletar horário.");
+      } else {
+        setSchedule(prev => prev.filter(ag => ag.id !== scheduleId));
+        exibirMsg("Horário deletado!");
+      }
+    } catch (error) {
+      exibirMsg("Erro inesperado ao deletar horário.");
+    } finally {
+      setLoading(false);
     }
   }
 
   // Avaliação do paciente e criação de desconto
   async function updateAvaliacao(scheduleId, valor) {
-    const { error } = await supabase
-      .from('schedule')
-      .update({ avaliacao: valor })
-      .eq('id', scheduleId);
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from('schedule')
+        .update({ avaliacao: valor })
+        .eq('id', scheduleId);
 
-    if (error) {
-      console.error('Erro ao avaliar:', error);
-      return;
+      if (error) {
+        exibirMsg('Erro ao enviar avaliação.');
+        return;
+      }
+
+      setSchedule(prev =>
+        prev.map(ag =>
+          ag.id === scheduleId ? { ...ag, avaliacao: valor } : ag
+        )
+      );
+
+      exibirMsg("Obrigado pela avaliação! Você terá 10% de desconto na próxima consulta.");
+
+      const uid = await getCurrentUserId();
+      const { data: proximas } = await supabase
+        .from('schedule')
+        .select()
+        .eq('patient_id', uid)
+        .neq('statusPatient', 'Concluída')
+        .order('date', { ascending: true })
+        .limit(1);
+
+      if (proximas?.length > 0) {
+        const proximaConsultaId = proximas[0].id;
+
+        const { data: descontosExistentes } = await supabase
+          .from('desconto')
+          .select()
+          .eq('schedule_id', proximaConsultaId);
+
+        if (!descontosExistentes || descontosExistentes.length === 0) {
+          await supabase
+            .from('desconto')
+            .insert([{ patient_id: uid, schedule_id: proximaConsultaId, percentual: 10, usado: false }]);
+        }
+      }
+    } catch (error) {
+      exibirMsg('Erro inesperado ao enviar avaliação.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Função para exibir o status correto baseado no tipo de usuário
+  function getStatusExibicao(agenda) {
+    if (tipoUsuario === 'doctor') {
+      // Para o médico, horários cancelados aparecem como "Disponível"
+      return agenda.statusPatient === 'Cancelada' ? 'Disponível' : (agenda.statusPatient || 'Disponível');
+    } else {
+      // Para o paciente, mostra o status real
+      return agenda.statusPatient || 'Disponível';
+    }
+  }
+
+  // Função para determinar o status do pagamento - VERSÃO SÍNCRONA
+  function getStatusPagamento(agenda) {
+    // Se payment é null mas existe payment_id, assumimos que está "Pago"
+    // (já que a query deveria trazer os dados do pagamento)
+    if (agenda.payment === null && agenda.payment_id) {
+      return 'Pago'; // Assumindo que se tem payment_id, está pago
     }
 
-    setSchedule(prev =>
-      prev.map(ag =>
-        ag.id === scheduleId ? { ...ag, avaliacao: valor } : ag
-      )
-    );
+    // Se tem payment com status, usa o status real
+    if (agenda.payment?.status) {
+      return agenda.payment.status;
+    }
 
-    exibirMsg("Obrigado pela avaliação! Você terá 10% de desconto na próxima consulta.");
-
-    // Aplica desconto na próxima consulta
-    const uid = await getCurrentUserId();
-    const { data: proximas } = await supabase
-      .from('schedule')
-      .select()
-      .eq('patient_id', uid)
-      .neq('statusPatient', 'Concluída')
-      .order('date', { ascending: true })
-      .limit(1);
-
-    if (proximas?.length > 0) {
-      const proximaConsultaId = proximas[0].id;
-
-      // Verifica se já existe desconto
-      const { data: descontosExistentes } = await supabase
-        .from('desconto')
-        .select()
-        .eq('schedule_id', proximaConsultaId);
-
-      if (!descontosExistentes || descontosExistentes.length === 0) {
-        await supabase
-          .from('desconto')
-          .insert([{ patient_id: uid, schedule_id: proximaConsultaId, percentual: 10, usado: false }]);
-      }
+    // Lógica para casos sem pagamento
+    if (tipoUsuario === 'doctor') {
+      return agenda.statusPatient === 'Cancelada' ? '--' : (agenda.patient_id ? 'Pendente' : '--');
+    } else {
+      return agenda.statusPatient === 'Cancelada' ? 'Reembolsado' : (agenda.patient_id ? 'Pendente' : '--');
     }
   }
 
   // Formata a data para dd/mm/yyyy hh:mm
   function formatarData(data) {
-    const date = new Date(data);
-    const dia = date.toLocaleDateString('pt-BR');
-    const hora = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    return `${dia} ${hora}`;
+    try {
+      const date = new Date(data);
+      if (isNaN(date.getTime())) return 'Data inválida';
+
+      const dia = date.toLocaleDateString('pt-BR');
+      const hora = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      return `${dia} ${hora}`;
+    } catch (error) {
+      return 'Data inválida';
+    }
   }
+
+  const hasData = schedule && schedule.length > 0;
 
   return (
     <div className="alinhamentoPagina">
       {msg && <div className="msgFeedback">{msg}</div>}
 
-      {tipoUsuario === 'patient' && schedule.length === 0 ? (
-        <p className="semConsulta">Nenhuma consulta encontrada.</p>
+      {loading ? (
+        <div className="carregando">Carregando...</div>
       ) : (
         <>
-          {/* Formulário de novo horário (para médicos) */}
           {tipoUsuario === "doctor" && (
             <div className="agenda">
               <button onClick={() => setInserirAgenda(!inserirAgenda)}>
@@ -262,66 +374,98 @@ function Schedule() {
             </div>
           )}
 
-          {/* Tabela de agenda */}
-          <div className="agendaContainer">
-            <table className="tabelaAgenda">
-              <thead>
-                <tr>
-                  <th>Data</th>
-                  <th>Médico</th>
-                  {tipoUsuario !== 'patient' && <th>Paciente</th>}
-                  <th>Status</th>
-                  <th>Pagamento</th>
-                  <th>Avaliação</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {schedule.map((agenda) => (
-                  <tr key={agenda.id}>
-                    <td>{agenda?.date ? formatarData(agenda.date) : ''}</td>
-                    <td>{agenda.doctors?.nome}</td>
-                    {tipoUsuario !== 'patient' && <td>{agenda.patient?.nome}</td>}
-                    <td>{agenda.statusPatient}</td>
-                    <td>{agenda.payment?.status || 'Reembolsado'}</td>
-                    <td>
-                      {tipoUsuario === 'patient' && agenda.statusPatient === 'Concluída' ? (
-                        agenda.avaliacao ? (
-                          agenda.avaliacao
-                        ) : (
-                          <select
-                            value={agenda.avaliacao || ''}
-                            onChange={(e) => updateAvaliacao(agenda.id, parseInt(e.target.value))}
-                          >
-                            <option value="">Avalie sua consulta</option>
-                            {[1, 2, 3, 4, 5].map(n => <option key={n} value={n}>{n}</option>)}
-                          </select>
-                        )
-                      ) : (
-                        agenda.avaliacao || ''
-                      )}
-                    </td>
-                    <td>
-                      {tipoUsuario === 'patient' && !['Cancelada', 'Concluída'].includes(agenda.statusPatient) ? (
-                        <button onClick={() => cancelarConsulta(agenda.id, agenda.payment_id)}>Cancelar</button>
-                      ) : tipoUsuario === 'doctor' && agenda.patient_id ? (
-                        <button
-                          onClick={() => finalizarConsulta(agenda.id)}
-                          disabled={agenda.statusPatient === "Concluída"}
-                        >
-                          Finalizar
-                        </button>
-                      ) : (
-                        tipoUsuario === 'doctor' && (
-                          <button onClick={() => deleteSchedule(agenda.id)}>Deletar</button>
-                        )
-                      )}
-                    </td>
+          {!hasData ? (
+            <p className="semConsulta">
+              {tipoUsuario === 'patient'
+                ? "Nenhuma consulta encontrada."
+                : "Nenhum horário encontrado."
+              }
+            </p>
+          ) : (
+            <div className="agendaContainer">
+              <table className="tabelaAgenda">
+                <thead>
+                  <tr>
+                    <th>Data</th>
+                    <th>Médico</th>
+                    {tipoUsuario !== 'patient' && <th>Paciente</th>}
+                    <th>Status</th>
+                    <th>Pagamento</th>
+                    <th>Ações</th>
+                    <th>Avaliação</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {schedule.map((agenda) => (
+                    <tr key={agenda.id}>
+                      <td data-label="Data">{formatarData(agenda.date)}</td>
+                      <td data-label="Médico">{agenda.doctors?.nome || '--'}</td>
+                      {tipoUsuario !== 'patient' && (
+                        <td data-label="Paciente">
+                          {agenda.patient?.nome || '--'}
+                        </td>
+                      )}
+                      <td data-label="Status">
+                        {getStatusExibicao(agenda)}
+                      </td>
+                      <td data-label="Pagamento">
+                        {getStatusPagamento(agenda)}
+                      </td>
+                      <td data-label="Ações">
+                        {tipoUsuario === 'patient' && !['Cancelada', 'Concluída'].includes(agenda.statusPatient) ? (
+                          <button
+                            className='btnCancel'
+                            onClick={() => cancelarConsulta(agenda.id, agenda.payment_id)}
+                            disabled={loading}
+                          >
+                            Cancelar
+                          </button>
+                        ) : tipoUsuario === 'doctor' && agenda.patient_id && agenda.statusPatient !== 'Cancelada' ? (
+                          <button
+                            className='btnFinalize'
+                            onClick={() => finalizarConsulta(agenda.id)}
+                            disabled={agenda.statusPatient === "Concluída"}
+                          >
+                            Finalizar
+                          </button>
+                        ) : tipoUsuario === 'doctor' && (!agenda.patient_id || agenda.statusPatient === 'Cancelada') ? (
+                          <button
+                            className='btnDelete'
+                            onClick={() => deleteSchedule(agenda.id)}
+                          >
+                            Deletar
+                          </button>
+                        ) : (
+                          <span className="sem-acoes">Nenhuma ação disponível</span>
+                        )}
+                      </td>
+                      <td data-label="Avaliação">
+                        {tipoUsuario === 'patient' && agenda.statusPatient === 'Concluída' ? (
+                          agenda.avaliacao ? (
+                            <div className="avaliacao-concluida">
+                              <span>⭐ {agenda.avaliacao}/5</span>
+                            </div>
+                          ) : (
+                            <select
+                              value={agenda.avaliacao || ''}
+                              onChange={(e) => updateAvaliacao(agenda.id, parseInt(e.target.value))}
+                            >
+                              <option value="">Avalie sua consulta</option>
+                              {[1, 2, 3, 4, 5].map(n => <option key={n} value={n}>{n} ⭐</option>)}
+                            </select>
+                          )
+                        ) : (
+                          <span className="avaliacao-pendente">
+                            {agenda.avaliacao ? `⭐ ${agenda.avaliacao}/5` : '--'}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </>
       )}
     </div>

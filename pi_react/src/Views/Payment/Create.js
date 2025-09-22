@@ -38,7 +38,7 @@ function PaymentCreate() {
     if (msg) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       if (msgTimer.current) clearTimeout(msgTimer.current);
-      msgTimer.current = setTimeout(() => setMsg(''), 3000);
+      msgTimer.current = setTimeout(() => setMsg(''), 2000);
     }
     return () => {
       if (msgTimer.current) clearTimeout(msgTimer.current);
@@ -154,7 +154,7 @@ function PaymentCreate() {
     if (scheduleId && idPagamento) {
       await updateSchedule(idPagamento);
       await updatePayment(idPagamento);
-      setTimeout(() => nav(`/schedule/${uid}`), 4000);
+      setTimeout(() => nav(`/schedule/${uid}`), 2000);
     } else {
       setMsg('Erro no agendamento.');
     }
@@ -179,8 +179,8 @@ function PaymentCreate() {
           />
           <p>{doctor ? doctor.nome : ''}<br /></p>
           {doctor?.especialidade?.nome}<br />
-          <p>R$ 30,00</p>
-          <p>{agenda ? (agenda.displayStatus || formatarData(agenda.date)) : ''}</p>
+          <p>R$ 120,00</p>
+          <p><strong>{agenda ? (agenda.displayStatus || formatarData(agenda.date)) : ''}</strong></p>
           <button className='btnGeral' onClick={() => nav(`/doctors/${doctorId}`, { replace: true })}>
             Escolher outro horário
           </button>

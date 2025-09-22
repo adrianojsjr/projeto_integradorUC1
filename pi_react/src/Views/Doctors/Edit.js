@@ -123,16 +123,16 @@ function Doctor() { // Componente React Doctor
     setDoctor(dataDoctors); // Atualiza estado
   }
 
-  // Função para deslogar
-  async function logout() {
-    await supabase.auth.signOut();
+async function logout() {
+  await supabase.auth.signOut();
 
-    // Limpa qualquer dado local (se usado)
-    localStorage.clear();
-    sessionStorage.clear();
+  // Limpa qualquer dado local
+  localStorage.clear();
+  sessionStorage.clear();
 
-    window.location.reload(); // Recarrega a página
-  }
+  // Força reload para atualizar o menu (e todo o app)
+  window.location.replace("/doctors");
+}
 
 
   const enviarArquivo = async (e, campo, pasta) => {

@@ -142,9 +142,7 @@ function Doctor() {
 
   return (
     <main>
-
-
-
+      
       <div className="inicio">
         <div className="menuBusca">
           <div></div>
@@ -166,7 +164,7 @@ function Doctor() {
 
             {filtro && (
               <button
-                className="btn"
+                className="btnFiltro"
                 onClick={() => {
                   setFiltro("");
                   listarMedicos(); // lista todos
@@ -178,6 +176,7 @@ function Doctor() {
           </div>
           <div></div>
         </div>
+
         <div className='apresentacaoPlataforma'>
           <h2>🩺 Bem-vindo ao ConectMed!</h2>
           <p>

@@ -1,13 +1,3 @@
-/* Container da página */
-.alinhamentoPagina {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f6fa;
-  color: #333;
-}
-
 /* Mensagem de feedback */
 .msgFeedback {
   background-color: #acae27;
@@ -32,11 +22,13 @@
   font-weight: bold;
   transition: all 0.3s;
   margin-bottom: 15px;
+  font-size: 0.95rem;
 }
 
 .agenda button:hover {
   background-color: #16a085;
   transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
 /* Formulário de adição de horário */
@@ -44,6 +36,8 @@
   display: flex;
   gap: 10px;
   margin-top: 10px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .addScheduleForm input[type="datetime-local"] {
@@ -52,20 +46,37 @@
   border: 1px solid #ccc;
   font-size: 0.95rem;
   flex: 1;
+  min-width: 200px;
+  transition: border-color 0.3s;
+}
+
+.addScheduleForm input[type="datetime-local"]:focus {
+  outline: none;
+  border-color: #1abc9c;
+  box-shadow: 0 0 0 2px rgba(26, 188, 156, 0.2);
+}
+
+.addScheduleForm button {
+  margin-bottom: 0;
+  white-space: nowrap;
 }
 
 /* Container da tabela */
 .agendaContainer {
+  width: 100%;
   overflow-x: auto;
   margin-top: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   margin-bottom: 40px;
+  -webkit-overflow-scrolling: touch;
+  background: white;
 }
 
 /* Tabela da agenda */
 .tabelaAgenda {
-  width: 100%;
+  width: auto;
+  min-width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   text-align: center;
@@ -76,106 +87,461 @@
 
 /* Cabeçalho da tabela */
 .tabelaAgenda th {
-  background:  #357ABD;
+  background: #357ABD;
   color: white;
-  padding: 14px;
+  padding: 16px 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  min-width: 120px;
+  border-bottom: 2px solid #2c6aa8;
 }
 
 /* Células da tabela */
 .tabelaAgenda td {
-  padding: 14px;
+  padding: 14px 12px;
   font-size: 0.95rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #f0f0f0;
   vertical-align: middle;
-  max-width: 200px;
-  text-align: center;
+  white-space: nowrap;
+  min-width: 120px;
+  transition: background-color 0.2s;
 }
 
 /* Linha alternada */
 .tabelaAgenda tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #f8f9fa;
 }
 
 /* Hover da linha */
 .tabelaAgenda tbody tr:hover {
-  background-color: #e0f0ff;
+  background-color: #e3f2fd;
 }
 
-/* Altura fixa das linhas */
-.tabelaAgenda tbody tr {
-  height: 60px;
+/* Estilos para status com cores - CORRIGIDO */
+.tabelaAgenda td:nth-child(4) { /* Coluna Status */
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
 }
 
-/* Nome do médico completo */
-.tabelaAgenda td:nth-child(2) {
-  white-space: normal;
-  word-break: break-word;
-  overflow: visible;
+/* Classes para status - CORRIGIDO */
+.status-concluida {
+  color: #27ae60;
+  background-color: #e8f5e8;
+  padding: 4px 8px;
+  border-radius: 12px;
 }
 
-/* Nome do paciente truncado com tooltip */
-.tabelaAgenda td:nth-child(3) {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.status-cancelada {
+  color: #e74c3c;
+  background-color: #fdedec;
+  padding: 4px 8px;
+  border-radius: 12px;
 }
 
-/* Botões dentro da tabela */
+.status-agendada {
+  color: #f39c12;
+  background-color: #fef5e7;
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.status-disponivel {
+  color: #3498db;
+  background-color: #ebf5fb;
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+/* Estilos para avaliação */
+.avaliacao-concluida {
+  background-color: #fff3cd;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.avaliacao-pendente {
+  color: #6c757d;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* Botões dentro da tabela - CORRIGIDO */
 .tabelaAgenda button {
-  padding: 6px 14px;
+  padding: 8px 16px;
   border: none;
   border-radius: 6px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
   margin: 2px;
   font-size: 0.85rem;
-}
-
-/* Botões específicos */
-.tabelaAgenda .btnCancel {
-  background-color: #e74c3c;
+  white-space: nowrap;
+  min-width: 80px;
+  background-color: #6c757d; /* Cor padrão */
   color: white;
 }
-.tabelaAgenda .btnCancel:hover {
-  background-color: #c0392b;
+
+.tabelaAgenda button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-.tabelaAgenda .btnFinalize {
-  background-color: #27ae60;
-  color: white;
-}
-.tabelaAgenda .btnFinalize:hover {
-  background-color: #1e8449;
+.tabelaAgenda button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
 }
 
-.tabelaAgenda .btnDelete {
-  background-color: #f39c12;
-  color: white;
-}
-.tabelaAgenda .btnDelete:hover {
-  background-color: #d68910;
+/* Botões específicos - CORRIGIDO */
+.btnCancel {
+  background-color: #e74c3c !important;
+  color: white !important;
 }
 
-/* Mensagem quando não há consulta */
-.semConsulta {
-  text-align: center;
-  margin-top: 30px;
-  color: #555;
-  font-weight: bold;
-  font-size: 1rem;
+.btnCancel:hover {
+  background-color: #c0392b !important;
+}
+
+.btnFinalize {
+  background-color: #27ae60 !important;
+  color: white !important;
+}
+
+.btnFinalize:hover {
+  background-color: #1e8449 !important;
+}
+
+.btnDelete {
+  background-color: #f39c12 !important;
+  color: white !important;
+}
+
+.btnDelete:hover {
+  background-color: #d68910 !important;
 }
 
 /* Select estilizado */
 select {
   border: 1px solid #ccc;
   border-radius: 8px;
-  font-size: 0.95rem;
-  padding: 10px;
+  font-size: 0.9rem;
+  padding: 8px 12px;
   background-color: white;
   cursor: pointer;
+  min-width: 150px;
+  transition: border-color 0.3s;
+}
+
+select:focus {
+  outline: none;
+  border-color: #357ABD;
+  box-shadow: 0 0 0 2px rgba(53, 122, 189, 0.2);
+}
+
+/* Mensagem quando não há consulta */
+.semConsulta {
+  text-align: center;
+  margin: 40px 0;
+  color: #6c757d;
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+/* Pagamento status */
+.tabelaAgenda td:nth-child(5) { /* Coluna Pagamento */
+  font-weight: 500;
+}
+
+.pagamento-pago {
+  color: #27ae60;
+}
+
+.pagamento-pendente {
+  color: #f39c12;
+}
+
+.pagamento-cancelado {
+  color: #e74c3c;
+}
+
+.pagamento-reembolsado {
+  color: #3498db;
+}
+
+/* RESPONSIVIDADE - MOBILE FIRST */
+@media (max-width: 768px) {
+  .alinhamentoPagina {
+    padding: 10px;
+  }
+  
+  .agendaContainer {
+    border-radius: 8px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow-x: visible;
+  }
+  
+  /* Tabela para mobile - layout vertical em cards MELHORADO */
+  .tabelaAgenda {
+    width: 100%;
+    min-width: auto;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+  }
+  
+  .tabelaAgenda thead {
+    display: none;
+  }
+  
+  .tabelaAgenda tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .tabelaAgenda tr {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 0;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+  }
+  
+  .tabelaAgenda tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  }
+  
+  .tabelaAgenda td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid #f5f5f5;
+    text-align: left;
+    white-space: normal;
+    min-width: auto;
+    width: 100%;
+    box-sizing: border-box;
+    gap: 12px;
+  }
+  
+  .tabelaAgenda td:last-child {
+    border-bottom: none;
+  }
+  
+  .tabelaAgenda td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #357ABD;
+    font-size: 0.75rem;
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+  
+  /* Conteúdo das células - alinhamento melhorado */
+  .tabelaAgenda td > *:not(:first-child) {
+    flex: 1;
+    text-align: right;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  /* Agrupamento lógico para mobile MELHORADO */
+  .tabelaAgenda td[data-label="Ações"] {
+    background-color: #f8f9fa;
+    border-top: 2px solid #e9ecef;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  
+  .tabelaAgenda td[data-label="Avaliação"] {
+    background-color: #fffbf0;
+    border-top: 1px solid #ffeaa7;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  
+  .tabelaAgenda td[data-label="Ações"]::before,
+  .tabelaAgenda td[data-label="Avaliação"]::before {
+    align-self: flex-start;
+    margin-bottom: 8px;
+    font-size: 0.8rem;
+  }
+  
+  /* Botões no mobile - MELHORADO */
+  .tabelaAgenda button {
+    width: 100%;
+    margin: 2px 0;
+    padding: 12px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+  }
+  
+  /* Select de avaliação no mobile */
+  .tabelaAgenda select {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+  
+  /* Status com melhor visualização */
+  .tabelaAgenda td[data-label="Status"] {
+    justify-content: space-between;
+  }
+  
+  .status-concluida,
+  .status-cancelada,
+  .status-agendada,
+  .status-disponivel {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 100px;
+  }
+  
+  /* Pagamento com melhor visualização */
+  .tabelaAgenda td[data-label="Pagamento"] {
+    justify-content: space-between;
+  }
+  
+  /* Ajustes para quando não há ações */
+  .tabelaAgenda td[data-label="Ações"]:empty::before,
+  .tabelaAgenda td[data-label="Avaliação"]:empty::before {
+    display: none;
+  }
+  
+  /* Mensagem quando não há botões */
+  .sem-botoes {
+    color: #6c757d;
+    font-style: italic;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+  
+  /* Ajustes para formulário no mobile */
+  .addScheduleForm {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .addScheduleForm input[type="datetime-local"] {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .addScheduleForm button {
+    width: 100%;
+  }
+}
+
+/* Para telas muito pequenas - MELHORADO */
+@media (max-width: 480px) {
+  .alinhamentoPagina {
+    padding: 8px;
+  }
+  
+  .tabelaAgenda td {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px;
+  }
+  
+  .tabelaAgenda td::before {
+    margin-right: 0;
+    margin-bottom: 4px;
+    font-size: 0.7rem;
+  }
+  
+  .tabelaAgenda td > *:not(:first-child) {
+    text-align: left;
+    width: 100%;
+  }
+  
+  .agenda button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+  }
+  
+  .msgFeedback {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+  }
+  
+  .tabelaAgenda tr {
+    margin-bottom: 12px;
+  }
+  
+  /* Status em telas muito pequenas */
+  .status-concluida,
+  .status-cancelada,
+  .status-agendada,
+  .status-disponivel {
+    min-width: auto;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Adicione estas classes para melhorar a exibição dos dados */
+.tabelaAgenda td[data-label="Data"] {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.tabelaAgenda td[data-label="Médico"],
+.tabelaAgenda td[data-label="Paciente"] {
+  color: #34495e;
+}
+
+.tabelaAgenda td[data-label="Pagamento"] {
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Estilo específico para quando não há ações */
+.sem-acoes {
+  color: #95a5a6;
+  font-style: italic;
+  text-align: center;
+  padding: 8px;
+  font-size: 0.9rem;
+}
+
+/* Melhorar a avaliação pendente */
+.avaliacao-pendente {
+  color: #7f8c8d;
+  font-style: italic;
+  text-align: center;
+  padding: 8px;
 }

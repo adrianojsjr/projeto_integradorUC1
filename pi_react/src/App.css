@@ -4,8 +4,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 /* =============================
-      Reset e estrutura básica
-      ============================= */
+   Reset e estrutura básica
+   ============================= */
+* {
+  box-sizing: border-box;
+}
+
 body,
 html {
   margin: 0;
@@ -13,13 +17,18 @@ html {
   font-family: "Rubik", sans-serif;
   background-color: #f5f6fa;
   color: #333;
-  height: 100vh;
+  min-height: 100vh;
+  line-height: 1.6;
 }
 
+#root, .app {
+  display: flex;
+  flex-direction: column;
+}
 
 /* =============================
-      Header / Nav
-      ============================= */
+   Menu principal
+   ============================= */
 .inicio .menu {
   display: flex;
   justify-content: space-between;
@@ -27,80 +36,89 @@ html {
   background-color: #ffffff;
   padding: 15px 30px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  border-radius: 12px;
-  margin-bottom: 20px;
+  gap: 15px;
 }
 
 .inicio .menu span {
+  flex: 0 0 auto;
   width: 400px;
 }
 
 .inicio .menu img {
   width: 150px;
   height: auto;
+  max-width: 100%;
 }
 
 .inicio .menu .btnNav {
   display: flex;
-  gap: 10px;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   width: 400px;
-  justify-content: right;
+  
 }
 
 .inicio .menu .btnNav a {
   background-color: #1e5acd;
   color: #ffffff;
   border-radius: 6px;
-  padding: 10px 20px;
+  padding: 12px 24px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.3s, transform 0.2s;
+  transition: all 0.3s ease;
   box-shadow: 0 4px 8px rgba(30, 90, 205, 0.25);
-
+  text-align: center;
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .inicio .menu .btnNav a:hover {
   background-color: #1546a0;
   transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(30, 90, 205, 0.3);
 }
 
 .inicio .menu p {
   color: #40566e;
-  font-size: 24px;
-  margin: 0;
+  font-size: clamp(18px, 2.5vw, 24px);
   text-align: center;
-  flex: 1;
   width: 400px;
 }
 
 /* =============================
-      Seção de busca / destaque
-      ============================= */
+   Seção de busca / destaque
+   ============================= */
 .inicio .menuBusca {
   display: flex;
   justify-content: center;
   align-items: center;
   background: linear-gradient(90deg, #1e5acd 0%, #33B291 100%);
-  height: 180px;
-  border-radius: 12px;
+  min-height: 180px;
   margin-bottom: 40px;
-  padding: 20px;
+  padding: 30px 20px;
 }
 
 .inicio .menuBusca .busca {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
 }
 
 .inicio .menuBusca input {
-  padding: 10px 20px;
+  padding: 12px 20px;
   border: none;
   border-radius: 6px;
   font-size: 16px;
-  width: 250px;
+  flex: 1;
+  min-width: 250px;
+  max-width: 400px;
 }
 
 .inicio .menuBusca .btn {
@@ -108,11 +126,12 @@ html {
   color: #ffffff;
   border: none;
   border-radius: 6px;
-  padding: 10px 20px;
+  padding: 12px 24px;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
+  transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 .inicio .menuBusca .btn:hover {
@@ -121,8 +140,8 @@ html {
 }
 
 /* =============================
-      Footer
-      ============================= */
+   Footer
+   ============================= */
 footer {
   background-color: #2f70e7;
   color: white;
@@ -132,25 +151,211 @@ footer {
   border-radius: 12px 12px 0 0;
 }
 
-
 footer h4 {
-  margin: 0 0 10px 0;
-  font-size: 18px;
+  margin: 0 0 15px 0;
+  font-size: clamp(16px, 2vw, 18px);
 }
 
 footer p {
-  margin: 5px 0;
-  font-size: 14px;
+  margin: 8px 0;
+  font-size: clamp(12px, 1.5vw, 14px);
 }
 
 /* =============================
-      Links do footer
-      ============================= */
+   Links do footer
+   ============================= */
 footer a {
   color: #11b5ba;
   text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 footer a:hover {
   text-decoration: underline;
+  color: #0ea1a6;
+}
+
+/* =============================
+   Media Queries - Responsividade
+   ============================= */
+
+
+/* Tablets pequenos e mobile grande (600px - 767px) */
+@media (max-width: 1186px) {
+  
+  .inicio .menu {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+    
+  }
+  
+  .inicio .menu span {
+    order: 1;
+  }
+  
+  .inicio .menu p {
+    order: 2;
+    min-width: auto;
+    width: 100%;
+    display: block !important;
+    font-size: 18px;
+  }
+  
+  .inicio .menu .btnNav {
+    order: 3;
+    justify-content: center;
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .inicio .menu img {
+    width: 100px;
+  }
+  
+  .inicio .menu .btnNav a {
+    flex: 1;
+    min-width: 120px;
+    max-width: 150px;
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+  
+  .inicio .menuBusca {
+    min-height: 140px;
+    padding: 20px 15px;
+    margin-bottom: 30px;
+  }
+  
+  .inicio .menuBusca .busca {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .inicio .menuBusca input {
+    min-width: 100%;
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .inicio .menuBusca .btn {
+    width: 100%;
+    max-width: 200px;
+  }
+}
+
+/* Mobile pequeno (480px - 599px) */
+@media (max-width: 599px) {
+  .inicio .menu {
+    margin: 10px 0;
+    border-radius: 8px;
+  }
+  
+  .inicio .menu .btnNav {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .inicio .menu .btnNav a {
+    max-width: 100%;
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .inicio .menuBusca {
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  footer {
+    padding: 20px 15px;
+    border-radius: 8px 8px 0 0;
+  }
+}
+
+/* Mobile muito pequeno (até 479px) */
+@media (max-width: 479px) {
+  main {
+    padding: 0 5px;
+  }
+  
+  .inicio .menu {
+    padding: 12px 10px;
+    gap: 10px;
+  }
+  
+  .inicio .menu img {
+    width: 80px;
+  }
+  
+  .inicio .menu p {
+    font-size: 16px;
+
+  }
+  
+  .inicio .menu .btnNav a {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .inicio .menuBusca {
+    min-height: 120px;
+    padding: 15px 10px;
+  }
+  
+  footer {
+    padding: 15px 10px;
+  }
+  
+  footer h4 {
+    margin-bottom: 10px;
+  }
+  
+  footer p {
+    margin: 5px 0;
+  }
+}
+
+/* =============================
+   Melhorias de acessibilidade
+   ============================= */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* =============================
+   Melhorias de contraste para modo escuro
+   ============================= */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+  }
+  
+  .inicio .menu {
+    background-color: #2d2d2d;
+    color: #f0f0f0;
+  }
+}
+
+/* =============================
+   Estados de foco para acessibilidade
+   ============================= */
+.inicio .menu .btnNav a:focus,
+.inicio .menuBusca .btn:focus,
+.inicio .menuBusca input:focus {
+  outline: 2px solid #11b5ba;
+  outline-offset: 2px;
+}
+
+/* =============================
+   Garantir que imagens sejam responsivas
+   ============================= */
+img {
+  max-width: 100%;
+  height: auto;
 }

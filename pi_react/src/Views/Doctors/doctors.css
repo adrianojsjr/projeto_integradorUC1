@@ -6,6 +6,17 @@
     --borda: #dce3ec;
 }
 
+/* Container da página */
+.alinhamentoPagina {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f6fa;
+  color: #333;
+  margin-bottom: 50px;
+}
+
 /*Texto de apresentação da plataforma*/
 
 .apresentacaoPlataforma {
@@ -147,15 +158,17 @@
     transition: all 0.2s ease-in-out;
 }
 
-.especialidade:hover {
-    border-color: #3b82f6;
-    /* azul */
+.btnFiltro{
+    background-color: #11b4bac9;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    width: 150px;
 }
 
-.especialidade:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 6px rgba(37, 99, 235, 0.5);
-}
 
 .dadosGeraisConsulta {
     display: flex;
